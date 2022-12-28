@@ -12,6 +12,3 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 exclude = ["test", "tests.*"]
-
-[project.scripts]
-cs-api = "flaskr.__main__:main"
