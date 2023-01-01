@@ -7,8 +7,15 @@ name = "cs-api"
 version = "0.0.1"
 dependencies = [
     "flask",
+    "Authlib",
+    "requests",
+    "flask-socketio",
+    "simple-websocket",
     "black"
 ]
 
 [tool.setuptools.packages.find]
 exclude = ["test", "tests.*"]
+
+[project.scripts]
+cs-api = "src.__main__:main"
