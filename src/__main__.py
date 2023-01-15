@@ -10,12 +10,12 @@ from flask import Flask
 from flask_socketio import SocketIO
 
 from src.versions.v1 import v1
-from src.versions.v2 import v2
+#from src.versions.v2 import v2 # This is for testing future API revisions
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = environ.get('OAUTH_CLIENT_KEY', 'SECRET1!')
 app.register_blueprint(v1)
-app.register_blueprint(v2)
+#app.register_blueprint(v2) # This is for testing future API revisions
 socketio = SocketIO(app)
 
 oauth = OAuth(app)
