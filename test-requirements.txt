@@ -1,0 +1,4 @@
+# dependencies for the test and build environments
+# source venv/bin/activate
+# python3 -m pip install -r test-requirements.txt
+black

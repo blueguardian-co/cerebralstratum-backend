@@ -4,18 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cs-api"
-version = "0.0.1"
 dependencies = [
     "flask",
     "Authlib",
     "requests",
     "flask-socketio",
     "simple-websocket",
-    "black"
+    "sqlalchemy"
 ]
-
-[tool.setuptools.packages.find]
-exclude = ["test", "tests.*"]
+dynamic = ["version", "readme", "description"]
 
 [project.scripts]
 cs-api = "src.__main__:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "src.__init__.VERSION"}
+description = {file = "src/DESCRIPTION"}
+readme = {file = ["README.md"], content-type = "text/markdown"}
+
+[tool.setuptools.packages.find]
+exclude = ["test", "tests.*"]
