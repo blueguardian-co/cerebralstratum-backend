@@ -1,0 +1,40 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "CEREBRAL STRATUM",
+        "version": "1.0.0",
+        "description": "CEREBRAL STRATUM API",
+        "license": {
+            "name": "GNU GPLv3",
+            "url": "https://www.gnu.org/licenses/gpl.txt"
+        }
+    },
+    "paths": {
+        "/api/v1/healthz": {
+            "summary": "API health",
+            "description": "This endpoint provides an overal summary of the API/backend's health",
+            "get": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "OK": {
+                                        "value": {
+                                            "status": "ok"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get API health status",
+                "description": "Get a health summary of the API/backend"
+            }
+        }
+    }
+}
