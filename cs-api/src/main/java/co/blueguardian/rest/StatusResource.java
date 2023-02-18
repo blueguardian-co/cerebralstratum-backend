@@ -1,12 +1,6 @@
-package co.blueguardian.json;
+package co.blueguardian.rest;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Set;
-
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 @Path("/api/v1/healthz")

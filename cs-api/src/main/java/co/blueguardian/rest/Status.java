@@ -1,4 +1,4 @@
-package co.blueguardian.json;
+package co.blueguardian.rest;
 
 public class Status {
 
