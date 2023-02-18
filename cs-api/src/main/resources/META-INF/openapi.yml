@@ -1,0 +1,19 @@
+---
+openapi: 3.1.0
+info:
+  title: Static OpenAPI document of CEREBRAL STRATUM's REST API
+  description: CEREBRAL STRATUM Open API documentation
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080/swagger
+    description: Optional dev mode server description
+
+paths:
+  /api/v1/health:
+    get:
+      responses:
+        200:
+          description: The health of the API
+          content:
+            application/json: {"status": "<status>"}
