@@ -18,7 +18,7 @@ components:
           value: OpenShift console
         - name: OPENVSX_REGISTRY_URL
           value: https://open-vsx.org
-      image: registry.redhat.io/devspaces/udi-rhel8@sha256:bc9d5980a78f0c8b9eb5a20368514ced3dc6e5d99d286cb2e67266b1eb522b94
+      image: registry.redhat.io/devspaces/udi-rhel8@sha256:d9467e83617e9ce7c76a5547894ef2fc3e5267af36da49573c2ff06b4c40bb51
       sourceMapping: /projects
     name: universal-developer-image
   - container:
