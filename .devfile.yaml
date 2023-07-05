@@ -35,5 +35,5 @@ components:
           targetPort: 6443
       mountSources: true
       sourceMapping: /projects
-    image: registry.access.redhat.com/quarkus/mandrel-22-rhel8:latest
+      image: registry.access.redhat.com/quarkus/mandrel-22-rhel8:latest
     name: quarkus
