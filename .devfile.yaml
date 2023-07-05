@@ -21,18 +21,19 @@ components:
       image: registry.redhat.io/devspaces/udi-rhel8@sha256:bc9d5980a78f0c8b9eb5a20368514ced3dc6e5d99d286cb2e67266b1eb522b94
       sourceMapping: /projects
     name: universal-developer-image
-  - command:
-      - sleep
-      - infinity
-    env:
-      - name: DEV_MODE
-        value: 'true'
-    endpoints:
-      - exposure: public
-        name: csapi
-        protocol: http
-        targetPort: 6443
+  - container:
+      command:
+        - sleep
+        - infinity
+      env:
+        - name: DEV_MODE
+          value: 'true'
+      endpoints:
+        - exposure: public
+          name: csapi
+          protocol: http
+          targetPort: 6443
+      mountSources: true
+      sourceMapping: /projects
     image: registry.access.redhat.com/quarkus/mandrel-22-rhel8:latest
-    mountSources: true
-    sourceMapping: /projects
     name: quarkus
