@@ -1,0 +1,38 @@
+schemaVersion: 2.2.0
+metadata:
+  name: cerebralstratum-backend
+components:
+  - attributes:
+      controller.devfile.io/merge-contribution: true
+    container:
+      env:
+        - name: CHE_DASHBOARD_URL
+          value: https://devspaces.apps.sandbox-m4.g2pi.p1.openshiftapps.com
+        - name: CHE_PLUGIN_REGISTRY_URL
+          value: https://devspaces.apps.sandbox-m4.g2pi.p1.openshiftapps.com/plugin-registry/v3
+        - name: CHE_PLUGIN_REGISTRY_INTERNAL_URL
+          value: http://plugin-registry.crw.svc:8080/v3
+        - name: CLUSTER_CONSOLE_URL
+          value: https://console-openshift-console.apps.sandbox-m4.g2pi.p1.openshiftapps.com
+        - name: CLUSTER_CONSOLE_TITLE
+          value: OpenShift console
+        - name: OPENVSX_REGISTRY_URL
+          value: https://open-vsx.org
+      image: registry.redhat.io/devspaces/udi-rhel8@sha256:bc9d5980a78f0c8b9eb5a20368514ced3dc6e5d99d286cb2e67266b1eb522b94
+      sourceMapping: /projects
+    name: universal-developer-image
+    - command:
+        - sleep
+        - infinity
+      env:
+        - name: DEV_MODE
+          value: 'true'
+      endpoints:
+        - exposure: public
+          name: csapi
+          protocol: http
+          targetPort: 6443
+      image: registry.access.redhat.com/quarkus/mandrel-22-rhel8:latest
+      mountSources: true
+      sourceMapping: /projects
+      name: quarkus
