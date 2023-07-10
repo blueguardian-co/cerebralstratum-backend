@@ -35,5 +35,11 @@ components:
           targetPort: 6443
       mountSources: true
       sourceMapping: /projects
-      image: registry.access.redhat.com/quarkus/mandrel-22-rhel8:latest
-    name: quarkus
+      image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
+    name: java
+commands:
+  - id: compile and run
+    exec:
+      component: java
+      commandLine: './mvnw compile quarkus:dev'
+      workingDir: '${PROJECTS_ROOT}/cerebralstratum-backend'
