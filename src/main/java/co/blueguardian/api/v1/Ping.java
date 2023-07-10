@@ -2,12 +2,12 @@ package co.blueguardian.api.v1;
 
 public class Ping {
 
-    public String response;
+    public String ping;
 
     public Ping() {
     }
 
     public Ping(String response) {
-        this.response = response;
+        this.ping = response;
     }
 }
