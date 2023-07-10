@@ -39,8 +39,8 @@ components:
     name: java
 commands:
   - id: compile-and-run
-    label: compile and run
     exec:
       component: java
       commandLine: './mvnw compile quarkus:dev'
+      label: compile and run
       workingDir: '${PROJECTS_SOURCE}'
