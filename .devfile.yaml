@@ -38,8 +38,9 @@ components:
       image: registry.access.redhat.com/ubi9/openjdk-17-runtime:latest
     name: java
 commands:
-  - id: compile and run
+  - id: compile-and-run
+    label: compile and run
     exec:
       component: java
       commandLine: './mvnw compile quarkus:dev'
-      workingDir: '${PROJECTS_ROOT}/cerebralstratum-backend'
+      workingDir: '${PROJECTS_SOURCE}'
