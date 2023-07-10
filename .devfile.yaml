@@ -22,6 +22,10 @@ components:
       sourceMapping: /projects
     name: universal-developer-image
   - container:
+      cpuLimit: "2.0"
+      cpuRequest: 200m
+      memoryLimit: 4Gi
+      memoryRequest: 256Mi
       command:
         - sleep
         - infinity
@@ -43,4 +47,4 @@ commands:
       component: java
       commandLine: './mvnw compile quarkus:dev'
       label: compile and run
-      workingDir: '${PROJECTS_SOURCE}'
+      workingDir: '${PROJECT_SOURCE}'
