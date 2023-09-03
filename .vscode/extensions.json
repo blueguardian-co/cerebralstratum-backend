@@ -1,5 +1,7 @@
 {
     "recommendations": [
-      "redhat.vscode-quarkus"
+      "redhat.vscode-quarkus",
+      "redhat.vscode-openshift-connector",
+      "redhat.vscode-tekton-pipelines"
     ]
 }
