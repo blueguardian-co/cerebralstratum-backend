@@ -5,19 +5,6 @@ components:
   - attributes:
       controller.devfile.io/merge-contribution: true
     container:
-      env:
-        - name: CHE_DASHBOARD_URL
-          value: https://devspaces.apps.sandbox-m4.g2pi.p1.openshiftapps.com
-        - name: CHE_PLUGIN_REGISTRY_URL
-          value: https://devspaces.apps.sandbox-m4.g2pi.p1.openshiftapps.com/plugin-registry/v3
-        - name: CHE_PLUGIN_REGISTRY_INTERNAL_URL
-          value: http://plugin-registry.crw.svc:8080/v3
-        - name: CLUSTER_CONSOLE_URL
-          value: https://console-openshift-console.apps.sandbox-m4.g2pi.p1.openshiftapps.com
-        - name: CLUSTER_CONSOLE_TITLE
-          value: OpenShift console
-        - name: OPENVSX_REGISTRY_URL
-          value: https://open-vsx.org
       image: registry.redhat.io/devspaces/udi-rhel8:latest
       sourceMapping: /projects
     name: universal-developer-image
