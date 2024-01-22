@@ -22,7 +22,7 @@ components:
       endpoints:
         - exposure: public
           name: csapi
-          protocol: http
+          protocol: https
           targetPort: 6443
       mountSources: true
       sourceMapping: /projects
