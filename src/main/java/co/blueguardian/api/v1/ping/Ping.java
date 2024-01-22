@@ -1,4 +1,4 @@
-package co.blueguardian.api.v1;
+package co.blueguardian.api.v1.ping;
 
 public class Ping {
 

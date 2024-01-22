@@ -1,4 +1,4 @@
-package co.blueguardian.api.v1;
+package co.blueguardian.api.v1.ping;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
