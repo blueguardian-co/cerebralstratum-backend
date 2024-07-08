@@ -1,0 +1,28 @@
+schemaVersion: 2.2.2
+metadata:
+  name: silent-auction-demo-backend
+projects:
+  - attributes: {}
+    name: silent-auction-demo-backend
+    git:
+      remotes:
+        origin: https://github.com/ahussey-redhat/silent-auction-demo-backend.git
+components:
+  - name: universal-developer-image
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel8:latest
+      env:
+        - name: DEV_MODE
+          value: 'true'
+      endpoints:
+        - exposure: public
+          name: backend-api
+          protocol: https
+          targetPort: 6443
+commands:
+  - id: run-dev-mode
+    exec:
+      component: java
+      commandLine: './mvnw compile quarkus:dev'
+      label: run dev mode
+      workingDir: '${PROJECT_SOURCE}'
