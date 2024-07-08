@@ -22,7 +22,7 @@ components:
 commands:
   - id: run-dev-mode
     exec:
-      component: java
+      component: universal-developer-image
       commandLine: './mvnw compile quarkus:dev'
       label: run dev mode
       workingDir: '${PROJECT_SOURCE}'
