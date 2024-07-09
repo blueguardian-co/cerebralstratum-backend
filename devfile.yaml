@@ -10,6 +10,10 @@ projects:
 components:
   - name: universal-developer-image
     container:
+      cpuLimit: "2.0"
+      cpuRequest: 200m
+      memoryLimit: 4Gi
+      memoryRequest: 256Mi
       image: registry.redhat.io/devspaces/udi-rhel8:latest
       env:
         - name: DEV_MODE

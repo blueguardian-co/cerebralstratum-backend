@@ -1,4 +1,4 @@
-package org.acme.security.keycloak.authorization;
+package api.v1.user;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -9,7 +9,7 @@ import org.jboss.resteasy.reactive.NoCache;
 import io.quarkus.security.identity.SecurityIdentity;
 
 @Path("/api/v1/users")
-public class UsersResource {
+public class UserResource {
 
     @Inject
     SecurityIdentity identity;
