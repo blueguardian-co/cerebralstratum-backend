@@ -1,0 +1,57 @@
+---
+databaseChangeLog:
+- preConditions:
+    - runningAs:
+        username:  silent-auction
+- changeSet:
+      id:  1
+      author:  ahussey
+      labels: example-label
+      context: example-context
+      comment: example-comment
+      changes:
+       - createTable:
+            tableName:  auctions
+            columns:
+              - column:
+                  name:  id
+                  type:  int
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  name
+                  type:  varchar(50)
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  description
+                  type:  varchar(50)
+              - column:
+                  name:  auctionEnd
+                  type:  timestamp
+              - column:
+                  name:  auctionStart
+                  type:  timestamp
+              - column:
+                  name:  image
+                  type:  blob
+       - createTable:
+            tableName:  user_info
+            columns:
+              - column:
+                  name:  id
+                  type:  int
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  username
+                  type:  varchar(50)
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  table
+                  type:  int
