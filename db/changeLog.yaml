@@ -6,9 +6,9 @@ databaseChangeLog:
 - changeSet:
       id:  1
       author:  ahussey
-      labels: example-label
-      context: example-context
-      comment: example-comment
+      labels: silent-auction
+      context: silent-auction
+      comment: initial tables
       changes:
        - createTable:
             tableName:  auctions
@@ -21,7 +21,7 @@ databaseChangeLog:
                     primaryKey:  true
                     nullable:  false
               - column:
-                  name:  name
+                  name:  item_name
                   type:  varchar(50)
                   constraints:
                     nullable:  false
@@ -29,10 +29,10 @@ databaseChangeLog:
                   name:  description
                   type:  varchar(50)
               - column:
-                  name:  auctionEnd
+                  name:  auction_end
                   type:  timestamp
               - column:
-                  name:  auctionStart
+                  name:  auction_start
                   type:  timestamp
               - column:
                   name:  image
@@ -53,5 +53,5 @@ databaseChangeLog:
                   constraints:
                     nullable:  false
               - column:
-                  name:  table
+                  name:  table_number
                   type:  int
