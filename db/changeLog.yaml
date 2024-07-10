@@ -8,7 +8,7 @@ databaseChangeLog:
       author:  ahussey
       labels: silent-auction
       context: silent-auction
-      comment: initial tables
+      comment: create initial tables
       changes:
        - createTable:
             tableName:  auctions
