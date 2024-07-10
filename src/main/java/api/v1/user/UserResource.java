@@ -18,6 +18,9 @@ public class UserResource {
     @Path("/me")
     @NoCache
     public User me() {
+        /*
+        This endpoint should be used to update the user's table number
+        */
         return new User(identity);
     }
 
