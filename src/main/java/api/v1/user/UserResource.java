@@ -7,9 +7,11 @@ import jakarta.ws.rs.Path;
 
 import org.jboss.resteasy.reactive.NoCache;
 
+import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
 @Path("/api/v1/users")
+@Authenticated
 public class UserResource {
 
     @Inject
@@ -37,14 +39,14 @@ public class UserResource {
 
     public static class User {
 
-        private final String userName;
+        private final String username;
 
         User(SecurityIdentity identity) {
-            this.userName = identity.getPrincipal().getName();
+            this.username = identity.getPrincipal().getName();
         }
 
         public String getUserName() {
-            return userName;
+            return username;
         }
     }
 }

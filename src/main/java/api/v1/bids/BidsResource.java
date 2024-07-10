@@ -19,7 +19,7 @@ public class BidsResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "All bids";
+        return "All bids view for " + username;
     }
 
 }
