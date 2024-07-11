@@ -11,7 +11,6 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Lob;
 
 @Entity
 @Table(name = "auctions")
@@ -37,7 +36,6 @@ public class Auctions {
     private LocalDateTime auction_end;
 
     @Column
-    @Lob
     private byte[] image;
 
     public Auctions() {
@@ -65,12 +63,43 @@ public class Auctions {
         this.id = id;
     }
 
-    public String getName() {
+    public String getItem_name() {
         return item_name;
     }
 
-    public void setName(String item_name) {
+    public void setItem_name(String item_name) {
         this.item_name = item_name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getAuction_start() {
+        return auction_start;
+    }
+
+    public void setAuction_start(LocalDateTime auction_start) {
+        this.auction_start = auction_start;
+    }
+
+    public LocalDateTime getAuction_end() {
+        return auction_end;
+    }
+
+    public void setAuction_end(LocalDateTime auction_end) {
+        this.auction_end = auction_end;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 }

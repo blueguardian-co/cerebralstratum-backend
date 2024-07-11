@@ -38,7 +38,7 @@ public class AuctionsResource {
     @Transactional
     public Response create(Auctions auction) {
         if (auction.getId() != null) {
-            throw new WebApplicationException("Id was invalidly set on request.", 422);
+            throw new WebApplicationException("ID was invalidly set on request.", 422);
         }
 
         entityManager.persist(auction);
