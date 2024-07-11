@@ -8,5 +8,18 @@ export access_token=$(\
     -d 'username=test.user@example.com&password=Password123&grant_type=password' | jq --raw-output '.access_token' \
 )
 
+# echo ""
+# echo "Get authenticated user's username"
+# curl -v -H "Authorization: Bearer $access_token" \
+#   http://localhost:6443/api/v1/users/me
+
+# echo ""
+# echo "Retrieve user's available bids"
+# curl -v -H "Authorization: Bearer $access_token" \
+#   http://localhost:6443/api/v1/bids
+
+echo ""
+echo "Retrieve user's available auctions"
 curl -v -H "Authorization: Bearer $access_token" \
-  http://localhost:6443/api/v1/users/me
+  http://localhost:6443/api/v1/auctions
+
