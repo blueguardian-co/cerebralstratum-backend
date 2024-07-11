@@ -13,7 +13,6 @@ import io.quarkus.security.identity.SecurityIdentity;
 @Path("/api/v1/users")
 @Authenticated
 public class UserResource {
-
     @Inject
     SecurityIdentity identity;
 

@@ -27,12 +27,12 @@ databaseChangeLog:
                     nullable:  false
               - column:
                   name:  description
-                  type:  varchar(50)
-              - column:
-                  name:  auction_end
-                  type:  timestamp
+                  type:  varchar(240)
               - column:
                   name:  auction_start
+                  type:  timestamp
+              - column:
+                  name:  auction_end
                   type:  timestamp
               - column:
                   name:  image

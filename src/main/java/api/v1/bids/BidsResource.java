@@ -17,9 +17,10 @@ public class BidsResource {
     private final String username = identity.getPrincipal().getName();
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "All bids view for " + username;
+    @Produces(MediaType.APPLICATION_JSON)
+    public String allBids() {
+        String allBidsView = "All bids view for " + username;
+        return  allBidsView;
     }
 
 }
