@@ -77,7 +77,7 @@ databaseChangeLog:
                   name:  bid_amount
                   type:  int
         -  addForeignKeyConstraint:
-            baseColumnNames:  id
+            baseColumnNames:  auction_id
             baseTableName:  bids
             baseTableSchemaName:  auction
             constraintName:  fk_auction_id
