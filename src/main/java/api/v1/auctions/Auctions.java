@@ -2,6 +2,8 @@ package api.v1.auctions;
 
 import java.time.LocalDateTime;
 
+import api.v1.bids.Bids;
+
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +28,7 @@ public class Auctions {
     @Column(length = 50, unique = true)
     private String item_name;
 
-    @Column(length = 240, unique = true)
+    @Column(length = 240)
     private String description;
 
     @Column(columnDefinition="timestamp")
@@ -35,8 +37,8 @@ public class Auctions {
     @Column(columnDefinition="timestamp")
     private LocalDateTime auction_end;
 
-    @Column
-    private byte[] image;
+    @Column(length = 240)
+    private String image_path;
 
     public Auctions() {
     }
@@ -46,13 +48,13 @@ public class Auctions {
         String description,
         LocalDateTime auction_start,
         LocalDateTime auction_end,
-        byte[] image
+        String image_path
     ) {
         this.item_name = item_name;
         this.description = description;
         this.auction_start = auction_start;
         this.auction_end = auction_end;
-        this.image = image;
+        this.image_path = image_path;
     }
 
     public Integer getId() {
@@ -95,11 +97,11 @@ public class Auctions {
         this.auction_end = auction_end;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getImage_path() {
+        return image_path;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
     }
 }

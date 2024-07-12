@@ -32,8 +32,8 @@ databaseChangeLog:
                   name:  auction_end
                   type:  timestamp
               - column:
-                  name:  image
-                  type:  blob
+                  name:  image_path
+                  type:  varchar(240)
         - createTable:
             tableName:  user_info
             columns:
@@ -46,9 +46,46 @@ databaseChangeLog:
                     nullable:  false
               - column:
                   name:  username
-                  type:  varchar(50)
+                  type:  varchar(240)
                   constraints:
                     nullable:  false
               - column:
                   name:  table_number
                   type:  int
+        - createTable:
+            tableName:  bids
+            columns:
+              - column:
+                  name:  id
+                  type:  int
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  auction_id
+                  type:  int
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  username
+                  type:  varchar(240)
+              - column:
+                  name:  bid_time
+                  type:  timestamp
+              - column:
+                  name:  bid_amount
+                  type:  int
+        -  addForeignKeyConstraint:
+            baseColumnNames:  id
+            baseTableName:  bids
+            baseTableSchemaName:  auction
+            constraintName:  fk_auction_id
+            deferrable:  true
+            initiallyDeferred:  true
+            onDelete:  NULL
+            onUpdate:  RESTRICT
+            referencedColumnNames:  id
+            referencedTableName:  auctions
+            referencedTableSchemaName:  auction
+            validate:  true
