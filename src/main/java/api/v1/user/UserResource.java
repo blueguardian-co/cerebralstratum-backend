@@ -13,8 +13,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
 
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -56,31 +54,4 @@ public class UserResource {
         }
         return entity;
     }
-
-    // @GET
-    // @Path("/me")
-    // public User me() {
-    //     /*
-    //     Return user details and table number
-    //     */
-    //     return new User(identity);
-    // }
-    // @POST
-    // @Path("/me")
-    // @NoCache
-    // public User update(String user, int tableNumber) {
-    //     /*
-    //     This endpoint should be used to update the user's table number
-    //     */
-    //     return new User(identity);
-    // private final String username;
-
-    // User(SecurityIdentity identity) {
-    //     this.username = identity.getPrincipal().getName();
-    // }
-
-    // public String getUserName() {
-    //     return username;
-    // }
-    // }
 }

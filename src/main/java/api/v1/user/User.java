@@ -17,14 +17,14 @@ import jakarta.persistence.Table;
 public class User {
 
     @Id
-    @SequenceGenerator(name = "userSequence", sequenceName = "user_id_seq", allocationSize = 1, initialValue = 10)
+    @SequenceGenerator(name = "userSequence", sequenceName = "user_info_id_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "userSequence")
     private Integer id;
 
-    @Column(length = 240, unique = true)
+    @Column(length = 255, unique = true)
     private String username;
 
-    @Column(length = 50)
+    @Column(length = 3)
     private int table_number;
 
     public User() {

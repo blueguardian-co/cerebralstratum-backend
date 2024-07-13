@@ -25,10 +25,10 @@ public class Auctions {
     @GeneratedValue(generator = "auctionsSequence")
     private Integer id;
 
-    @Column(length = 50, unique = true)
+    @Column(length = 255, unique = true)
     private String item_name;
 
-    @Column(length = 240)
+    @Column(length = 255)
     private String description;
 
     @Column(columnDefinition="timestamp")
@@ -37,7 +37,7 @@ public class Auctions {
     @Column(columnDefinition="timestamp")
     private LocalDateTime auction_end;
 
-    @Column(length = 240)
+    @Column(length = 255)
     private String image_path;
 
     public Auctions() {

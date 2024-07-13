@@ -19,12 +19,12 @@ databaseChangeLog:
                     nullable:  false
               - column:
                   name:  item_name
-                  type:  varchar(50)
+                  type:  varchar(255)
                   constraints:
                     nullable:  false
               - column:
                   name:  description
-                  type:  varchar(240)
+                  type:  varchar(255)
               - column:
                   name:  auction_start
                   type:  timestamp
@@ -33,7 +33,7 @@ databaseChangeLog:
                   type:  timestamp
               - column:
                   name:  image_path
-                  type:  varchar(240)
+                  type:  varchar(255)
         - createTable:
             tableName:  user_info
             columns:
@@ -46,7 +46,7 @@ databaseChangeLog:
                     nullable:  false
               - column:
                   name:  username
-                  type:  varchar(240)
+                  type:  varchar(255)
                   constraints:
                     nullable:  false
               - column:
@@ -69,7 +69,7 @@ databaseChangeLog:
                     nullable:  false
               - column:
                   name:  username
-                  type:  varchar(240)
+                  type:  varchar(255)
               - column:
                   name:  bid_time
                   type:  timestamp
