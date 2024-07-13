@@ -30,7 +30,7 @@ public class Bids {
     @PrimaryKeyJoinColumn
     private Auctions auction;
 
-    @Column(length = 240)
+    @Column(length = 255)
     private String username;
 
     @Column(columnDefinition="timestamp")
