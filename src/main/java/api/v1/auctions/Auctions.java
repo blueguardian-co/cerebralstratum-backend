@@ -2,8 +2,6 @@ package api.v1.auctions;
 
 import java.time.LocalDateTime;
 
-import api.v1.bids.Bids;
-
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
