@@ -13,11 +13,8 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
 
 import io.quarkus.security.Authenticated;
-import io.quarkus.security.identity.SecurityIdentity;
 
 @Path("/api/v1/auctions")
 @Authenticated
