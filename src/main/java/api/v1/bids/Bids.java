@@ -3,6 +3,8 @@ package api.v1.bids;
 import java.time.LocalDateTime;
 
 import api.v1.auctions.Auctions;
+import api.v1.user.User;
+
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +19,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "bids")
-@NamedQuery(name = "Bids.findAll", query = "SELECT a FROM Bids a ORDER BY a.auction", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "Bids.findAll", query = "SELECT b FROM Bids b ORDER BY b.auction", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "HighestBids.findAll", query = "SELECT b FROM Bids b ORDER BY b.auction.id ASC, b.bid_amount DESC, b.bid_time ASC", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+
 @Cacheable
 public class Bids {
 
@@ -30,8 +34,9 @@ public class Bids {
     @PrimaryKeyJoinColumn
     private Auctions auction;
 
-    @Column(length = 255)
-    private String username;
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private User user;
 
     @Column(columnDefinition="timestamp")
     private LocalDateTime bid_time;
@@ -44,12 +49,12 @@ public class Bids {
 
     public Bids(
         Auctions auction,
-        String username,
+        User user,
         LocalDateTime bid_time,
         int bid_amount
     ) {
         this.auction = auction;
-        this.username = username;
+        this.user = user;
         this.bid_time = bid_time;
         this.bid_amount = bid_amount;
     }
@@ -70,12 +75,12 @@ public class Bids {
         this.auction = auction;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getBid_time() {

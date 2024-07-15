@@ -51,4 +51,21 @@ public class BidsResource {
         }
         return entity;
     }
+
+    @GET
+    @Path("highest")
+    public List<Bids> getAllHighestBids() {
+        return entityManager.createNamedQuery("HighestBids.findAll", Bids.class)
+            .getResultList();          
+    }
+
+    @GET
+    @Path("highest/{id}")
+    public Bids getSpecificHighestBid(Integer id) {
+        Bids entity = entityManager.find(Bids.class, id);
+        if (entity == null) {
+            throw new WebApplicationException("Bid with id of " + id + " does not exist.", 404);
+        }
+        return entity;
+    }
 }
