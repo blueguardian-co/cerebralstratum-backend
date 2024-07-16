@@ -19,8 +19,24 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "bids")
-@NamedQuery(name = "Bids.findAll", query = "SELECT b FROM Bids b ORDER BY b.auction", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-@NamedQuery(name = "HighestBids.findAll", query = "SELECT b FROM Bids b ORDER BY b.auction.id ASC, b.bid_amount DESC, b.bid_time ASC", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(
+    name = "Bids.findAll",
+    query = "SELECT b FROM Bids b ORDER BY b.auction",
+    hints = @QueryHint(name = "org.hibernate.cacheable",
+    value = "true")
+)
+@NamedQuery(
+    name = "Bids.byUser",
+    query = "SELECT b FROM Bids b WHERE b.user.id = :userId ORDER BY b.auction",
+    hints = @QueryHint(name = "org.hibernate.cacheable", value = "true")
+)
+@NamedQuery(
+    name = "HighestBids.findAll",
+    query = "SELECT b FROM Bids b ORDER BY b.auction.id ASC, b.bid_amount DESC, b.bid_time ASC",
+    hints = @QueryHint(name = "org.hibernate.cacheable",
+    value = "true")
+    
+)
 
 @Cacheable
 public class Bids {

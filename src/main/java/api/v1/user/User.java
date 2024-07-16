@@ -12,7 +12,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "user_info")
-@NamedQuery(name = "User.findAll", query = "SELECT a FROM User a ORDER BY a.username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u ORDER BY u.username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "User.getUser", query = "SELECT u FROM User u WHERE u.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
 @Cacheable
 public class User {
 
