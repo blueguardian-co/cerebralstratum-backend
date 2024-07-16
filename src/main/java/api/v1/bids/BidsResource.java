@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -46,9 +47,7 @@ public class BidsResource {
         if (bids.getId() != null) {
             throw new WebApplicationException("ID was invalidly set on request.", 422);
         }
-        /* 
-        * Need to lock this down. Currently any authenticated user could bid on any user's behalf.
-        */
+
         List<User> oidcUserIdList = entityManager.createNamedQuery("User.getUser", User.class)
             .setParameter("username", securityIdentity.getPrincipal().getName())
             .getResultList();
@@ -69,12 +68,38 @@ public class BidsResource {
 
     @GET
     @Path("{id}")
-    public Bids getSpecificAuction(Integer id) {
+    public Bids getSpecificBid(Integer id) {
         Bids entity = entityManager.find(Bids.class, id);
         if (entity == null) {
             throw new WebApplicationException("Bid with id of " + id + " does not exist.", 404);
         }
         return entity;
+    }
+
+    @PUT
+    @Transactional
+    @RolesAllowed("bidder")
+    public Response update(Bids bid) {
+        if (bid.getId() == null) {
+            throw new WebApplicationException("No bid ID was provided.", 422);
+        }
+
+        List<User> oidcUserIdList = entityManager.createNamedQuery("User.getUser", User.class)
+            .setParameter("username", securityIdentity.getPrincipal().getName())
+            .getResultList();
+
+        // Get requesting user's ID from the user_info table
+        int oidcUserId = oidcUserIdList.get(0).getId();
+
+        // Get the requested bid user's ID
+        int bidUserId = bid.getUser().getId();
+
+        if (oidcUserId != bidUserId) {
+            throw new WebApplicationException("You can only update bids on your own behalf.", 403);
+        }
+
+        entityManager.merge(bid);
+        return Response.ok(bid).status(201).build();
     }
 
     @GET
@@ -92,15 +117,5 @@ public class BidsResource {
     public List<Bids> getAllHighestBids() {
         String sql = "SELECT DISTINCT ON (b.auction_id) b.id, b.auction_id, b.user_id, u.username, u.table_number, b.bid_time, b.bid_amount FROM bids b INNER JOIN user_info u on b.user_id = u.id ORDER BY b.auction_id ASC, b.bid_amount DESC, b.bid_time ASC;";
         return entityManager.createNativeQuery(sql, Bids.class).getResultList();      
-    }
-
-    @GET
-    @Path("highest/{id}")
-    public Bids getSpecificHighestBid(Integer id) {
-        Bids entity = entityManager.find(Bids.class, id);
-        if (entity == null) {
-            throw new WebApplicationException("Bid with id of " + id + " does not exist.", 404);
-        }
-        return entity;
     }
 }
