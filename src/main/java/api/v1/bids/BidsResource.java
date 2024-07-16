@@ -1,5 +1,7 @@
 package api.v1.bids;
 
+import api.v1.user.User;
+
 import java.util.List;
 
 import jakarta.inject.Inject;
@@ -13,8 +15,10 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.annotation.security.RolesAllowed;
 
 import io.quarkus.security.Authenticated;
+import io.quarkus.security.identity.SecurityIdentity;
 
 @Path("/api/v1/bids")
 @Authenticated
@@ -24,6 +28,9 @@ public class BidsResource {
 
     @Inject
     EntityManager entityManager;
+    @Inject
+    SecurityIdentity securityIdentity;
+
 
     @GET
     public List<Bids> getAllBids() {
@@ -33,9 +40,27 @@ public class BidsResource {
 
     @POST
     @Transactional
+    @RolesAllowed("bidder")
     public Response create(Bids bids) {
+
         if (bids.getId() != null) {
             throw new WebApplicationException("ID was invalidly set on request.", 422);
+        }
+        /* 
+        * Need to lock this down. Currently any authenticated user could bid on any user's behalf.
+        */
+        List<User> oidcUserIdList = entityManager.createNamedQuery("User.getUser", User.class)
+            .setParameter("username", securityIdentity.getPrincipal().getName())
+            .getResultList();
+
+        // Get requesting user's ID from the user_info table
+        int oidcUserId = oidcUserIdList.get(0).getId();
+        // Get requesting user's ID from the username from the IdP, and lookup in user_info
+        int requestingUserId = bids.getUser().getId();
+
+        // Compare that the two IDs are the same
+        if (oidcUserId != requestingUserId) {
+            throw new WebApplicationException("You can only place bids on your own behalf.", 403);
         }
 
         entityManager.persist(bids);
@@ -53,10 +78,20 @@ public class BidsResource {
     }
 
     @GET
+    @Path("user/{id}")
+    @RolesAllowed("bidder")
+    public List<Bids> getBidsByUser(Integer id) {
+        return entityManager.createNamedQuery("Bids.byUser", Bids.class)
+            .setParameter("userId", id)
+            .getResultList();          
+    }
+
+    @SuppressWarnings("unchecked")
+    @GET
     @Path("highest")
     public List<Bids> getAllHighestBids() {
-        return entityManager.createNamedQuery("HighestBids.findAll", Bids.class)
-            .getResultList();          
+        String sql = "SELECT DISTINCT ON (b.auction_id) b.id, b.auction_id, b.user_id, u.username, u.table_number, b.bid_time, b.bid_amount FROM bids b INNER JOIN user_info u on b.user_id = u.id ORDER BY b.auction_id ASC, b.bid_amount DESC, b.bid_time ASC;";
+        return entityManager.createNativeQuery(sql, Bids.class).getResultList();      
     }
 
     @GET

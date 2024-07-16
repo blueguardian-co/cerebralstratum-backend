@@ -2,6 +2,7 @@ package api.v1.auctions;
 
 import java.util.List;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ public class AuctionsResource {
     }
 
     @POST
+    @RolesAllowed({"moderator", "auctioneer"})
     @Transactional
     public Response create(Auctions auction) {
         if (auction.getId() != null) {
