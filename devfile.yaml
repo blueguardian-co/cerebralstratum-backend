@@ -36,3 +36,27 @@ commands:
       commandLine: './mvnw install -Dquarkus.openshift.deploy=true'
       label: build and deploy
       workingDir: '${PROJECT_SOURCE}'
+  - id: prepare-for-release-dryrun
+    exec:
+      component: universal-developer-image
+      commandLine: './mvnw release:prepare -DdryRun'
+      label: prepare for release - dry run
+      workingDir: '${PROJECT_SOURCE}'
+  - id: prepare-for-release
+    exec:
+      component: universal-developer-image
+      commandLine: './mvnw release:prepare'
+      label: prepare for release
+      workingDir: '${PROJECT_SOURCE}'
+  - id: release-dryrun
+    exec:
+      component: universal-developer-image
+      commandLine: './mvnw release:perform -DdryRun'
+      label: release - dry run
+      workingDir: '${PROJECT_SOURCE}'
+  - id: release
+    exec:
+      component: universal-developer-image
+      commandLine: './mvnw release:perform'
+      label: release
+      workingDir: '${PROJECT_SOURCE}'
