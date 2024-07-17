@@ -3,6 +3,7 @@ package api.v1.bids;
 import java.time.LocalDateTime;
 
 import api.v1.user.User;
+import repositories.auctions.AuctionEntity;
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
@@ -15,7 +16,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import repositories.auctions.AuctionEntity;
+import jakarta.persistence.CascadeType;
 
 @Entity
 @Table(name = "bids")
@@ -46,11 +47,11 @@ public class Bids {
     @GeneratedValue(generator = "bidsSequence")
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private AuctionEntity auction;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private User user;
 

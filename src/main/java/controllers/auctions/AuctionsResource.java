@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Consumes;
@@ -32,10 +33,18 @@ public class AuctionsResource {
     }
 
     @POST
-    @RolesAllowed({"moderator", "auctioneer"})
+    @RolesAllowed({"admin"})
     @Transactional
     public Response create(CreateAuctionRequest request) {
         Auction auction = auctionRepository.create(request);
+        return Response.ok(auction).status(201).build();
+    }
+
+    @DELETE
+    @RolesAllowed({"admin"})
+    @Transactional
+    public Response delete(DeleteAuctionRequest request) {
+        Auction auction = auctionRepository.delete(request);
         return Response.ok(auction).status(201).build();
     }
 
