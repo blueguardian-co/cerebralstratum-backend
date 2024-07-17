@@ -17,23 +17,6 @@
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
     </properties>
 
-    <scm>
-        <developerConnection>scm:git:https://github.com/ahussey-redhat/silent-auction-demo-backend.git</developerConnection>
-    </scm>
-
-    <build>
-        <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <version>3.1.1</version>
-            <configuration>
-            <projectVersionPolicyId>SemVerVersionPolicy</projectVersionPolicyId>
-            </configuration>
-        </plugin>
-        </plugins>
-    </build>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -120,8 +103,19 @@
             <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
     </dependencies>
+    <scm>
+        <developerConnection>scm:git:https://github.com/ahussey-redhat/silent-auction-demo-backend.git</developerConnection>
+    </scm>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                <projectVersionPolicyId>SemVerVersionPolicy</projectVersionPolicyId>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
