@@ -2,6 +2,7 @@ package repositories.auctions;
 
 import controllers.auctions.Auction;
 import controllers.auctions.CreateAuctionRequest;
+import controllers.auctions.DeleteAuctionRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,13 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
         AuctionEntity newAuction = mapCreateRequestToEntity(request);
         entityManager.persist(newAuction);
         return mapEntityToAuction(newAuction);
+    }
+
+    @Transactional
+    public Auction delete(DeleteAuctionRequest request) {
+        AuctionEntity auction = entityManager.find(AuctionEntity.class, request.id);
+        entityManager.remove(auction);
+        return mapEntityToAuction(auction);
     }
     
 }
