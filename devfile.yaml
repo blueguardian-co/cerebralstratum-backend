@@ -30,3 +30,9 @@ commands:
       commandLine: './mvnw compile quarkus:dev'
       label: run dev mode
       workingDir: '${PROJECT_SOURCE}'
+  - id: build-and-deploy
+    exec:
+      component: universal-developer-image
+      commandLine: './mvnw install -Dquarkus.openshift.deploy=true'
+      label: build and deploy
+      workingDir: '${PROJECT_SOURCE}'
