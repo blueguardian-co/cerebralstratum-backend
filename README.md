@@ -2,6 +2,7 @@
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
+
 If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
 
 ## Running the application in dev mode
@@ -60,3 +61,37 @@ If you want to learn more about building native executables, please consult <htt
 - REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
 - OpenShift Client ([guide](https://quarkus.io/guides/kubernetes-client)): Interact with OpenShift and develop OpenShift Operators
 - Liquibase ([guide](https://quarkus.io/guides/liquibase)): Handle your database schema migrations with Liquibase
+
+
+## Schema
+
+### Endpoints
+
+#### Auctions
+##### Public
+GET api/v1/auctions
+GET api/v1/auctions/{id}
+GET api/v1/auctions/{id}/bids/highest
+##### Admin
+POST api/v1/auctions
+PUT/DELETE api/v1/auctions/{id}
+GET api/v1/auctions/{id}/bids
+
+#### Bids
+##### Public
+POST api/v1/bids
+
+##### Admin
+GET api/v1/bids
+GET/DELETE api/v1/bids/{id}
+
+#### Users
+##### Admin
+GET/POST api/v1/users
+GET api/v1/users/{id}
+GET api/v1/users/{id}/bids
+
+##### Bidder
+GET/POST api/v1/me
+GET api/v1/me/bids
+
