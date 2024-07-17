@@ -1,4 +1,4 @@
-package api.v1.auctions;
+package repositories.auctions;
 
 import java.time.LocalDateTime;
 
@@ -14,9 +14,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "auctions")
-@NamedQuery(name = "Auctions.findAll", query = "SELECT a FROM Auctions a ORDER BY a.item_name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "AuctionEntity.findAll", query = "SELECT a FROM AuctionEntity a ORDER BY a.item_name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
 @Cacheable
-public class Auctions {
+public class AuctionEntity {
 
     @Id
     @SequenceGenerator(name = "auctionsSequence", sequenceName = "auctions_id_seq", allocationSize = 1, initialValue = 10)
@@ -38,10 +38,10 @@ public class Auctions {
     @Column(length = 255)
     private String image_path;
 
-    public Auctions() {
+    public AuctionEntity() {
     }
 
-    public Auctions(
+    public AuctionEntity(
         String item_name,
         String description,
         LocalDateTime auction_start,

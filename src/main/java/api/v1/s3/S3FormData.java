@@ -1,4 +1,4 @@
-package api.v1.auctions;
+package api.v1.s3;
 
 import java.io.File;
 import jakarta.ws.rs.core.MediaType;
