@@ -1,4 +1,4 @@
-package api.v1.auctions;
+package api.v1.s3;
 
 import software.amazon.awssdk.services.s3.model.S3Object;
 

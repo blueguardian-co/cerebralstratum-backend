@@ -2,7 +2,6 @@ package api.v1.bids;
 
 import java.time.LocalDateTime;
 
-import api.v1.auctions.Auctions;
 import api.v1.user.User;
 
 import jakarta.persistence.Cacheable;
@@ -16,6 +15,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.QueryHint;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import repositories.auctions.AuctionEntity;
 
 @Entity
 @Table(name = "bids")
@@ -48,7 +48,7 @@ public class Bids {
 
     @ManyToOne
     @PrimaryKeyJoinColumn
-    private Auctions auction;
+    private AuctionEntity auction;
 
     @ManyToOne
     @PrimaryKeyJoinColumn
@@ -64,7 +64,7 @@ public class Bids {
     }
 
     public Bids(
-        Auctions auction,
+        AuctionEntity auction,
         User user,
         LocalDateTime bid_time,
         int bid_amount
@@ -83,11 +83,11 @@ public class Bids {
         this.id = id;
     }
 
-    public Auctions getAuction() {
+    public AuctionEntity getAuction() {
         return auction;
     }
 
-    public void setAuction(Auctions auction) {
+    public void setAuction(AuctionEntity auction) {
         this.auction = auction;
     }
 

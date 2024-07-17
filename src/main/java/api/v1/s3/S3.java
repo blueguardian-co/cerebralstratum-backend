@@ -1,4 +1,4 @@
-package api.v1.auctions;
+package api.v1.s3;
 
 import java.util.Comparator;
 import java.util.List;
