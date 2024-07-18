@@ -39,7 +39,7 @@ public class BidsResource {
 
     @POST
     @Transactional
-    @RolesAllowed("bidder")
+    @RolesAllowed({"admin"})
     public Response create(CreateBidRequest request) {
         Bid bid = bidRepository.create(request);
         return Response.ok(bid).status(201).build();
@@ -65,7 +65,7 @@ public class BidsResource {
 
     @GET
     @Path("user/{user_id}")
-    @RolesAllowed("bidder")
+    @RolesAllowed({"bidder"})
     public List<Bid> getBidsByUserAndAuction(Integer auction_id, Integer user_id) {
         return bidRepository.getByUserAndAuction(auction_id, user_id);
     }
