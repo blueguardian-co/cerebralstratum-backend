@@ -58,11 +58,11 @@ public class AuctionsResource {
     }
 
     @GET
-    @Path("{id}")
-    public Auction getAuction(Integer id) {
-        Auction auction = auctionRepository.getById(id);
+    @Path("{auction_id}")
+    public Auction getAuction(Integer auction_id) {
+        Auction auction = auctionRepository.getById(auction_id);
         if (auction == null) {
-            throw new WebApplicationException("Auction with id of " + id + " does not exist.", 404);
+            throw new WebApplicationException("Auction with id of " + auction_id + " does not exist.", 404);
         }
         return auction;
     }
