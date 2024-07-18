@@ -15,6 +15,8 @@ public interface BidRepository {
 
     public List<Bid> getByUserAndAuction(int auction_id, int user_id);
 
+    public Bid getHighest(int auction_id);
+
     public Bid create(CreateBidRequest request);
 
     public Bid delete(DeleteBidRequest request);

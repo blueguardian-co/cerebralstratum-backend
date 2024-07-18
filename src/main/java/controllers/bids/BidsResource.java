@@ -70,11 +70,9 @@ public class BidsResource {
         return bidRepository.getByUserAndAuction(auction_id, user_id);
     }
 
-    // @SuppressWarnings("unchecked")
-    // @GET
-    // @Path("api/v1/auctions/{id}/bids/highest")
-    // public List<Bids> getAllHighestBids() {
-    //     String sql = "SELECT DISTINCT ON (b.auction_id) b.id, b.auction_id, b.user_id, u.username, u.table_number, b.bid_time, b.bid_amount FROM bids b INNER JOIN user_info u on b.user_id = u.id ORDER BY b.auction_id ASC, b.bid_amount DESC, b.bid_time ASC;";
-    //     return entityManager.createNativeQuery(sql, Bids.class).getResultList();      
-    // }
+    @GET
+    @Path("highest")
+    public Bid getAllHighestBids(Integer auction_id) {
+        return bidRepository.getHighest(auction_id);      
+    }
 }
