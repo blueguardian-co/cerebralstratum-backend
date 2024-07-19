@@ -99,6 +99,12 @@
         <developerConnection>scm:git:https://github.com/ahussey-redhat/silent-auction-demo-backend.git</developerConnection>
       <tag>v1.0.0</tag>
   </scm>
+    <distributionManagement>
+        <repository>
+        <id>ahussey-redhat</id>
+        <url>https://maven.pkg.github.com/ahussey-redhat/silent-auction-demo-backend</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
