@@ -34,7 +34,7 @@ public class UserResource {
 
     @GET
     @Path("users")
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     public List<User> getAllUsers() {
         return userRepository.findAll();        
     }
@@ -42,15 +42,24 @@ public class UserResource {
     @POST
     @Path("users")
     @Transactional
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     public Response create(CreateUserRequest request) {
         User user = userRepository.create(request);
         return Response.ok(user).status(201).build();
     }
 
+    @DELETE
+    @Path("users")
+    @Transactional
+    @RolesAllowed("admin")
+    public Response delete(DeleteUserRequest request) {
+        User user = userRepository.delete(request);
+        return Response.ok(user).status(201).build();
+    }
+
     @GET
     @Path("users/{id}")
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     public User getUser(Integer id) {
         User user = userRepository.getById(id);
         if (user == null) {
@@ -61,7 +70,6 @@ public class UserResource {
 
     @GET
     @Path("me")
-    @RolesAllowed({"bidder"})
     public User getMe() {
         User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
         if (user == null) {

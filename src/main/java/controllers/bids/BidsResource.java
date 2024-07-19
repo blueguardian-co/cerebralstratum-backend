@@ -39,14 +39,14 @@ public class BidsResource {
 
     @POST
     @Transactional
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     public Response create(CreateBidRequest request) {
         Bid bid = bidRepository.create(request);
         return Response.ok(bid).status(201).build();
     }
 
     @DELETE
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     @Transactional
     public Response delete(DeleteBidRequest request) {
         Bid bid = bidRepository.delete(request);
