@@ -34,7 +34,7 @@ public class AuctionsResource {
     }
 
     @POST
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     @Transactional
     public Response create(CreateAuctionRequest request) {
         Auction auction = auctionRepository.create(request);
@@ -43,14 +43,14 @@ public class AuctionsResource {
 
     @PUT
     @Transactional
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     public Response update(UpdateAuctionRequest request) {
         Auction auction = auctionRepository.update(request);
         return Response.ok(auction).status(201).build(); 
     }
 
     @DELETE
-    @RolesAllowed({"admin"})
+    @RolesAllowed("admin")
     @Transactional
     public Response delete(DeleteAuctionRequest request) {
         Auction auction = auctionRepository.delete(request);
