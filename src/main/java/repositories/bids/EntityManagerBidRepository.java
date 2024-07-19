@@ -60,8 +60,9 @@ public class EntityManagerBidRepository implements BidRepository {
         return mapEntityToBid(bid);
     }
 
-    public List<Bid> findAll() {
-        return entityManager.createNamedQuery("BidEntity.findAll", BidEntity.class)
+    public List<Bid> findAll(int auction_id) {
+        return entityManager.createNamedQuery("Bids.findAll", BidEntity.class)
+            .setParameter("auctionId", auction_id)
             .getResultList().stream().map(EntityManagerBidRepository::mapEntityToBid).collect(Collectors.toList());          
     }
 

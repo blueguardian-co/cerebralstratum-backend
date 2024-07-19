@@ -7,7 +7,7 @@ import controllers.bids.DeleteBidRequest;
 
 public interface BidRepository {
 
-    public List<Bid> findAll();
+    public List<Bid> findAll(int auction_id);
 
     public Bid getById(int id);
 

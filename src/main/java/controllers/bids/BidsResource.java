@@ -33,8 +33,8 @@ public class BidsResource {
 
 
     @GET
-    public List<Bid> getAllBids() {
-        return bidRepository.findAll();          
+    public List<Bid> getAllBids(Integer auction_id) {
+        return bidRepository.findAll(auction_id);          
     }
 
     @POST
