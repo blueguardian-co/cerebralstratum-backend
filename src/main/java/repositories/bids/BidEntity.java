@@ -23,7 +23,7 @@ import jakarta.persistence.CascadeType;
 @Table(name = "bids")
 @NamedQuery(
     name = "Bids.findAll",
-    query = "SELECT b FROM BidEntity b ORDER BY b.auction",
+    query = "SELECT b FROM BidEntity b WHERE b.auction.id = :auctionId ORDER BY b.auction",
     hints = @QueryHint(name = "org.hibernate.cacheable",
     value = "true")
 )
