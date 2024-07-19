@@ -1,7 +1,7 @@
 package repositories.bids;
 
 import repositories.auctions.AuctionEntity;
-import api.v1.user.User;
+import repositories.users.UserEntity;
 
 import java.time.LocalDateTime;
 
@@ -58,7 +58,7 @@ public class BidEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private User user;
+    private UserEntity user;
 
     @Column(columnDefinition="timestamp")
     private LocalDateTime bid_time;
@@ -71,7 +71,7 @@ public class BidEntity {
 
     public BidEntity(
         AuctionEntity auction,
-        User user,
+        UserEntity user,
         LocalDateTime bid_time,
         int bid_amount
     ) {
@@ -97,11 +97,11 @@ public class BidEntity {
         this.auction = auction;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 

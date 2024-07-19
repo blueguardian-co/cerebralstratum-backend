@@ -1,4 +1,4 @@
-package api.v1.user;
+package repositories.users;
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
@@ -12,10 +12,10 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "user_info")
-@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u ORDER BY u.username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-@NamedQuery(name = "User.getUser", query = "SELECT u FROM User u WHERE u.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u ORDER BY u.username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "UserEntity.getUser", query = "SELECT u FROM UserEntity u WHERE u.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
 @Cacheable
-public class User {
+public class UserEntity {
 
     @Id
     @SequenceGenerator(name = "userSequence", sequenceName = "user_info_id_seq", allocationSize = 1, initialValue = 10)
@@ -28,10 +28,10 @@ public class User {
     @Column(length = 3)
     private int table_number;
 
-    public User() {
+    public UserEntity() {
     }
 
-    public User(
+    public UserEntity(
         String username,
         int table_number
     ) {

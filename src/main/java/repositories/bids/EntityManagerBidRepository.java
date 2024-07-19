@@ -5,7 +5,7 @@ import controllers.bids.CreateBidRequest;
 import controllers.bids.DeleteBidRequest;
 
 import repositories.auctions.AuctionEntity;
-import api.v1.user.User;
+import repositories.users.UserEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +37,7 @@ public class EntityManagerBidRepository implements BidRepository {
 
     private BidEntity mapCreateRequestToEntity (CreateBidRequest request) {
         AuctionEntity auction =  entityManager.find(AuctionEntity.class, request.auction_id);
-        User user = entityManager.find(User.class, request.user_id);
+        UserEntity user = entityManager.find(UserEntity.class, request.user_id);
         return new BidEntity(
             auction,
             user,
