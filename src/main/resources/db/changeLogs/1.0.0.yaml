@@ -83,8 +83,8 @@ databaseChangeLog:
             constraintName:  fk_auction_id
             deferrable:  true
             initiallyDeferred:  true
-            onDelete:  NULL
-            onUpdate:  RESTRICT
+            onDelete:  CASCADE
+            onUpdate:  CASCADE
             referencedColumnNames:  id
             referencedTableName:  auctions
             referencedTableSchemaName:  auction
@@ -96,8 +96,8 @@ databaseChangeLog:
             constraintName:  fk_user_username
             deferrable:  true
             initiallyDeferred:  true
-            onDelete:  NULL
-            onUpdate:  RESTRICT
+            onDelete:  CASCADE
+            onUpdate:  CASCADE
             referencedColumnNames: id
             referencedTableName:  user_info
             referencedTableSchemaName:  auction

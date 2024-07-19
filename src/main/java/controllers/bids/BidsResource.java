@@ -48,8 +48,8 @@ public class BidsResource {
     @DELETE
     @RolesAllowed("admin")
     @Transactional
-    public Response delete(DeleteBidRequest request) {
-        Bid bid = bidRepository.delete(request);
+    public Response delete(Integer bid_id) {
+        Bid bid = bidRepository.delete(bid_id);
         return Response.ok(bid).status(201).build();
     }
 

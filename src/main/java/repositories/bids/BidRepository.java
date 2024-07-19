@@ -3,7 +3,6 @@ package repositories.bids;
 import java.util.List;
 import controllers.bids.Bid;
 import controllers.bids.CreateBidRequest;
-import controllers.bids.DeleteBidRequest;
 
 public interface BidRepository {
 
@@ -19,6 +18,6 @@ public interface BidRepository {
 
     public Bid create(CreateBidRequest request);
 
-    public Bid delete(DeleteBidRequest request);
+    public Bid delete(int bid_id);
     
 }

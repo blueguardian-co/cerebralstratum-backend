@@ -2,7 +2,6 @@ package repositories.bids;
 
 import controllers.bids.Bid;
 import controllers.bids.CreateBidRequest;
-import controllers.bids.DeleteBidRequest;
 
 import repositories.auctions.AuctionEntity;
 import repositories.users.UserEntity;
@@ -54,8 +53,8 @@ public class EntityManagerBidRepository implements BidRepository {
     }
 
     @Transactional
-    public Bid delete(DeleteBidRequest request) {
-        BidEntity bid = entityManager.find(BidEntity.class, request);
+    public Bid delete(int bid_id) {
+        BidEntity bid = entityManager.find(BidEntity.class, bid_id);
         entityManager.remove(bid);
         return mapEntityToBid(bid);
     }
