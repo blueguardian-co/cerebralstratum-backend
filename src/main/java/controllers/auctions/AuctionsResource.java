@@ -50,10 +50,11 @@ public class AuctionsResource {
     }
 
     @DELETE
+    @Path("{auction_id}")
     @RolesAllowed("admin")
     @Transactional
-    public Response delete(DeleteAuctionRequest request) {
-        Auction auction = auctionRepository.delete(request);
+    public Response delete(Integer auction_id) {
+        Auction auction = auctionRepository.delete(auction_id);
         return Response.ok(auction).status(201).build();
     }
 
