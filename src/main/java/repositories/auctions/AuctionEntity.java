@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "auctions")
-@NamedQuery(name = "AuctionEntity.findAll", query = "SELECT a FROM AuctionEntity a ORDER BY a.item_name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(name = "AuctionEntity.findAll", query = "SELECT a FROM AuctionEntity a ORDER BY a.item_name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
 @Cacheable
 public class AuctionEntity {
 
