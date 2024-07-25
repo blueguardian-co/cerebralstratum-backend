@@ -71,10 +71,11 @@ public class UserResource {
     @GET
     @Path("me")
     public User getMe() {
-        User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
-        if (user == null) {
+        try {
+            User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
+            return user;
+        } catch (Exception e) {
             throw new WebApplicationException("User mapping does not exist.", 404);
         }
-        return user;
     }
 }
