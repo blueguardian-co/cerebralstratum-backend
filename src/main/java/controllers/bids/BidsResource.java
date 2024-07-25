@@ -39,8 +39,8 @@ public class BidsResource {
     @POST
     @Transactional
     @RolesAllowed("admin")
-    public Response create(CreateBidRequest request) {
-        Bid bid = bidRepository.create(request);
+    public Response create(Integer auction_id, CreateBidRequest request) {
+        Bid bid = bidRepository.create(auction_id, request);
         return Response.ok(bid).status(201).build();
     }
 

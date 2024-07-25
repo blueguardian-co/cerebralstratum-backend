@@ -34,8 +34,8 @@ public class EntityManagerBidRepository implements BidRepository {
         );
     }
 
-    private BidEntity mapCreateRequestToEntity (CreateBidRequest request) {
-        AuctionEntity auction =  entityManager.find(AuctionEntity.class, request.auction_id);
+    private BidEntity mapCreateRequestToEntity (int auction_id, CreateBidRequest request) {
+        AuctionEntity auction =  entityManager.find(AuctionEntity.class, auction_id);
         UserEntity user = entityManager.find(UserEntity.class, request.user_id);
         return new BidEntity(
             auction,
@@ -46,8 +46,8 @@ public class EntityManagerBidRepository implements BidRepository {
     }
 
     @Transactional
-    public Bid create(CreateBidRequest request) {
-        BidEntity newBid = mapCreateRequestToEntity(request);
+    public Bid create(int auction_id, CreateBidRequest request) {
+        BidEntity newBid = mapCreateRequestToEntity(auction_id, request);
         entityManager.persist(newBid);
         return mapEntityToBid(newBid);
     }
