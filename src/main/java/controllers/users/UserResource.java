@@ -36,7 +36,7 @@ public class UserResource {
     @Path("users")
     @RolesAllowed("admin")
     public List<User> getAllUsers() {
-        return userRepository.findAll();        
+        return userRepository.findAll();
     }
 
     @POST
@@ -58,10 +58,10 @@ public class UserResource {
     }
 
     @GET
-    @Path("users/{id}")
+    @Path("users/{user_id}")
     @RolesAllowed("admin")
-    public User getUser(Integer id) {
-        User user = userRepository.getById(id);
+    public User getUser(Integer user_id) {
+        User user = userRepository.getById(user_id);
         if (user == null) {
             throw new WebApplicationException("User does not exist.", 404);
         }
