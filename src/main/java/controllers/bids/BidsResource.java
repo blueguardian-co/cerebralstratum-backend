@@ -20,7 +20,7 @@ import jakarta.annotation.security.RolesAllowed;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
-@Path("/api/v1/auction/{auction_id}/bids")
+@Path("/api/v1/auctions/{auction_id}/bids")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,10 +31,9 @@ public class BidsResource {
     @Inject
     BidRepository bidRepository;
 
-
     @GET
     public List<Bid> getAllBids(Integer auction_id) {
-        return bidRepository.findAll(auction_id);          
+        return bidRepository.findAll(auction_id);
     }
 
     @POST
@@ -65,7 +64,7 @@ public class BidsResource {
 
     @GET
     @Path("user/{user_id}")
-    @RolesAllowed({"bidder"})
+    @RolesAllowed({ "bidder" })
     public List<Bid> getBidsByUserAndAuction(Integer auction_id, Integer user_id) {
         return bidRepository.getByUserAndAuction(auction_id, user_id);
     }
@@ -73,6 +72,6 @@ public class BidsResource {
     @GET
     @Path("highest")
     public Bid getAllHighestBids(Integer auction_id) {
-        return bidRepository.getHighest(auction_id);      
+        return bidRepository.getHighest(auction_id);
     }
 }
