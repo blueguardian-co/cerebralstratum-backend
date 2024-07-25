@@ -53,11 +53,11 @@ public class BidsResource {
     }
 
     @GET
-    @Path("{id}")
-    public Bid getBid(Integer id) {
-        Bid bid = bidRepository.getById(id);
+    @Path("{bid_id}")
+    public Bid getBid(Integer bid_id) {
+        Bid bid = bidRepository.getById(bid_id);
         if (bid == null) {
-            throw new WebApplicationException("Bid with id of " + id + " does not exist.", 404);
+            throw new WebApplicationException("Bid with id of " + bid_id + " does not exist.", 404);
         }
         return bid;
     }
