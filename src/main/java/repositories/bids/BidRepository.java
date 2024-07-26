@@ -16,7 +16,7 @@ public interface BidRepository {
 
     public Bid getHighest(int auction_id);
 
-    public Bid create(int auction_id, CreateBidRequest request);
+    public Bid create(int auction_id, String username, CreateBidRequest request);
 
     public Bid delete(int bid_id);
     
