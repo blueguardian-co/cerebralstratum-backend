@@ -20,6 +20,8 @@ import jakarta.annotation.security.RolesAllowed;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
 @Path("/api/v1")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,6 +30,9 @@ public class UserResource {
 
     @Inject
     SecurityIdentity securityIdentity;
+
+    @Inject
+    JsonWebToken jwt;
 
     @Inject
     UserRepository userRepository;
@@ -86,6 +91,8 @@ public class UserResource {
         User user = userRepository.create(
                 new CreateUserRequest(
                         securityIdentity.getPrincipal().getName(),
+                        jwt.getClaim("given_name").toString(),
+                        jwt.getClaim("family_name").toString(),
                         request.table_number));
         return Response.ok(user).status(201).build();
     }
