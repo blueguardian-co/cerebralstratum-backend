@@ -47,14 +47,14 @@ public class BidsResource {
     @DELETE
     @RolesAllowed("admin")
     @Transactional
-    public Response delete(Integer bid_id) {
+    public Response delete(Integer auction_id, Integer bid_id) {
         Bid bid = bidRepository.delete(bid_id);
         return Response.ok(bid).status(201).build();
     }
 
     @GET
     @Path("{bid_id}")
-    public Bid getBid(Integer bid_id) {
+    public Bid getBid(Integer auction_id, Integer bid_id) {
         Bid bid = bidRepository.getById(bid_id);
         if (bid == null) {
             throw new WebApplicationException("Bid with id of " + bid_id + " does not exist.", 404);
