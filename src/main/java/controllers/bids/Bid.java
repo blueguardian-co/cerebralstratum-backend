@@ -10,13 +10,15 @@ public class Bid {
     public LocalDateTime bid_time;
     public int bid_amount;
 
+    public Bid() {
+    }
+
     public Bid(
-        int id,
-        int auction_id,
-        int user_id,
-        LocalDateTime bid_time,
-        int bid_amount
-    ) {
+            int id,
+            int auction_id,
+            int user_id,
+            LocalDateTime bid_time,
+            int bid_amount) {
         this.id = id;
         this.auction_id = auction_id;
         this.user_id = user_id;
