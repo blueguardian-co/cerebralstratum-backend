@@ -8,6 +8,7 @@ import repositories.users.UserEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
@@ -34,20 +35,23 @@ public class EntityManagerBidRepository implements BidRepository {
         );
     }
 
-    private BidEntity mapCreateRequestToEntity (int auction_id, CreateBidRequest request) {
+    private BidEntity mapCreateRequestToEntity (int auction_id, String username, CreateBidRequest request) {
         AuctionEntity auction =  entityManager.find(AuctionEntity.class, auction_id);
-        UserEntity user = entityManager.find(UserEntity.class, request.user_id);
+        UserEntity user = entityManager.createNamedQuery("UserEntity.getUser", UserEntity.class)
+        .setParameter("username", username)
+        .getSingleResult();
+        LocalDateTime bid_time = LocalDateTime.now();
         return new BidEntity(
             auction,
             user,
-            request.bid_time,
+            bid_time,
             request.bid_amount
         );
     }
 
     @Transactional
-    public Bid create(int auction_id, CreateBidRequest request) {
-        BidEntity newBid = mapCreateRequestToEntity(auction_id, request);
+    public Bid create(int auction_id, String username, CreateBidRequest request) {
+        BidEntity newBid = mapCreateRequestToEntity(auction_id, username, request);
         entityManager.persist(newBid);
         return mapEntityToBid(newBid);
     }
