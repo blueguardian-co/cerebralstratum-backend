@@ -78,4 +78,15 @@ public class UserResource {
             throw new WebApplicationException("User mapping does not exist.", 404);
         }
     }
+
+    @POST
+    @Path("me")
+    @Transactional
+    public Response createMe(CreateMeRequest request) {
+        User user = userRepository.create(
+                new CreateUserRequest(
+                        securityIdentity.getPrincipal().getName(),
+                        request.table_number));
+        return Response.ok(user).status(201).build();
+    }
 }
