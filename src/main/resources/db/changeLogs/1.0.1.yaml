@@ -1,0 +1,17 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: ahussey
+      qcontext: silent-auction
+      comment: add new user columns
+      changes:
+        - addColumn:
+            tableName: user_info
+            columns:
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)

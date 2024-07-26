@@ -25,6 +25,8 @@ public class EntityManagerUserRepository implements UserRepository {
         return new User(
             user.getId(),
             user.getUsername(),
+            user.getFirst_name(),
+            user.getLast_name(),
             user.getTable_number()
         );
     }
@@ -32,6 +34,8 @@ public class EntityManagerUserRepository implements UserRepository {
     private static UserEntity mapCreateRequestToEntity (CreateUserRequest request) {
         return new UserEntity(
             request.username,
+            request.first_name,
+            request.last_name,
             request.table_number
         );
     }
@@ -39,6 +43,8 @@ public class EntityManagerUserRepository implements UserRepository {
     private static UserEntity mapUpdateRequestToEntity (UpdateUserRequest request) {
         return new UserEntity(
             request.username,
+            request.first_name,
+            request.last_name,
             request.table_number
         );
     }

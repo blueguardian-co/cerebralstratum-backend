@@ -25,6 +25,12 @@ public class UserEntity {
     @Column(length = 255, unique = true)
     private String username;
 
+    @Column(length = 255, unique = true)
+    private String first_name;
+
+    @Column(length = 255, unique = true)
+    private String last_name;
+
     @Column(length = 3)
     private int table_number;
 
@@ -33,9 +39,13 @@ public class UserEntity {
 
     public UserEntity(
         String username,
+        String first_name,
+        String last_name,
         int table_number
     ) {
         this.username = username;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.table_number = table_number;
     }
 
@@ -53,6 +63,22 @@ public class UserEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public int getTable_number() {
