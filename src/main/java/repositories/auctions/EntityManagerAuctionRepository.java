@@ -27,6 +27,7 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
             auction.getDescription(),
             auction.getAuction_start(),
             auction.getAuction_end(),
+            auction.getStarting_bid(),
             auction.getImage_path()
         );
     }
@@ -37,6 +38,7 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
             request.description,
             request.auction_start,
             request.auction_end,
+            request.starting_bid,
             request.image_path
         );
     }
@@ -47,6 +49,7 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
             request.description,
             request.auction_start,
             request.auction_end,
+            request.starting_bid,
             request.image_path
         );
     }
@@ -78,20 +81,6 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
     @Transactional
     public Auction update(UpdateAuctionRequest request) {
         AuctionEntity updateAuction = mapUpdateRequestToEntity(request);
-
-        // List<User> oidcUserIdList = entityManager.createNamedQuery("User.getUser", User.class)
-        //     .setParameter("username", securityIdentity.getPrincipal().getName())
-        //     .getResultList();
-
-        // // Get requesting user's ID from the user_info table
-        // int oidcUserId = oidcUserIdList.get(0).getId();
-
-        // // Get the requested bid user's ID
-        // int bidUserId = bid.getUser().getId();
-
-        // if (oidcUserId != bidUserId) {
-        //     throw new WebApplicationException("You can only update bids on your own behalf.", 403);
-        // }
         entityManager.merge(updateAuction);
         return mapEntityToAuction(updateAuction);
     }

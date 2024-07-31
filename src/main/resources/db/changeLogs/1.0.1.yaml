@@ -3,8 +3,8 @@ databaseChangeLog:
   - changeSet:
       id: 2
       author: ahussey
-      qcontext: silent-auction
-      comment: add new user columns
+      context: silent-auction
+      comment: add new user columns, and starting bid column
       changes:
         - addColumn:
             tableName: user_info
@@ -15,3 +15,9 @@ databaseChangeLog:
               - column:
                   name: last_name
                   type: varchar(255)
+        - addColumn:
+            tableName: auctions
+            columns:
+              - column:
+                  name: starting_bid
+                  type: int
