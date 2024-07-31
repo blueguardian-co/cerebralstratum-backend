@@ -13,7 +13,8 @@ public class CreateUserRequest {
             String username,
             String first_name,
             String last_name,
-            int table_number) {
+            int table_number
+    ) {
         this.username = username;
         this.first_name = first_name;
         this.last_name = last_name;

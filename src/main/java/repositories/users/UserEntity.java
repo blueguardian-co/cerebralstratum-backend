@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(length = 255, unique = true)
     private String last_name;
 
-    @Column(length = 3)
+    @Column
     private int table_number;
 
     public UserEntity() {

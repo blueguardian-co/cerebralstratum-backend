@@ -9,11 +9,11 @@ public class User {
     public int table_number;
 
     public User (
-        int id,
-        String username,
-        String first_name,
-        String last_name,
-        int table_number
+            int id,
+            String username,
+            String first_name,
+            String last_name,
+            int table_number
     ) {
         this.id = id;
         this.username = username;
