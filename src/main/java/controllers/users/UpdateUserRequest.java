@@ -15,7 +15,8 @@ public class UpdateUserRequest {
             String username,
             String first_name,
             String last_name,
-            int table_number) {
+            int table_number
+    ) {
         this.user_id = user_id;
         this.username = username;
         this.first_name = first_name;

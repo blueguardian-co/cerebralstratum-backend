@@ -7,7 +7,8 @@ public class DeleteUserRequest {
     }
 
     public DeleteUserRequest(
-            int user_id) {
+            int user_id
+    ) {
         this.user_id = user_id;
     }
 }
