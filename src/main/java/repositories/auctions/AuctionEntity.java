@@ -35,6 +35,9 @@ public class AuctionEntity {
     @Column(columnDefinition="timestamp")
     private LocalDateTime auction_end;
 
+    @Column
+    private Integer starting_bid;
+
     @Column(length = 255)
     private String image_path;
 
@@ -46,12 +49,14 @@ public class AuctionEntity {
         String description,
         LocalDateTime auction_start,
         LocalDateTime auction_end,
+        Integer starting_bid,
         String image_path
     ) {
         this.item_name = item_name;
         this.description = description;
         this.auction_start = auction_start;
         this.auction_end = auction_end;
+        this.starting_bid = starting_bid;
         this.image_path = image_path;
     }
 
@@ -94,6 +99,10 @@ public class AuctionEntity {
     public void setAuction_end(LocalDateTime auction_end) {
         this.auction_end = auction_end;
     }
+
+    public Integer getStarting_bid() { return starting_bid; }
+
+    public void setStarting_bid(Integer starting_bid) { this.starting_bid = starting_bid; }
 
     public String getImage_path() {
         return image_path;
