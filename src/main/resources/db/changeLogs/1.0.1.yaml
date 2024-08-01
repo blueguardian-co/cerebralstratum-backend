@@ -21,3 +21,18 @@ databaseChangeLog:
               - column:
                   name: starting_bid
                   type: int
+        -  createSequence:
+             incrementBy:  1
+             schemaName:  auction
+             sequenceName:  auctions_id_seq
+             startValue:  1
+        -  createSequence:
+             incrementBy:  1
+             schemaName:  auction
+             sequenceName:  bids_id_seq
+             startValue:  1
+        -  createSequence:
+             incrementBy:  1
+             schemaName:  auction
+             sequenceName:  user_info_id_seq
+             startValue:  1
