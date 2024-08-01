@@ -48,7 +48,7 @@ import jakarta.persistence.CascadeType;
 @Cacheable
 public class BidEntity {
     @Id
-    @SequenceGenerator(name = "bidsSequence", sequenceName = "bids_id_seq", allocationSize = 1, initialValue = 10)
+    @SequenceGenerator(name = "bidsSequence", sequenceName = "bids_id_seq", schema = "auction", allocationSize = 1)
     @GeneratedValue(generator = "bidsSequence")
     private int id;
 
