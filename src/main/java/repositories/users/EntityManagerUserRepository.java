@@ -33,10 +33,10 @@ public class EntityManagerUserRepository implements UserRepository {
 
     private static UserEntity mapCreateRequestToEntity (CreateUserRequest request) {
         return new UserEntity(
-            request.username,
-            request.first_name,
-            request.last_name,
-            request.table_number
+                request.username,
+                request.first_name,
+                request.last_name,
+                request.table_number
         );
     }
 
@@ -60,17 +60,26 @@ public class EntityManagerUserRepository implements UserRepository {
     }
 
     public User getByUsername(String username) {
-        UserEntity user = entityManager.createNamedQuery("UserEntity.getUser", UserEntity.class)
-            .setParameter("username", username)
-            .getSingleResult();
-        return mapEntityToUser(user);
+        try {
+            UserEntity user = entityManager.createNamedQuery("UserEntity.getUser", UserEntity.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            return mapEntityToUser(user);
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
+        }
     }
 
     @Transactional
     public User create(CreateUserRequest request) {
-        UserEntity newUser = mapCreateRequestToEntity(request);
-        entityManager.persist(newUser);
-        return mapEntityToUser(newUser);
+        User user = getByUsername(request.username);
+        if (user != null) {
+            return user;
+        } else {
+            UserEntity newUser = mapCreateRequestToEntity(request);
+            entityManager.persist(newUser);
+            return mapEntityToUser(newUser);
+        }
     }
 
     @Transactional
@@ -83,20 +92,6 @@ public class EntityManagerUserRepository implements UserRepository {
     @Transactional
     public User update(UpdateUserRequest request) {
         UserEntity updateUser = mapUpdateRequestToEntity(request);
-
-        // List<User> oidcUserIdList = entityManager.createNamedQuery("User.getUser", User.class)
-        //     .setParameter("username", securityIdentity.getPrincipal().getName())
-        //     .getResultList();
-
-        // // Get requesting user's ID from the user_info table
-        // int oidcUserId = oidcUserIdList.get(0).getId();
-
-        // // Get the requested bid user's ID
-        // int bidUserId = bid.getUser().getId();
-
-        // if (oidcUserId != bidUserId) {
-        //     throw new WebApplicationException("You can only update bids on your own behalf.", 403);
-        // }
         entityManager.merge(updateUser);
         return mapEntityToUser(updateUser);
     }
