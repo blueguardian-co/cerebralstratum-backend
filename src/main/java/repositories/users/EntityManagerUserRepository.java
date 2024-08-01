@@ -60,6 +60,9 @@ public class EntityManagerUserRepository implements UserRepository {
     }
 
     public User getByUsername(String username) {
+        if (username == null || username.isEmpty()) {
+            return null;
+        }
         try {
             UserEntity user = entityManager.createNamedQuery("UserEntity.getUser", UserEntity.class)
                     .setParameter("username", username)
