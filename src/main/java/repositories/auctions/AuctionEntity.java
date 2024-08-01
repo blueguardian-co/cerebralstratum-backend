@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 public class AuctionEntity {
 
     @Id
-    @SequenceGenerator(name = "auctionsSequence", sequenceName = "auctions_id_seq", allocationSize = 1, initialValue = 10)
+    @SequenceGenerator(name = "auctionsSequence", sequenceName = "auctions_id_seq", schema = "auction", allocationSize = 1)
     @GeneratedValue(generator = "auctionsSequence")
     private Integer id;
 
