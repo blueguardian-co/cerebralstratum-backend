@@ -78,7 +78,7 @@ public class UserResource {
     public Response getMe() {
         User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
         if (user != null) {
-            return Response.ok(user).status(201).build();
+            return Response.ok(user).status(200).build();
         } else {
             throw new WebApplicationException("User mapping does not exist.", 404);
         }
