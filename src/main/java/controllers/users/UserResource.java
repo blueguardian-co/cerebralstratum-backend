@@ -76,10 +76,10 @@ public class UserResource {
     @GET
     @Path("me")
     public Response getMe() {
-        try {
-            User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
+        User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
+        if (user != null) {
             return Response.ok(user).status(201).build();
-        } catch (Exception e) {
+        } else {
             throw new WebApplicationException("User mapping does not exist.", 404);
         }
     }
