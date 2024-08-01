@@ -1,1 +1,2 @@
 CREATE SCHEMA IF NOT EXISTS auction;
+ALTER SCHEMA auction OWNER TO quarkus;
