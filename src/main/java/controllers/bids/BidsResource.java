@@ -73,7 +73,7 @@ public class BidsResource {
     @Path("highest")
     public Bid getAllHighestBids(Integer auction_id) {
         try {
-            return bidRepository.getHighest(auction_id);
+            return bidRepository.getHighestByAuction(auction_id);
         } catch (Exception e) {
             throw new WebApplicationException("No bids exist on auction.", 404);
         }

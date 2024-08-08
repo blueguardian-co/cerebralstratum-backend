@@ -74,12 +74,18 @@ public class EntityManagerBidRepository implements BidRepository {
         return mapEntityToBid(bid);
     }
 
-    public Bid getHighest(int auction_id) {
-        return mapEntityToBid(entityManager.createNamedQuery("Bids.highest", BidEntity.class)
+    public Bid getHighestByAuction(int auction_id) {
+        return mapEntityToBid(entityManager.createNamedQuery("Bids.highestByAuction", BidEntity.class)
             .setParameter("auctionId", auction_id)
             .getSingleResult()
         );
     }
+
+    public List<Bid> getHighestAllAuctions() {
+        return entityManager.createNamedQuery("Bids.highestAllAuctions", BidEntity.class)
+                .getResultList().stream().map(EntityManagerBidRepository::mapEntityToBid).collect(Collectors.toList());
+    }
+
     public List<Bid> getByUser(int user_id) {
         return entityManager.createNamedQuery("Bids.byUser", BidEntity.class)
             .setParameter("userId", user_id)

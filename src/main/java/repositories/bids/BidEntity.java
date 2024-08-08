@@ -38,13 +38,20 @@ import jakarta.persistence.CascadeType;
     hints = @QueryHint(name = "org.hibernate.cacheable", value = "true")
 )
 @NamedNativeQuery(
-    name="Bids.highest", 
+    name="Bids.highestByAuction",
     query = "SELECT DISTINCT ON (b.auction_id) b.id, b.auction_id, b.user_id, b.bid_time, b.bid_amount "
         + "FROM bids b "
         + "WHERE b.auction_id = :auctionId "
         + "ORDER BY b.auction_id ASC, b.bid_amount DESC, b.bid_time ASC;", 
     resultClass = BidEntity.class
  )
+@NamedNativeQuery(
+    name="Bids.highestAllAuctions",
+    query = "SELECT DISTINCT ON (b.auction_id) b.id, b.auction_id, b.user_id, b.bid_time, b.bid_amount "
+            + "FROM bids b "
+            + "ORDER BY b.auction_id ASC, b.bid_amount DESC, b.bid_time ASC;",
+    resultClass = BidEntity.class
+)
 @Cacheable
 public class BidEntity {
     @Id
