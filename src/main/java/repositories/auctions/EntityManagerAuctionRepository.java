@@ -43,15 +43,25 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
         );
     }
 
-    private static AuctionEntity mapUpdateRequestToEntity (UpdateAuctionRequest request) {
-        return new AuctionEntity(
-            request.item_name,
-            request.description,
-            request.auction_start,
-            request.auction_end,
-            request.starting_bid,
-            request.image_path
-        );
+    private static void updateRequestToEntity (AuctionEntity auction, UpdateAuctionRequest request) {
+        if (!request.item_name.isEmpty()) {
+            auction.setItem_name(request.item_name);
+        }
+        if (!request.description.isEmpty()) {
+            auction.setDescription(request.description);
+        }
+        if (request.auction_start != null) {
+           auction.setAuction_start(request.auction_start);
+        }
+        if (request.auction_end != null) {
+            auction.setAuction_end(request.auction_end);
+        }
+        if (request.starting_bid != null) {
+            auction.setStarting_bid(request.starting_bid);
+        }
+        if (!request.image_path.isEmpty()) {
+            auction.setImage_path(request.image_path);
+        }
     }
 
     public List<Auction> findAll() {
@@ -80,9 +90,10 @@ public class EntityManagerAuctionRepository implements AuctionRepository {
 
     @Transactional
     public Auction update(UpdateAuctionRequest request) {
-        AuctionEntity updateAuction = mapUpdateRequestToEntity(request);
-        entityManager.merge(updateAuction);
-        return mapEntityToAuction(updateAuction);
+        AuctionEntity auction = entityManager.find(AuctionEntity.class, request.id);
+        updateRequestToEntity(auction, request);
+        entityManager.merge(auction);
+        return mapEntityToAuction(auction);
     }
     
 }
