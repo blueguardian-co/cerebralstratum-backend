@@ -3,12 +3,14 @@ package controllers.auctions;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import repositories.auctions.AuctionRepository;
+import repositories.bids.BidRepository;
+import repositories.users.UserRepository;
 import controllers.bids.Bid;
+import controllers.users.User;
 
 import io.quarkus.websockets.next.*;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.inject.Inject;
-import repositories.bids.BidRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -17,13 +19,15 @@ import java.util.List;
 @ApplicationScoped
 @WebSocket(path = "/api/v1/auctions/ws")
 public class AuctionWebSocket {
-    public enum MessageType {ALL_AUCTIONS, ALL_AUCTIONS_HIGHEST_BIDS, AUCTION_NOTIFICATION}
+    public enum MessageType {ALL_AUCTIONS, ALL_AUCTIONS_HIGHEST_BIDS, AUCTION_NOTIFICATION, TEXT_MESSAGE}
 
     public record AllAuctions(MessageType type, List<Auction> auctions) {
     }
     public record AllAuctionsHighestBids(MessageType type, List<Bid> bids) {
     }
     public record AuctionNotification(MessageType type, Integer auction_id, String message) {
+    }
+    public record TextMessage(MessageType type, String message){
     }
 
     @Inject
@@ -35,9 +39,17 @@ public class AuctionWebSocket {
     @Inject
     BidRepository bidRepository;
 
+    @Inject
+    UserRepository userRepository;
+
     @OnOpen(broadcast = true)
     public AllAuctions onOpen() {
         return new AllAuctions(MessageType.ALL_AUCTIONS, auctionRepository.findAll());
+    }
+
+    @OnTextMessage(broadcast = true)
+    public TextMessage onTextMessage(TextMessage message) {
+        return message;
     }
 
     @OnClose
@@ -51,15 +63,22 @@ public class AuctionWebSocket {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         for (Auction auction : allAuctions) {
-            if (auction.auction_start.isEqual(now)) {
-                auctionNotificationBroadcast(auction, now + ": Auction " + auction.item_name + " is now open for bidding. (" + auction.auction_start + ")");
-            } else if (auction.auction_start.isBefore(now.plusMinutes(5)) && auction.auction_start.isAfter(now)) {
-                auctionNotificationBroadcast(auction, "Auction " + auction.item_name + " is open for bidding within the next five minutes.");
+            if (auction.auction_start == now) {
+                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " is now open for bidding. (" + auction.auction_start + "Z)");
+            } else if (auction.auction_start.isAfter(now) && auction.auction_start.isBefore(now.plusMinutes(5))) {
+                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " will be open for bidding within the next five minutes. (" + auction.auction_start + "Z)");
             }
-            if (auction.auction_end.isEqual(now)) {
-                auctionNotificationBroadcast(auction, now + ": Auction " + auction.item_name + " is now closed. (" + auction.auction_end + ")");
-            } else if (auction.auction_end.isAfter(now.plusMinutes(5)) && auction.auction_end.isAfter(now)) {
-                auctionNotificationBroadcast(auction, "Auction " + auction.item_name + " closes within the next five minutes.");
+            if (auction.auction_end == now) {
+                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " is now closed. (" + auction.auction_end + "Z)");
+                try {
+                    Bid winningBid = bidRepository.getHighestByAuction(auction.id);
+                    User winningUser = userRepository.getById(winningBid.user_id);
+                    auctionNotificationBroadcast(auction, "[" + now + "] Congratulations " + winningUser.first_name + " " + winningUser.last_name + " on winning " + auction.item_name + "!!!");
+                } catch (Exception e) {
+                    auctionNotificationBroadcast(auction, "[" + now + "] No bids placed on auction " + auction.item_name);
+                }
+            } else if (auction.auction_end.isAfter(now) && auction.auction_end.isBefore(now.plusMinutes(5))) {
+                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " closes within the next five minutes. (" + auction.auction_end + "Z)");
             }
         }
     }
@@ -84,10 +103,13 @@ public class AuctionWebSocket {
     // Eventually, rather than scheduled, we trigger on a bid being placed
     @Scheduled(every = "${schedule.all-auctions-highest-bids:5s}")
     public void highestBidsBroadcast() {
-        for (WebSocketConnection c : openConnections) {
-            c.sendTextAndAwait(
-                    new AllAuctionsHighestBids(MessageType.ALL_AUCTIONS_HIGHEST_BIDS, bidRepository.getHighestAllAuctions())
-            );
+        List<Bid> highestBidForEachAuction = bidRepository.getHighestAllAuctions();
+        if (!highestBidForEachAuction.isEmpty()) {
+            for (WebSocketConnection c : openConnections) {
+                c.sendTextAndAwait(
+                        new AllAuctionsHighestBids(MessageType.ALL_AUCTIONS_HIGHEST_BIDS, highestBidForEachAuction)
+                );
+            }
         }
     }
 }
