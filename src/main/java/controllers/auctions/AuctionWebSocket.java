@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @ApplicationScoped
@@ -60,25 +61,28 @@ public class AuctionWebSocket {
     @Scheduled(every = "1m")
     public void processAuctionStatus() {
         List<Auction> allAuctions = auctionRepository.findAll();
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MINUTES);
 
         for (Auction auction : allAuctions) {
-            if (auction.auction_start == now) {
-                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " is now open for bidding. (" + auction.auction_start + "Z)");
-            } else if (auction.auction_start.isAfter(now) && auction.auction_start.isBefore(now.plusMinutes(5))) {
-                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " will be open for bidding within the next five minutes. (" + auction.auction_start + "Z)");
+            LocalDateTime auction_start = auction.auction_start.truncatedTo(ChronoUnit.MINUTES);
+            LocalDateTime auction_end = auction.auction_end.truncatedTo(ChronoUnit.MINUTES);
+
+            if (auction_start.isEqual(now)) {
+                auctionNotificationBroadcast(auction, "Auction for " + auction.item_name + " is now open for bidding.");
+            } else if (auction_start.isAfter(now) && auction_start.isBefore(now.plusMinutes(5))) {
+                auctionNotificationBroadcast(auction, "Auction for " + auction.item_name + " will be open for bidding within the next five minutes.");
             }
-            if (auction.auction_end == now) {
-                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " is now closed. (" + auction.auction_end + "Z)");
+            if (auction_end.isEqual(now)) {
+                auctionNotificationBroadcast(auction, "Auction for " + auction.item_name + " is now closed.");
                 try {
                     Bid winningBid = bidRepository.getHighestByAuction(auction.id);
                     User winningUser = userRepository.getById(winningBid.user_id);
-                    auctionNotificationBroadcast(auction, "[" + now + "] Congratulations " + winningUser.first_name + " " + winningUser.last_name + " on winning " + auction.item_name + "!!!");
+                    auctionNotificationBroadcast(auction, "Congratulations " + winningUser.first_name + " " + winningUser.last_name + " on winning " + auction.item_name + "!!!");
                 } catch (Exception e) {
                     auctionNotificationBroadcast(auction, "[" + now + "] No bids placed on auction " + auction.item_name);
                 }
-            } else if (auction.auction_end.isAfter(now) && auction.auction_end.isBefore(now.plusMinutes(5))) {
-                auctionNotificationBroadcast(auction, "[" + now + "] Auction for " + auction.item_name + " closes within the next five minutes. (" + auction.auction_end + "Z)");
+            } else if (auction_end.isAfter(now) && auction_end.isBefore(now.plusMinutes(5))) {
+                auctionNotificationBroadcast(auction, "Auction for " + auction.item_name + " closes within the next five minutes.");
             }
         }
     }
