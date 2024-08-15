@@ -8,7 +8,8 @@ metadata:
     pipelinesascode.tekton.dev/on-target-branch: "[main]"
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
-    pipelinesascode.tekton.dev/task-2: '[https://github.com/ahussey-redhat/silent-auction-demo-infra/blob/main/.tekton/tasks/deploy.yaml]'
+    pipelinesascode.tekton.dev/task-2: '[https://github.com/ahussey-redhat/silent-auction-demo-infra/blob/main/.tekton/tasks/mvnw-build.yaml]'
+    pipelinesascode.tekton.dev/task-3: '[https://github.com/ahussey-redhat/silent-auction-demo-infra/blob/main/.tekton/tasks/deploy.yaml]'
     pipelinesascode.tekton.dev/max-keep-runs: "5"
 spec:
   params:
@@ -46,11 +47,19 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.revision)
+      - name: build-native-binary
+        taskRef:
+          name: mvnw-build
+        workspaces:
+          - name: output
+            workspace: source
+        runAfter:
+          - fetch-repository
       - name: build-image
         taskRef:
           name: buildah
         runAfter:
-          - fetch-repository
+          - build-native-binary
         workspaces:
           - name: source
             workspace: source
