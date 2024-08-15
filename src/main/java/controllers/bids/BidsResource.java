@@ -1,7 +1,11 @@
 package controllers.bids;
 
+import repositories.auctions.AuctionRepository;
+import controllers.auctions.Auction;
 import repositories.bids.BidRepository;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.inject.Inject;
@@ -30,6 +34,8 @@ public class BidsResource {
     SecurityIdentity securityIdentity;
     @Inject
     BidRepository bidRepository;
+    @Inject
+    AuctionRepository auctionRepository;
 
     @GET
     public List<Bid> getAllBids(Integer auction_id) {
@@ -40,8 +46,14 @@ public class BidsResource {
     @Transactional
     public Response create(Integer auction_id, CreateBidRequest request) {
         String username = securityIdentity.getPrincipal().getName();
-        Bid bid = bidRepository.create(auction_id, username, request);
-        return Response.ok(bid).status(201).build();
+        LocalDateTime now = LocalDateTime.now();
+        Auction auction = auctionRepository.getById(auction_id);
+        if ((now.isAfter(auction.auction_start) || now.isEqual(auction.auction_start)) && now.isBefore(auction.auction_end)) {
+            Bid bid = bidRepository.create(auction_id, username, request);
+            return Response.ok(bid).status(201).build();
+        } else {
+            throw new WebApplicationException("Auction: " + auction.item_name + " is closed. Bid rejected.", 406);
+        }
     }
 
     @DELETE
