@@ -112,7 +112,7 @@ spec:
               storage: 1Gi
     - name: dockerconfig-ws
       secret:
-        secretName: quay-robot-pull-secret-string
+        secretName: pull-secret
     - name: basic-auth
       secret:
         secretName: '{{ git_auth_secret }}'
