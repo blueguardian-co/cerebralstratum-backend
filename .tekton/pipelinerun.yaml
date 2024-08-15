@@ -6,7 +6,9 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
     pipelinesascode.tekton.dev/on-target-branch: "[main]"
-    pipelinesascode.tekton.dev/task: "git-clone"
+    pipelinesascode.tekton.dev/task: 'git-clone'
+    pipelinesascode.tekton.dev/task-1: 'buildah'
+    pipelinesascode.tekton.dev/task-2: '[https://github.com/ahussey-redhat/silent-auction-demo-infra/blob/main/.tekton/tasks/deploy.yaml]'
     pipelinesascode.tekton.dev/max-keep-runs: "5"
 spec:
   params:
@@ -15,14 +17,20 @@ spec:
     - name: revision
       value: "{{ revision }}"
     - name: image
-      value: quay.io/ahussey/silent-auction/backend:latest
+      value: quay.io/ahussey/silent-auction/backend
+    - name: argocd-git-url
+      value: git@github.com:ahussey-redhat/silent-auction-demo-infra.git
   pipelineSpec:
+    taskRunTemplate:
+      serviceAccountName: pipeline
     params:
       - name: repo_url
       - name: revision
       - name: image
+      - name: argocd-git-url
     workspaces:
       - name: source
+      - name: argocd_source
       - name: basic-auth
     tasks:
       - name: fetch-repository
@@ -40,16 +48,51 @@ spec:
             value: $(params.revision)
       - name: build-image
         taskRef:
-          name: s2i-java
-          kind: ClusterTask
+          name: buildah
         runAfter:
           - fetch-repository
         workspaces:
           - name: source
             workspace: source
+          - name: dockerconfig
+            workspace: dockerconfig-ws
         params:
           - name: IMAGE
             value: $(params.image)
+          - name: DOCKERFILE
+            value: src/main/docker/Dockerfile.native
+      - name: git-clone-argocd-repo
+        taskRef:
+          kind: ClusterTask
+          name: git-clone
+        params:
+          - name: url
+            value: '$(params.argocd-git-url)'
+          - name: revision
+            value: 'main'
+        runAfter:
+          - build-image
+        workspaces:
+          - name: output
+            workspace: argocd_source
+      - name: deploy
+        taskRef:
+          kind: Task
+          name: deploy
+        runAfter:
+          - git-clone-argocd-repo
+        params:
+          - name: kustomization_directory
+            value: 4-workloads/production
+          - name: image_url
+            value: $(params.image)
+          - name: image_digest
+            value: $(tasks.build-image.results.IMAGE_DIGEST)
+          - name: argocd_git_url
+            value: $(params.argocd-git-url)
+        workspaces:
+          - name: argocd_source
+            workspace: argocd_source
   workspaces:
     - name: source
       volumeClaimTemplate:
@@ -58,7 +101,18 @@ spec:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 10Gi
+              storage: 1Gi
+    - name: argocd_source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: dockerconfig-ws
+      secret:
+        secretName: quay-robot-pull-secret-string
     - name: basic-auth
       secret:
-        secretName: "{{ git_auth_secret }}"
+        secretName: '{{ git_auth_secret }}'
