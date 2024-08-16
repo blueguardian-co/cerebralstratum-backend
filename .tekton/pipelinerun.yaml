@@ -70,6 +70,8 @@ spec:
             value: $(params.image)
           - name: DOCKERFILE
             value: src/main/docker/Dockerfile.native
+          - name: BUILD_EXTRA_ARGS
+            value: "--storage-driver=overlay"
       - name: git-clone-argocd-repo
         taskRef:
           kind: ClusterTask
