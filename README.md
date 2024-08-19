@@ -1,4 +1,4 @@
-# silent-auction-demo-backend
+# silent-auction-backend
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
