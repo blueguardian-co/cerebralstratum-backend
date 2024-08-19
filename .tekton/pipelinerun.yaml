@@ -99,8 +99,8 @@ spec:
             value: $(params.image)
           - name: image_digest
             value: $(tasks.build-image.results.IMAGE_DIGEST)
-          - name: argocd_git_url
-            value: $(params.argocd-git-url)
+          - name: repo_url
+            value: $(params.repo_url)
         workspaces:
           - name: argocd_source
             workspace: argocd_source
