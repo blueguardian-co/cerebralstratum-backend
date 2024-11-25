@@ -5,5 +5,5 @@ mp:
         topic: locations
         connector: smallrye-kafka
       device-status:
-        topic: device-status
+        topic: device/status
         connector: smallrye-kafka
