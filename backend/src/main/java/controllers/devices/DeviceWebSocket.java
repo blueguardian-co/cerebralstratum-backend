@@ -17,13 +17,13 @@ import java.util.UUID;
 @WebSocket(path = "/api/v1/devices/{device_uuid}/ws")
 public class DeviceWebSocket {
     Integer device_id;
-    public enum MessageType {CURRENT_LOCATION, DEVICE_NOTIFICATION, CANBUS, TEXT_MESSAGE}
+    public enum MessageType {CURRENT_LOCATION, DEVICE_NOTIFICATION, CANBUS_MESSAGE, TEXT_MESSAGE}
 
-    public record CurrentLocation(MessageType type, UUID device_uuid, InboundLocation location) {
+    public record CurrentLocationMessage(MessageType type, UUID device_uuid, InboundLocation location) {
     }
-    public record DeviceNotification(MessageType type, UUID device_uuid, Set<Status> status) {
+    public record DeviceNotification(MessageType type, UUID device_uuid, Status status) {
     }
-    public record CANBus(MessageType type, UUID device_uuid, CANBus message) {
+    public record CANBusMessage(MessageType type, UUID device_uuid, CANBus message) {
     }
     public record TextMessage(MessageType type, String message){
     }
@@ -55,12 +55,12 @@ public class DeviceWebSocket {
     public void consumeLocation(ConsumerRecord<UUID, InboundLocation> record) {
         for (WebSocketConnection c : openConnections) {
             c.broadcast().sendTextAndAwait(
-                    new CurrentLocation(MessageType.CURRENT_LOCATION, record.key(), record.value())
+                    new CurrentLocationMessage(MessageType.CURRENT_LOCATION, record.key(), record.value())
             );
         }
     }
     @Incoming("kafka/device/status")
-    public void consumeStatus(ConsumerRecord<UUID, Set<Status>> record) {
+    public void consumeStatus(ConsumerRecord<UUID, Status> record) {
         for (WebSocketConnection c : openConnections) {
             c.broadcast().sendTextAndAwait(
                     new DeviceNotification(MessageType.DEVICE_NOTIFICATION, record.key(), record.value())
@@ -71,7 +71,7 @@ public class DeviceWebSocket {
     public void consumeCANBus(ConsumerRecord<UUID, CANBus> record) {
         for (WebSocketConnection c : openConnections) {
             c.broadcast().sendTextAndAwait(
-                    new CANBus(MessageType.CANBUS, record.key(), record.value())
+                    new CANBusMessage(MessageType.CANBUS_MESSAGE, record.key(), record.value())
             );
         }
     }
