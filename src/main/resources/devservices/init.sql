@@ -1,2 +1,2 @@
-CREATE SCHEMA IF NOT EXISTS auction;
-ALTER SCHEMA auction OWNER TO quarkus;
+CREATE SCHEMA IF NOT EXISTS cerebralstratum;
+ALTER SCHEMA cerebralstratum OWNER TO quarkus;

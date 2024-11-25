@@ -2,103 +2,215 @@
 databaseChangeLog:
   - changeSet:
       id:  1
-      author:  ahussey
-      labels: silent-auction
-      context: silent-auction
-      comment: create initial tables
+      author:  Alex Hussey
+      labels: cerebral-stratum
+      context: cerebralstratum
+      comment: create initial tables and sequences
       changes:
         - createTable:
-            tableName:  auctions
+            tableName: devices
             columns:
               - column:
-                  name:  id
-                  type:  int
-                  autoIncrement:  true
+                  name: id
+                  type: int
+                  autoIncrement: true
                   constraints:
-                    primaryKey:  true
+                    primaryKey: true
                     nullable:  false
               - column:
-                  name:  item_name
-                  type:  varchar(255)
+                 name: uuid
+                 type: uuid
+                 constraints:
+                   nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
                   constraints:
-                    nullable:  false
+                    nullable: false
               - column:
-                  name:  description
-                  type:  varchar(255)
+                  name: description
+                  type: varchar(255)
               - column:
-                  name:  auction_start
-                  type:  timestamp
+                  name: registered
+                  type: timestamp
               - column:
-                  name:  auction_end
-                  type:  timestamp
+                  name: owner_id
+                  type: int
+                  constraints:
+                    nullable: false
               - column:
-                  name:  image_path
-                  type:  varchar(255)
+                  name: shared_users_read
+                  type: varchar[]
+              - column:
+                  name: shared_users_modify
+                  type: varchar[]
+              - column:
+                  name: organisation_id
+                  type: int
+              - column:
+                  name: image_path
+                  type: varchar(255)
+              - column:
+                  name: status
+                  type: jsonb
         - createTable:
-            tableName:  user_info
+            tableName: locations
             columns:
               - column:
-                  name:  id
-                  type:  int
-                  autoIncrement:  true
+                  name: id
+                  type: int
+                  autoIncrement: true
                   constraints:
-                    primaryKey:  true
-                    nullable:  false
+                    primaryKey: true
+                    nullable: false
               - column:
-                  name:  username
-                  type:  varchar(255)
+                  name: device_id
+                  type: int
                   constraints:
-                    nullable:  false
+                    nullable: false
               - column:
-                  name:  table_number
-                  type:  int
+                  name: latitude
+                  type: decimal
+              - column:
+                  name: longitude
+                  type: decimal
+              - column:
+                  name: timestamp
+                  type: timestamp
         - createTable:
-            tableName:  bids
+            tableName: organisations
             columns:
               - column:
-                  name:  id
-                  type:  int
-                  autoIncrement:  true
+                  name: id
+                  type: int
+                  autoIncrement: true
                   constraints:
-                    primaryKey:  true
-                    nullable:  false
+                    primaryKey: true
+                    nullable: false
               - column:
-                  name:  auction_id
-                  type:  int
+                  name: name
+                  type: varchar(255)
                   constraints:
-                    nullable:  false
+                    nullable: false
               - column:
-                  name:  user_id
-                  type:  int
+                  name: owner_id
+                  type: int
+                  constraints:
+                    nullable: false
               - column:
-                  name:  bid_time
-                  type:  timestamp
+                  name: created
+                  type: timestamp
+        - createTable:
+            tableName: users
+            columns:
               - column:
-                  name:  bid_amount
-                  type:  int
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: organisation_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created
+                  type: timestamp
+              - column:
+                  name: subscription_active
+                  type: boolean
+              - column:
+                  name: subscription_discount
+                  type: int
         -  addForeignKeyConstraint:
-            baseColumnNames:  auction_id
-            baseTableName:  bids
-            baseTableSchemaName:  auction
-            constraintName:  fk_auction_id
+            baseColumnNames: device_id
+            baseTableName:  locations
+            baseTableSchemaName:  cerebralstratum
+            constraintName:  fk_devices_locations_id
             deferrable:  true
             initiallyDeferred:  true
             onDelete:  CASCADE
             onUpdate:  CASCADE
             referencedColumnNames:  id
-            referencedTableName:  auctions
-            referencedTableSchemaName:  auction
+            referencedTableName:  devices
+            referencedTableSchemaName:  cerebralstratum
             validate:  true
         -  addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName:  bids
-            baseTableSchemaName:  auction
-            constraintName:  fk_user_username
+             baseColumnNames: organisation_id
+             baseTableName:  devices
+             baseTableSchemaName:  cerebralstratum
+             constraintName:  fk_devices_organisations_id
+             deferrable:  true
+             initiallyDeferred:  true
+             onDelete:  CASCADE
+             onUpdate:  CASCADE
+             referencedColumnNames: id
+             referencedTableName:  organisations
+             referencedTableSchemaName:  cerebralstratum
+             validate:  true
+        -  addForeignKeyConstraint:
+            baseColumnNames: owner_id
+            baseTableName:  organisations
+            baseTableSchemaName:  cerebralstratum
+            constraintName:  fk_users_organisations_id
             deferrable:  true
             initiallyDeferred:  true
             onDelete:  CASCADE
             onUpdate:  CASCADE
             referencedColumnNames: id
-            referencedTableName:  user_info
-            referencedTableSchemaName:  auction
+            referencedTableName:  users
+            referencedTableSchemaName:  cerebralstratum
             validate:  true
+        -  addForeignKeyConstraint:
+             baseColumnNames: owner_id
+             baseTableName:  devices
+             baseTableSchemaName:  cerebralstratum
+             constraintName:  fk_users_devices_id
+             deferrable:  true
+             initiallyDeferred:  true
+             onDelete:  CASCADE
+             onUpdate:  CASCADE
+             referencedColumnNames: id
+             referencedTableName:  users
+             referencedTableSchemaName:  cerebralstratum
+             validate:  true
+        - addForeignKeyConstraint:
+            baseColumnNames: organisation_id
+            baseTableName: users
+            baseTableSchemaName: cerebralstratum
+            constraintName: fk_organisations_users_id
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: organisations
+            referencedTableSchemaName: cerebralstratum
+            validate: true
+        - createSequence:
+            incrementBy: 1
+            schemaName: cerebralstratum
+            sequenceName: devices_id_seq
+            startValue: 1
+        - createSequence:
+            incrementBy: 1
+            schemaName: cerebralstratum
+            sequenceName: locations_id_seq
+            startValue: 1
+        - createSequence:
+            incrementBy: 1
+            schemaName: cerebralstratum
+            sequenceName: users_id_seq
+            startValue: 1
+        - createSequence:
+            incrementBy: 1
+            schemaName: cerebralstratum
+            sequenceName: organisations_id_seq
+            startValue: 1

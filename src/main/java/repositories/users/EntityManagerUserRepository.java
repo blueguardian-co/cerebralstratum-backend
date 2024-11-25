@@ -4,7 +4,9 @@ import controllers.users.User;
 import controllers.users.CreateUserRequest;
 import controllers.users.DeleteUserRequest;
 import controllers.users.UpdateUserRequest;
+import repositories.organisations.OrganisationEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,28 +27,37 @@ public class EntityManagerUserRepository implements UserRepository {
         return new User(
             user.getId(),
             user.getUsername(),
-            user.getFirst_name(),
-            user.getLast_name(),
-            user.getTable_number()
+            user.getOrganisation(),
+            user.getCreated(),
+            user.getSubscriptionActive(),
+            user.getSubscriptionDiscount()
         );
     }
 
-    private static UserEntity mapCreateRequestToEntity (CreateUserRequest request) {
+    private UserEntity mapCreateRequestToEntity (CreateUserRequest request) {
+        OrganisationEntity organisation;
+        if (request.organisation_id != null) {
+           organisation = entityManager.find(OrganisationEntity.class, request.organisation_id);
+        } else {
+           organisation = null;
+        }
+        LocalDateTime created = LocalDateTime.now();
+        Boolean subscription_active = true;
+        Integer subscription_discount = 0;
         return new UserEntity(
                 request.username,
-                request.first_name,
-                request.last_name,
-                request.table_number
+                organisation,
+                created,
+                subscription_active,
+                subscription_discount
         );
     }
 
-    private static UserEntity mapUpdateRequestToEntity (UpdateUserRequest request) {
-        return new UserEntity(
-            request.username,
-            request.first_name,
-            request.last_name,
-            request.table_number
-        );
+    private void mapUpdateRequestToEntity (UserEntity user, UpdateUserRequest request) {
+        if (request.organisation_id != null) {
+            OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.organisation_id);
+            user.setOrganisation(organisation);
+        }
     }
 
     public List<User> findAll() {
@@ -94,9 +105,10 @@ public class EntityManagerUserRepository implements UserRepository {
 
     @Transactional
     public User update(UpdateUserRequest request) {
-        UserEntity updateUser = mapUpdateRequestToEntity(request);
-        entityManager.merge(updateUser);
-        return mapEntityToUser(updateUser);
+        UserEntity user = entityManager.find(UserEntity.class, request.user_id);
+        mapUpdateRequestToEntity(user, request);
+        entityManager.merge(user);
+        return mapEntityToUser(user);
     }
     
 }
