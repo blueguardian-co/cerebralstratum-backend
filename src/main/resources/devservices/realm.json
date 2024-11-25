@@ -1,7 +1,7 @@
 {
   "id" : "afa7fdbf-39e7-42ea-9e13-bb8e90223377",
   "realm" : "silent-auction",
-  "displayName" : "Silent Auction",
+  "displayName" : "Silent Device",
   "displayNameHtml" : "",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",

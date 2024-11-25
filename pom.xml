@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.redhat</groupId>
-    <artifactId>silent-auction-backend</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <groupId>co.blueguardian</groupId>
+    <artifactId>cerebral-stratum-backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
@@ -12,7 +12,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.13.2</quarkus.platform.version>
+        <quarkus.platform.version>3.16.4</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.3.1</surefire-plugin.version>
     </properties>
@@ -54,6 +54,11 @@
             <artifactId>quarkus-hibernate-orm</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.locationtech.spatial4j</groupId>
+            <artifactId>spatial4j</artifactId>
+            <version>0.8</version>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-liquibase</artifactId>
         </dependency>
@@ -87,7 +92,7 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-messaging-kafka</artifactId>
+            <artifactId>quarkus-kafka-client</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -108,22 +113,17 @@
         </dependency>
     </dependencies>
     <scm>
-        <developerConnection>scm:git:https://github.com/ahussey-redhat/silent-auction-demo-backend.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/blueguardian-co/cerebralstratum-backend.git</developerConnection>
       <tag>v1.0.0</tag>
   </scm>
     <distributionManagement>
         <repository>
-        <id>ahussey-redhat</id>
-        <url>https://maven.pkg.github.com/ahussey-redhat/silent-auction-backend</url>
+        <id>blueguardian-coß</id>
+        <url>https://maven.pkg.github.com/blueguardian-co/cerebral-stratum-backend</url>
         </repository>
     </distributionManagement>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>4.29.1</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>

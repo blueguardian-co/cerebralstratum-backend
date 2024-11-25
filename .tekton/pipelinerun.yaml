@@ -2,14 +2,14 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: silent-auction-backend
+  name: cerebral-stratum-backend
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
     pipelinesascode.tekton.dev/on-target-branch: "[main]"
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
-    pipelinesascode.tekton.dev/task-2: '[https://github.com/ahussey-redhat/silent-auction-demo-infra/blob/main/.tekton/tasks/mvnw-build.yaml]'
-    pipelinesascode.tekton.dev/task-3: '[https://github.com/ahussey-redhat/silent-auction-demo-infra/blob/main/.tekton/tasks/deploy.yaml]'
+    pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/mvnw-build.yaml]'
+    pipelinesascode.tekton.dev/task-3: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 spec:
   params:
@@ -18,9 +18,9 @@ spec:
     - name: revision
       value: "{{ revision }}"
     - name: image
-      value: quay.io/ahussey/silent-auction/backend
+      value: quay.io/blueguardian-co/cerebral-stratum/backend
     - name: argocd-git-url
-      value: git@github.com:ahussey-redhat/silent-auction-demo-infra.git
+      value: git@github.com:blueguardian-co/infra.git
   pipelineSpec:
     taskRunTemplate:
       serviceAccountName: pipeline

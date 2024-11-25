@@ -1,0 +1,104 @@
+quarkus:
+  smallrye-openapi:
+    path: /openapi
+  swagger-ui:
+    path: /swagger-ui
+    always-include: true
+  http:
+    port: 6443
+    cors:
+      ~: true
+  dev-ui:
+    cors:
+      enabled: false
+  live-reload:
+    instrumentation: true
+  datasource:
+    db-kind: postgresql
+    devservices:
+      db-name: cerebral-stratum
+      init-script-path: devservices/init.sql
+      port: 5432
+  hibernate-orm:
+    database:
+      default-schema: ${quarkus.liquibase.default-schema-name}
+      generation: none
+    mapping:
+      timezone:
+        default-storage: normalize-utc
+  liquibase:
+    migrate-at-start: true
+    change-log: db/changeLog.yaml
+    default-schema-name: cerebralstratum
+  oidc:
+    client-id: backend
+  keycloak:
+    devservices:
+      realm-path: devservices/realm.json
+      port: 8000
+    policy-enforcer:
+      enable: false
+  scheduler:
+    start-mode: normal
+'%prod':
+  quarkus:
+    http:
+      host: 0.0.0.0
+      cors:
+        origins: /.*/
+    kubernetes-config:
+      secrets:
+        ~:
+          - db-creds
+          - backend-oidc
+        enabled: true
+      secrets-role-config:
+        name: cerebral-stratum-backend
+    datasource:
+      jdbc:
+        url: ${jdbc-url}?defaultSchema=cerebralstratum
+        username: ${jdbc-username}
+        password: ${jdbc-password}
+    oidc:
+      auth-server-url: https://sso.blueguardian.co/realms/external
+      credentials:
+        secret: ${oidc-secret}
+        token-cache:
+          max-size: 1000
+          time-to-live: 5M
+          clean-up-timer-interval: 1M
+    keycloak:
+      policy-enforcer:
+        enable: true
+        paths:
+          quarkus-status:
+            paths: /q/*
+            enforcement-mode: disabled
+          swagger-ui:
+            paths: /swagger-ui/*
+            enforcement-mode: disabled
+          openapi:
+            paths: /openapi
+            enforcement-mode: disabled
+'%dev':
+   quarkus:
+     http:
+       host: localhost
+       cors:
+         origins: /.*/
+     datasource:
+       jdbc:
+         additional-jdbc-properties:
+          currentSchema: ${quarkus.liquibase.default-schema-name}
+mp:
+ messaging:
+   incoming:
+     locations:
+       topic: locations
+       connector: smallrye-kafka
+     device-status:
+       topic: device-status
+       connector: smallrye-kafka
+     can-bus:
+       topic: can-bus
+       connector: smallrye-kafka

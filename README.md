@@ -1,4 +1,4 @@
-# silent-auction-backend
+# cerebral-stratum-backend
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
