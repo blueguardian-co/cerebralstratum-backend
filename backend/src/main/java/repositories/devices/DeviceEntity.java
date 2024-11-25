@@ -77,7 +77,7 @@ public class DeviceEntity {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column
-    private Set<Status> status;
+    private Status status;
 
     public DeviceEntity() {
     }
@@ -92,7 +92,7 @@ public class DeviceEntity {
         List<Integer> shared_users_modify,
         OrganisationEntity organisation,
         String image_path,
-        Set<Status> status
+        Status status
     ) {
         this.name = name;
         this.uuid = uuid;
@@ -186,10 +186,10 @@ public class DeviceEntity {
         this.image_path = image_path;
     }
 
-    public Set<Status> getStatus() {
+    public Status getStatus() {
         return status;
     }
-    public void setStatus(Set<Status> status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

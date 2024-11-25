@@ -5,7 +5,6 @@ import repositories.users.UserEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class Device {
@@ -20,7 +19,7 @@ public class Device {
     public List<Integer> shared_users_modify;
     public OrganisationEntity organisation_id;
     public String image_path;
-    public Set<Status> status;
+    public Status status;
 
     public Device() {
     }
@@ -34,9 +33,9 @@ public class Device {
             UserEntity owner_id,
             List<Integer> shared_users_read,
             List<Integer> shared_users_modify,
-            OrganisationEntity organisation,
+            OrganisationEntity organisation_id,
             String image_path,
-            Set<Status> status
+            Status status
     ) {
         this.id = id;
         this.name = name;
