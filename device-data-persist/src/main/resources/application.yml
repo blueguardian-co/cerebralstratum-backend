@@ -1,9 +1,13 @@
 mp:
   messaging:
     incoming:
-      locations:
-        topic: locations
+      kafka/device/location:
+        topic: location
         connector: smallrye-kafka
-      device-status:
-        topic: device/status
+      kafka/device/status:
+        topic: status
         connector: smallrye-kafka
+quarkus:
+  kafka:
+    devservices:
+      port: 9092

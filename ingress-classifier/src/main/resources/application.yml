@@ -1,31 +1,35 @@
 mp:
   messaging:
     outgoing:
-      device/locations:
-        topic: device/locations
+      kafka/device/location:
+        topic: location
         connector: smallrye-kafka
-      device/status:
-        topic: device/status
+      kafka/device/status:
+        topic: status
         connector: smallrye-kafka
-      device/canbus:
-        topic: device/canbus
+      kafka/device/canbus:
+        topic: canbus
         connector: smallrye-kafka
     incoming:
-      location:
+      mqtt/device/location:
         topic: location
         host: ${MQTT_HOST:localhost}
         port: 1883
         auto-generated-client-id: true
         connector: smallrye-mqtt
-      status:
+      mqtt/device/status:
         topic: status
         host: ${MQTT_HOST:localhost}
         port: 1883
         auto-generated-client-id: true
         connector: smallrye-mqtt
-      canbus:
+      mqtt/device/canbus:
         topic: canbus
         host: ${MQTT_HOST:localhost}
         port: 1883
         auto-generated-client-id: true
         connector: smallrye-mqtt
+quarkus:
+  kafka:
+    devservices:
+      port: 9092
