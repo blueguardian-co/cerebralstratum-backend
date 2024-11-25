@@ -40,6 +40,9 @@ quarkus:
       enable: false
   scheduler:
     start-mode: normal
+  kafka:
+    devservices:
+      port: 9092
 '%prod':
   quarkus:
     http:
