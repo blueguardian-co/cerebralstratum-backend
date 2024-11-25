@@ -49,8 +49,7 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         OrganisationEntity organisation = null;
         List<Integer> sharedUsersRead = new ArrayList<>();
         List<Integer> sharedUsersModify = new ArrayList<>();
-        Set<Status> status = new HashSet<>();
-        status.add(new Status("Device Created", "Healthy", 1.00F));
+        Status status = new Status("Device Created", "Healthy", 1.00F);
         return new DeviceEntity(
             request.name,
             uuid,
