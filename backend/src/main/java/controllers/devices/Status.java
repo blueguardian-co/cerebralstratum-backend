@@ -13,4 +13,12 @@ public class Status {
         this.overall = overall;
         this.battery = battery;
     }
+
+    @Override
+    public String toString() {
+        return "-- Status --" +
+               "Summary: " + summary + '\n' +
+               "Overall: " + overall + '\n' +
+               "Battery: " + battery;
+    }
 }

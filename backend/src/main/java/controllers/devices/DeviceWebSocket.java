@@ -1,16 +1,14 @@
 package controllers.devices;
 
+import controllers.locations.InboundLocation;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
-
-import repositories.devices.DeviceRepository;
-import repositories.locations.LocationRepository;
-import repositories.users.UserRepository;
-import controllers.locations.Location;
-
+import jakarta.inject.Inject;
 import io.quarkus.websockets.next.*;
 import io.quarkus.scheduler.Scheduled;
-import jakarta.inject.Inject;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import java.util.Set;
 import java.util.UUID;
@@ -19,26 +17,19 @@ import java.util.UUID;
 @WebSocket(path = "/api/v1/devices/{device_uuid}/ws")
 public class DeviceWebSocket {
     Integer device_id;
-    public enum MessageType {CURRENT_LOCATION, DEVICE_NOTIFICATION, TEXT_MESSAGE}
+    public enum MessageType {CURRENT_LOCATION, DEVICE_NOTIFICATION, CANBUS, TEXT_MESSAGE}
 
-    public record CurrentLocation(MessageType type, UUID device_uuid, Location location) {
+    public record CurrentLocation(MessageType type, UUID device_uuid, InboundLocation location) {
     }
     public record DeviceNotification(MessageType type, UUID device_uuid, Set<Status> status) {
+    }
+    public record CANBus(MessageType type, UUID device_uuid, CANBus message) {
     }
     public record TextMessage(MessageType type, String message){
     }
 
     @Inject
     OpenConnections openConnections;
-
-    @Inject
-    DeviceRepository deviceRepository;
-
-    @Inject
-    LocationRepository locationRepository;
-
-    @Inject
-    UserRepository userRepository;
 
     @RolesAllowed("Admins")
     @OnTextMessage(broadcast = true)
@@ -60,13 +51,27 @@ public class DeviceWebSocket {
 //            );
 //        }
 //    }
-
-    public void broadcastDeviceLocation() {
-        Device device = deviceRepository.getById(device_id);
-        Location location = locationRepository.getLatest(device_id);
+    @Incoming("kafka/device/location")
+    public void consumeLocation(ConsumerRecord<UUID, InboundLocation> record) {
         for (WebSocketConnection c : openConnections) {
             c.broadcast().sendTextAndAwait(
-                    new CurrentLocation(MessageType.CURRENT_LOCATION, device.uuid, location)
+                    new CurrentLocation(MessageType.CURRENT_LOCATION, record.key(), record.value())
+            );
+        }
+    }
+    @Incoming("kafka/device/status")
+    public void consumeStatus(ConsumerRecord<UUID, Set<Status>> record) {
+        for (WebSocketConnection c : openConnections) {
+            c.broadcast().sendTextAndAwait(
+                    new DeviceNotification(MessageType.DEVICE_NOTIFICATION, record.key(), record.value())
+            );
+        }
+    }
+    @Incoming("kafka/device/canbus")
+    public void consumeCANBus(ConsumerRecord<UUID, CANBus> record) {
+        for (WebSocketConnection c : openConnections) {
+            c.broadcast().sendTextAndAwait(
+                    new CANBus(MessageType.CANBUS, record.key(), record.value())
             );
         }
     }

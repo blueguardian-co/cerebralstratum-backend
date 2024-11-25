@@ -96,12 +96,12 @@ quarkus:
 mp:
  messaging:
    incoming:
-     device/locations:
-       topic: locations
+     kafka/device/location:
+       topic: location
        connector: smallrye-kafka
-     device/status:
-       topic: device/status
+     kafka/device/status:
+       topic: status
        connector: smallrye-kafka
-     device/canbus:
-       topic: device/canbus
+     kafka/device/canbus:
+       topic: canbus
        connector: smallrye-kafka
