@@ -21,6 +21,7 @@
         <module>backend</module>
         <module>ingress-classifier</module>
         <module>device-data-persist</module>
+        <module>utils</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -42,6 +43,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-config-yaml</artifactId>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>io.quarkus</groupId>-->
 <!--            <artifactId>quarkus-openshift</artifactId>-->

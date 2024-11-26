@@ -63,7 +63,7 @@ quarkus:
         username: ${jdbc-username}
         password: ${jdbc-password}
     oidc:
-      auth-server-url: https://sso.blueguardian.co/realms/external
+      auth-server-url: https://sso.blueguardian.co/realms/External
       credentials:
         secret: ${oidc-secret}
         token-cache:
@@ -89,6 +89,9 @@ quarkus:
        host: localhost
        cors:
          origins: /.*/
+     keycloak:
+       admin-client:
+         server-url: http://localhost:8000
      datasource:
        jdbc:
          additional-jdbc-properties:
