@@ -14,7 +14,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.util.List;
 
-@Path("/api/v1")
+@Path("/api/v1/authorisation/organisations")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -30,14 +30,12 @@ public class OrganisationResource {
     OrganisationRepository organisationRepository;
 
     @GET
-    @Path("organisations")
     @RolesAllowed("admin")
     public List<Organisation> getAllOrganisations() {
         return organisationRepository.findAll();
     }
 
     @POST
-    @Path("organisations")
     @Transactional
     @RolesAllowed("admin")
     public Response create(CreateOrganisationRequest request) {
@@ -46,7 +44,6 @@ public class OrganisationResource {
     }
 
     @DELETE
-    @Path("organisations")
     @Transactional
     @RolesAllowed("admin")
     public Response delete(DeleteOrganisationRequest request) {
@@ -55,7 +52,7 @@ public class OrganisationResource {
     }
 
     @GET
-    @Path("organisations/{organisation_id}")
+    @Path("{organisation_id}")
     @RolesAllowed("admin")
     public Organisation getOrganisation(int organisation_id) {
         Organisation organisation = organisationRepository.getById(organisation_id);

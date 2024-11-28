@@ -1,6 +1,4 @@
-package co.blueguardian.cerebralstratum.backend.controllers.Groups;
-
-import co.blueguardian.cerebralstratum.utils.identity.GroupPermissionChecker;
+package co.blueguardian.cerebralstratum.backend.controllers.groups;
 
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.PermissionsAllowed;
@@ -22,7 +20,7 @@ import java.util.List;
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class Groups {
+public class GroupsResource {
     @Inject
     Keycloak keycloak;
 

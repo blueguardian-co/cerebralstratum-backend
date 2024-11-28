@@ -20,7 +20,7 @@ import jakarta.annotation.security.RolesAllowed;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
-@Path("/api/v1")
+@Path("/api/v1/authorisation/users")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -33,14 +33,12 @@ public class UserResource {
     UserRepository userRepository;
 
     @GET
-    @Path("users")
     @RolesAllowed("admin")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @POST
-    @Path("users")
     @Transactional
     @RolesAllowed("admin")
     public Response create(CreateUserRequest request) {
@@ -49,7 +47,6 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("users")
     @Transactional
     @RolesAllowed("admin")
     public Response delete(DeleteUserRequest request) {
@@ -58,7 +55,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("users/{user_id}")
+    @Path("{user_id}")
     @RolesAllowed("admin")
     public User getUser(Integer user_id) {
         User user = userRepository.getById(user_id);
