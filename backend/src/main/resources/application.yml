@@ -108,3 +108,5 @@ mp:
      kafka/device/canbus:
        topic: canbus
        connector: smallrye-kafka
+keycloak:
+  realm: silent-auction
