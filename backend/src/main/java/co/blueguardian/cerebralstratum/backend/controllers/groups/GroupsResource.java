@@ -10,6 +10,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -24,12 +25,15 @@ public class GroupsResource {
     @Inject
     Keycloak keycloak;
 
+    @ConfigProperty(name = "keycloak.realm")
+    String KeycloakRealm;
+
     @GET
     @Path("{group_name}/membership")
     @PermissionsAllowed("member-of-group")
     public List<UserRepresentation> getGroupMembership(String group_name) {
-        GroupRepresentation group = keycloak.realm("silent-auction").getGroupByPath(group_name);
-        return keycloak.realm("silent-auction").groups().group(group.getId()).members();
+        GroupRepresentation group = keycloak.realm(KeycloakRealm).getGroupByPath(group_name);
+        return keycloak.realm(KeycloakRealm).groups().group(group.getId()).members();
     }
 
 }
