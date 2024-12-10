@@ -10,7 +10,7 @@ projects:
 components:
   - name: workstation-container
     container:
-      image: registry.redhat.io/ubi9/openjdk-21:latest
+      image: registry.redhat.io/devspaces/udi-rhel8:latest
       cpuLimit: "4.0"
       cpuRequest: 200m
       memoryLimit: 8Gi
