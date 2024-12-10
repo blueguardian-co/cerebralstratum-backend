@@ -15,3 +15,6 @@ components:
       cpuRequest: 200m
       memoryLimit: 8Gi
       memoryRequest: 256Mi
+      command:
+        - sleep
+        - infinity
