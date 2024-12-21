@@ -29,6 +29,14 @@ import org.hibernate.type.SqlTypes;
                 value = "false"
         )
 )
+@NamedQuery(
+        name = "DeviceEntity.getDeviceByUUID",
+        query = "SELECT d FROM DeviceEntity d WHERE d.uuid = :uuid",
+        hints = @QueryHint(
+                name = "org.hibernate.cacheable",
+                value = "false"
+        )
+)
 @Cacheable
 public class DeviceEntity {
 

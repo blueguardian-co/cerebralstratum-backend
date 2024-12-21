@@ -2,7 +2,7 @@ package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
 import co.blueguardian.cerebralstratum.backend.controllers.locations.InboundLocation;
 
-import jakarta.annotation.security.RolesAllowed;
+import io.quarkus.security.PermissionsAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import io.quarkus.websockets.next.*;
@@ -29,46 +29,44 @@ public class DeviceWebSocket {
     @Inject
     OpenConnections openConnections;
 
-    @RolesAllowed("Admins")
+    @PermissionsAllowed("platform-admin")
     @OnTextMessage(broadcast = true)
     public TextMessage onTextMessage(TextMessage message) {
         return message;
     }
 
-    @OnClose
-    public void onClose() {
-        // Place a message on the bus?
-    }
-
-//    @Scheduled(every = "1m")
-//    public void broadcastDeviceStatus() {
-//        Device device = deviceRepository.getById(device_id);
-//        for (WebSocketConnection c : openConnections) {
-//            c.broadcast().sendTextAndAwait(
-//                    new DeviceNotification(MessageType.DEVICE_NOTIFICATION, device.uuid, device.status)
-//            );
-//        }
+//    @OnClose
+//    public void onClose() {
+//        // Place a message on the bus?
 //    }
+
+    @PermissionsAllowed("message-classifier")
     @Incoming("kafka/device/location")
     public void consumeLocation(ConsumerRecord<UUID, InboundLocation> record) {
         for (WebSocketConnection c : openConnections) {
-            c.broadcast().sendTextAndAwait(
-                    new CurrentLocationMessage(MessageType.CURRENT_LOCATION, record.key(), record.value())
-            );
+            try {
+                c.sendTextAndAwait(
+                        new CurrentLocationMessage(MessageType.CURRENT_LOCATION, record.key(), record.value())
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
+    @PermissionsAllowed("message-classifier")
     @Incoming("kafka/device/status")
     public void consumeStatus(ConsumerRecord<UUID, Status> record) {
         for (WebSocketConnection c : openConnections) {
-            c.broadcast().sendTextAndAwait(
+            c.sendTextAndAwait(
                     new DeviceNotification(MessageType.DEVICE_NOTIFICATION, record.key(), record.value())
             );
         }
     }
+    @PermissionsAllowed("message-classifier")
     @Incoming("kafka/device/canbus")
     public void consumeCANBus(ConsumerRecord<UUID, CANBus> record) {
         for (WebSocketConnection c : openConnections) {
-            c.broadcast().sendTextAndAwait(
+            c.sendTextAndAwait(
                     new CANBusMessage(MessageType.CANBUS_MESSAGE, record.key(), record.value())
             );
         }
