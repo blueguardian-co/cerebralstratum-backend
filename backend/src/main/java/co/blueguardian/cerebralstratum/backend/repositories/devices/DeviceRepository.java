@@ -2,6 +2,7 @@ package co.blueguardian.cerebralstratum.backend.repositories.devices;
 
 import co.blueguardian.cerebralstratum.backend.controllers.devices.Device;
 import co.blueguardian.cerebralstratum.backend.controllers.devices.CreateDeviceRequest;
+import co.blueguardian.cerebralstratum.backend.controllers.devices.RegisterDeviceRequest;
 import co.blueguardian.cerebralstratum.backend.controllers.devices.UpdateDeviceRequest;
 
 import java.util.List;
@@ -17,5 +18,9 @@ public interface DeviceRepository {
     public Device delete(int auction_id);
 
     public Device update(Integer device_id, UpdateDeviceRequest request);
+
+    public Device register(String username, RegisterDeviceRequest request);
+
+    public Device unregister(String username, Integer device_id);
     
 }

@@ -1,6 +1,6 @@
 quarkus:
-  devservices:
-    enabled: false
+#  devservices:
+#    enabled: false
   smallrye-openapi:
     path: /openapi
   swagger-ui:
@@ -17,10 +17,10 @@ quarkus:
     instrumentation: true
   datasource:
     db-kind: postgresql
-#    devservices:
-#      db-name: cerebral-stratum
-#      init-script-path: devservices/init.sql
-#      port: 5432
+    devservices:
+      db-name: cerebral-stratum
+      init-script-path: devservices/init.sql
+      port: 5432
   hibernate-orm:
     database:
       default-schema: ${quarkus.liquibase.default-schema-name}
@@ -35,16 +35,18 @@ quarkus:
   oidc:
     client-id: cerebral-stratum-backend
   keycloak:
-#    devservices:
-#      realm-path: devservices/realm.json
-#      port: 8000
+    devservices:
+      realm-path: devservices/realm.json
+      port: 8000
+      start-command: >-
+        start-dev --http-enabled=true --proxy-headers=xforwarded --features=organization:v1
     policy-enforcer:
       enable: false
   scheduler:
     start-mode: normal
-#  kafka:
-#    devservices:
-#      port: 9092
+  kafka:
+    devservices:
+      port: 9092
 '%prod':
   quarkus:
     http:
@@ -86,27 +88,27 @@ quarkus:
             paths: /openapi
             enforcement-mode: disabled
 '%dev':
-  kafka:
-    bootstrap:
-      servers:
-        - kafka-cluster-kafka-bootstrap.development.svc.cluster.local:9092
-    security:
-      protocol: SASL_PLAINTEXT
-    sasl:
-      mechanism: PLAIN
-      jaas:
-        config: >-
-          org.apache.kafka.common.security.plain.PlainLoginModule required
-          username="${kafka-username}"
-          password="${kafka-password}";
+#  kafka:
+#    bootstrap:
+#      servers:
+#        - kafka-cluster-kafka-bootstrap.development.svc.cluster.local:9092
+#    security:
+#      protocol: SASL_PLAINTEXT
+#    sasl:
+#      mechanism: PLAIN
+#      jaas:
+#        config: >-
+#          org.apache.kafka.common.security.plain.PlainLoginModule required
+#          username="${kafka-username}"
+#          password="${kafka-password}";
   quarkus:
-    kubernetes-config:
-      secrets:
-        ~:
-          - db-creds
-          - oidc-creds
-          - message-bus-creds
-        enabled: true
+#    kubernetes-config:
+#      secrets:
+#        ~:
+#          - db-creds
+#          - oidc-creds
+#          - message-bus-creds
+#        enabled: true
     http:
       host: localhost
       cors:
@@ -114,11 +116,11 @@ quarkus:
     keycloak:
       admin-client:
         server-url: http://localhost:8000
-    datasource:
-      jdbc:
-        url: ${jdbc-url}?defaultSchema=cerebralstratum
-      username: ${jdbc-username}
-      password: ${jdbc-password}
+#    datasource:
+#      jdbc:
+#        url: ${jdbc-url}?defaultSchema=cerebralstratum
+#      username: ${jdbc-username}
+#      password: ${jdbc-password}
 mp:
  messaging:
    incoming:

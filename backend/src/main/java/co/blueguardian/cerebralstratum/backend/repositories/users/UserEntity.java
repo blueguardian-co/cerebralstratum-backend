@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u ORDER BY u.username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
-@NamedQuery(name = "UserEntity.getUser", query = "SELECT u FROM UserEntity u WHERE u.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
+@NamedQuery(name = "UserEntity.getByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
 @Cacheable
 public class UserEntity {
 

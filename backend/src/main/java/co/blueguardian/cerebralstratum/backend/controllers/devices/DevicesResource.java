@@ -72,11 +72,37 @@ public class DevicesResource {
     @GET
     @Path("{device_id}")
     @RolesAllowed("admin")
-    public Device getAuction(Integer device_id) {
+    public Device getDevice(Integer device_id) {
         Device device = deviceRepository.getById(device_id);
         if (device == null) {
             throw new WebApplicationException("Device with id of " + device_id + " does not exist.", 404);
         }
         return device;
+    }
+
+    @Path("register")
+    @POST
+    @Transactional
+    public Response register(RegisterDeviceRequest request) {
+        String username = securityIdentity.getPrincipal().getName();
+        try {
+            Device device = deviceRepository.register(username, request);
+            return Response.ok(device).status(201).build();
+        } catch (Exception e) {
+            throw new WebApplicationException("Device already registered. Please contact owner to unregister the device, and then try again.", Response.Status.UNAUTHORIZED);
+        }
+    }
+    @Path("{device_id}/unregister")
+    @POST
+    @Transactional
+    @PermissionsAllowed("is-member-of")
+    public Response unregister(Integer device_id) {
+        String username = securityIdentity.getPrincipal().getName();
+        try {
+            Device device = deviceRepository.unregister(username, device_id);
+            return Response.ok(device).status(201).build();
+        } catch (Exception e) {
+            throw new WebApplicationException("Failed to unregister device", Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 }

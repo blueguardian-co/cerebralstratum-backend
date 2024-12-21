@@ -1,9 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.repositories.devices;
 
-import co.blueguardian.cerebralstratum.backend.controllers.devices.Device;
-import co.blueguardian.cerebralstratum.backend.controllers.devices.Status;
-import co.blueguardian.cerebralstratum.backend.controllers.devices.CreateDeviceRequest;
-import co.blueguardian.cerebralstratum.backend.controllers.devices.UpdateDeviceRequest;
+import co.blueguardian.cerebralstratum.backend.controllers.devices.*;
 import co.blueguardian.cerebralstratum.backend.repositories.organisations.OrganisationEntity;
 import co.blueguardian.cerebralstratum.backend.repositories.users.UserEntity;
 
@@ -120,6 +117,38 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         updateRequestToEntity(device, request);
         entityManager.merge(device);
         return mapEntityToDevice(device);
+    }
+
+    @Transactional
+    public Device register(String username, RegisterDeviceRequest request) {
+        DeviceEntity device = entityManager.createNamedQuery("DeviceEntity.getDeviceByUUID", DeviceEntity.class)
+                .setParameter("uuid", request.serial_number)
+                .getSingleResult();
+        if (device.getOwner() == null) {
+            UserEntity owner = entityManager.createNamedQuery("UserEntity.getByUsername", UserEntity.class)
+                 .setParameter("username", username)
+                 .getSingleResult();
+            device.setOwner(owner);
+            entityManager.persist(device);
+            return mapEntityToDevice(device);
+        } else {
+            return null;
+        }
+
+    }
+
+    @Transactional
+    public Device unregister(String username, Integer device_id) {
+        DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
+        UserEntity owner = device.getOwner();
+        if (Objects.equals(owner.getUsername(), username)) {
+            device.setOwner(null);
+            entityManager.persist(device);
+            return mapEntityToDevice(device);
+        } else {
+            return null;
+        }
+
     }
     
 }
