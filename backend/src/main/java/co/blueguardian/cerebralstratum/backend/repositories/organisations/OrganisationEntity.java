@@ -11,20 +11,21 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "organisations")
 @NamedQuery(
         name = "OrganisationEntity.findAll",
-        query = "SELECT o FROM OrganisationEntity o ORDER BY o.name",
+        query = "SELECT o FROM OrganisationEntity o ORDER BY o.keycloak_org_id",
         hints = @QueryHint(
                 name = "org.hibernate.cacheable",
                 value = "false"
         )
 )
 @NamedQuery(
-        name = "OrganisationEntity.getOrganisationByName",
-        query = "SELECT o FROM OrganisationEntity o WHERE o.name = :name",
+        name = "OrganisationEntity.getOrganisationByKeycloakOrgId",
+        query = "SELECT o FROM OrganisationEntity o WHERE o.keycloak_org_id = :keycloak_org_id",
         hints = @QueryHint(
                 name = "org.hibernate.cacheable",
                 value = "false"
@@ -45,7 +46,7 @@ public class OrganisationEntity {
     private Integer id;
 
     @Column(length = 255, unique = true)
-    private String name;
+    private UUID keycloak_org_id;
 
     @Column(unique = true)
     private Integer owner_id;
@@ -57,11 +58,11 @@ public class OrganisationEntity {
     }
 
     public OrganisationEntity(
-        String name,
+        UUID keycloak_org_id,
         Integer owner_id,
         LocalDateTime created
     ) {
-        this.name = name;
+        this.keycloak_org_id = keycloak_org_id;
         this.owner_id = owner_id;
         this.created = created;
     }
@@ -74,12 +75,12 @@ public class OrganisationEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public UUID getKeycloakOrgId() {
+        return keycloak_org_id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setKeycloakOrgId(UUID keycloak_org_id) {
+        this.keycloak_org_id = keycloak_org_id;
     }
 
     public Integer getOwnerId() {
@@ -90,12 +91,11 @@ public class OrganisationEntity {
         this.owner_id = owner_id;
     }
 
-
     public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCrated(LocalDateTime created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 }

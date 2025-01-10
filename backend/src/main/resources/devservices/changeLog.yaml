@@ -1,0 +1,10 @@
+---
+databaseChangeLog:
+- preConditions:
+    onFail: MARK_RAN
+- includeAll:
+    path: ../db/changeLogs/
+    relativeToChangelogFile: true
+- includeAll:
+      path: changeLogs/
+      relativeToChangelogFile: true

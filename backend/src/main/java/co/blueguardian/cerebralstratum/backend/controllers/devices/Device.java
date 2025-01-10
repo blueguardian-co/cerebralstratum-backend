@@ -14,10 +14,8 @@ public class Device {
     public UUID uuid;
     public String description;
     public LocalDateTime registered;
-    public UserEntity owner_id;
-    public List<Integer> shared_users_read;
-    public List<Integer> shared_users_modify;
-    public OrganisationEntity organisation_id;
+    public int owner_id;
+    public int organisation_id;
     public String image_path;
     public Status status;
 
@@ -30,10 +28,8 @@ public class Device {
             UUID uuid,
             String description,
             LocalDateTime registered,
-            UserEntity owner_id,
-            List<Integer> shared_users_read,
-            List<Integer> shared_users_modify,
-            OrganisationEntity organisation_id,
+            int owner_id,
+            int organisation_id,
             String image_path,
             Status status
     ) {
@@ -43,8 +39,6 @@ public class Device {
         this.description = description;
         this.registered = registered;
         this.owner_id = owner_id;
-        this.shared_users_read = shared_users_read;
-        this.shared_users_modify = shared_users_modify;
         this.organisation_id = organisation_id;
         this.image_path = image_path;
         this.status = status;

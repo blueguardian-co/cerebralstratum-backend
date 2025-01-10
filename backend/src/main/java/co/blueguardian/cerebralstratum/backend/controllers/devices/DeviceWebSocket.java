@@ -41,7 +41,7 @@ public class DeviceWebSocket {
 //    }
 
     @PermissionsAllowed("message-classifier")
-    @Incoming("kafka/device/location")
+    @Incoming("/device/location")
     public void consumeLocation(ConsumerRecord<UUID, InboundLocation> record) {
         for (WebSocketConnection c : openConnections) {
             try {
@@ -54,7 +54,7 @@ public class DeviceWebSocket {
         }
     }
     @PermissionsAllowed("message-classifier")
-    @Incoming("kafka/device/status")
+    @Incoming("/device/status")
     public void consumeStatus(ConsumerRecord<UUID, Status> record) {
         for (WebSocketConnection c : openConnections) {
             c.sendTextAndAwait(
@@ -63,7 +63,7 @@ public class DeviceWebSocket {
         }
     }
     @PermissionsAllowed("message-classifier")
-    @Incoming("kafka/device/canbus")
+    @Incoming("/device/canbus")
     public void consumeCANBus(ConsumerRecord<UUID, CANBus> record) {
         for (WebSocketConnection c : openConnections) {
             c.sendTextAndAwait(

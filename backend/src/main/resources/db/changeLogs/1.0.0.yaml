@@ -2,9 +2,9 @@
 databaseChangeLog:
   - changeSet:
       id:  1
-      author:  Alex Hussey
+      author:  Alex Henshaw
       labels: cerebral-stratum
-      context: cerebralstratum
+      context: production
       comment: create initial tables and sequences
       changes:
         - createTable:
@@ -38,12 +38,6 @@ databaseChangeLog:
                   type: int
                   constraints:
                     nullable: false
-              - column:
-                  name: shared_users_read
-                  type: varchar[]
-              - column:
-                  name: shared_users_modify
-                  type: varchar[]
               - column:
                   name: organisation_id
                   type: int
@@ -88,8 +82,8 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
-                  type: varchar(255)
+                  name: keycloak_org_id
+                  type: uuid
                   constraints:
                     nullable: false
               - column:
@@ -111,15 +105,15 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: username
-                  type: varchar(255)
+                  name: keycloak_user_id
+                  type: uuid
                   constraints:
                     nullable: false
               - column:
                   name: organisation_id
                   type: int
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: created
                   type: timestamp

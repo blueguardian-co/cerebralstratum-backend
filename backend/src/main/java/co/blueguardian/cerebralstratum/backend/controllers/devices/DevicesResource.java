@@ -7,6 +7,7 @@ import io.quarkus.security.PermissionsAllowed;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -24,6 +25,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("/api/v1/devices")
 @Authenticated
@@ -37,6 +39,9 @@ public class DevicesResource {
     @Inject
     SecurityIdentity securityIdentity;
 
+    @Inject
+    JsonWebToken jwtToken;
+
     @GET
     @RolesAllowed("admin")
     public List<Device> getAllDevices() {
@@ -46,8 +51,8 @@ public class DevicesResource {
     @POST
     @Transactional
     public Response create(CreateDeviceRequest request) {
-        String username = securityIdentity.getPrincipal().getName();
-        Device device = deviceRepository.create(username, request);
+        UUID keycloak_user_id = jwtToken.getClaim("sub");
+        Device device = deviceRepository.create(keycloak_user_id, request);
         return Response.ok(device).status(201).build();
     }
 
@@ -72,7 +77,7 @@ public class DevicesResource {
     @GET
     @Path("{device_id}")
     @RolesAllowed("admin")
-    public Device getDevice(Integer device_id) {
+    public Device getDeviceById(Integer device_id) {
         Device device = deviceRepository.getById(device_id);
         if (device == null) {
             throw new WebApplicationException("Device with id of " + device_id + " does not exist.", 404);
@@ -84,9 +89,9 @@ public class DevicesResource {
     @POST
     @Transactional
     public Response register(RegisterDeviceRequest request) {
-        String username = securityIdentity.getPrincipal().getName();
+        UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
-            Device device = deviceRepository.register(username, request);
+            Device device = deviceRepository.register(keycloak_user_id, request);
             return Response.ok(device).status(201).build();
         } catch (Exception e) {
             throw new WebApplicationException("Device already registered. Please contact owner to unregister the device, and then try again.", Response.Status.UNAUTHORIZED);
@@ -97,9 +102,9 @@ public class DevicesResource {
     @Transactional
     @PermissionsAllowed("is-member-of")
     public Response unregister(Integer device_id) {
-        String username = securityIdentity.getPrincipal().getName();
+        UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
-            Device device = deviceRepository.unregister(username, device_id);
+            Device device = deviceRepository.unregister(keycloak_user_id, device_id);
             return Response.ok(device).status(201).build();
         } catch (Exception e) {
             throw new WebApplicationException("Failed to unregister device", Response.Status.INTERNAL_SERVER_ERROR);

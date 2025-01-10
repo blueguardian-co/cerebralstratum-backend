@@ -28,24 +28,20 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
             device.getUuid(),
             device.getDescription(),
             device.getRegistered(),
-            device.getOwner(),
-            device.getSharedUsersRead(),
-            device.getSharedUsersModify(),
-            device.getOrganisation(),
+            device.getOwner().getId(),
+            device.getOrganisation().getId(),
             device.getImagePath(),
             device.getStatus()
         );
     }
 
-    private DeviceEntity mapCreateRequestToEntity (String username, CreateDeviceRequest request) {
+    private DeviceEntity mapCreateRequestToEntity (UUID keycloak_user_id, CreateDeviceRequest request) {
         UUID uuid = UUID.randomUUID();
         LocalDateTime registered = LocalDateTime.now();
-        UserEntity owner = entityManager.createNamedQuery("UserEntity.getUser", UserEntity.class)
-                .setParameter("username", username)
+        UserEntity owner = entityManager.createNamedQuery("UserEntity.getByKeycloakUserId", UserEntity.class)
+                .setParameter("keycloak_user_id", keycloak_user_id)
                 .getSingleResult();
         OrganisationEntity organisation = null;
-        List<Integer> sharedUsersRead = new ArrayList<>();
-        List<Integer> sharedUsersModify = new ArrayList<>();
         Status status = new Status("Device Created", "Healthy", 1.00F);
         return new DeviceEntity(
             request.name,
@@ -53,8 +49,6 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
             request.description,
             registered,
             owner,
-            sharedUsersRead,
-            sharedUsersModify,
             organisation,
             request.image_path,
             status
@@ -71,12 +65,6 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         if (request.owner_id != null) {
             UserEntity owner = entityManager.find(UserEntity.class, request.owner_id);
             device.setOwner(owner);
-        }
-        if (request.shared_users_read != null) {
-            device.setSharedUsersRead(request.shared_users_read);
-        }
-        if (request.shared_users_modify != null) {
-            device.setSharedUsersModify(request.shared_users_modify);
         }
         if (request.organisation_id != null) {
             OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.organisation_id);
@@ -98,8 +86,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device create(String username, CreateDeviceRequest request) {
-        DeviceEntity newDevice = mapCreateRequestToEntity(username, request);
+    public Device create(UUID keycloak_user_id, CreateDeviceRequest request) {
+        DeviceEntity newDevice = mapCreateRequestToEntity(keycloak_user_id, request);
         entityManager.persist(newDevice);
         return mapEntityToDevice(newDevice);
     }
@@ -120,13 +108,13 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device register(String username, RegisterDeviceRequest request) {
+    public Device register(UUID keycloak_user_id, RegisterDeviceRequest request) {
         DeviceEntity device = entityManager.createNamedQuery("DeviceEntity.getDeviceByUUID", DeviceEntity.class)
                 .setParameter("uuid", request.serial_number)
                 .getSingleResult();
         if (device.getOwner() == null) {
-            UserEntity owner = entityManager.createNamedQuery("UserEntity.getByUsername", UserEntity.class)
-                 .setParameter("username", username)
+            UserEntity owner = entityManager.createNamedQuery("UserEntity.getByKeycloakUserId", UserEntity.class)
+                 .setParameter("keycloak_user_id", keycloak_user_id)
                  .getSingleResult();
             device.setOwner(owner);
             entityManager.persist(device);
@@ -138,10 +126,10 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device unregister(String username, Integer device_id) {
+    public Device unregister(UUID keycloak_user_id, Integer device_id) {
         DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         UserEntity owner = device.getOwner();
-        if (Objects.equals(owner.getUsername(), username)) {
+        if (Objects.equals(owner.getKeycloakUserId(), keycloak_user_id)) {
             device.setOwner(null);
             entityManager.persist(device);
             return mapEntityToDevice(device);

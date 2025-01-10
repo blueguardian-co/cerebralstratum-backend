@@ -67,14 +67,6 @@ public class DeviceEntity {
     @PrimaryKeyJoinColumn
     private UserEntity owner;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column
-    private List<Integer> shared_users_read;
-
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column
-    private List<Integer> shared_users_modify;
-
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private OrganisationEntity organisation;
@@ -95,8 +87,6 @@ public class DeviceEntity {
         String description,
         LocalDateTime registered,
         UserEntity owner,
-        List<Integer> shared_users_read,
-        List<Integer> shared_users_modify,
         OrganisationEntity organisation,
         String image_path,
         Status status
@@ -106,8 +96,6 @@ public class DeviceEntity {
         this.description = description;
         this.registered = registered;
         this.owner = owner;
-        this.shared_users_read = shared_users_read;
-        this.shared_users_modify = shared_users_modify;
         this.organisation = organisation;
         this.image_path = image_path;
         this.status = status;
@@ -159,22 +147,6 @@ public class DeviceEntity {
 
     public void setOwner(UserEntity owner) {
         this.owner = owner;
-    }
-
-    public List<Integer> getSharedUsersRead() {
-        return shared_users_read;
-    }
-
-    public void setSharedUsersRead(List<Integer> shared_users_read) {
-        this.shared_users_read = shared_users_read;
-    }
-
-    public List<Integer> getSharedUsersModify() {
-        return shared_users_modify;
-    }
-
-    public void setSharedUsersModify(List<Integer> shared_users_modify) {
-        this.shared_users_modify = shared_users_modify;
     }
 
     public OrganisationEntity getOrganisation() {

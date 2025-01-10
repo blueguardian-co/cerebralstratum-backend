@@ -6,6 +6,7 @@ import co.blueguardian.cerebralstratum.backend.controllers.users.DeleteUserReque
 import co.blueguardian.cerebralstratum.backend.controllers.users.UpdateUserRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserRepository {
 
@@ -13,7 +14,7 @@ public interface UserRepository {
 
     public User getById(int id);
 
-    public User getByUsername(String username);
+    public User getByKeycloakUserId(UUID keycloak_user_id);
 
     public User create(CreateUserRequest request);
 

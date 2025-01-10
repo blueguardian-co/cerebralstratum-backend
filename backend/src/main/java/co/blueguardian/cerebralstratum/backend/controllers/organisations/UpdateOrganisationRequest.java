@@ -1,8 +1,10 @@
 package co.blueguardian.cerebralstratum.backend.controllers.organisations;
 
+import java.util.UUID;
+
 public class UpdateOrganisationRequest {
     public int id;
-    public String name;
+    public UUID keycloak_org_id;
     public Integer owner_id;
 
     public UpdateOrganisationRequest() {
@@ -10,11 +12,11 @@ public class UpdateOrganisationRequest {
 
     public UpdateOrganisationRequest(
             int id,
-            String name,
+            UUID keycloak_org_id,
             Integer owner_id
     ) {
         this.id = id;
-        this.name = name;
+        this.keycloak_org_id = keycloak_org_id;
         this.owner_id = owner_id;
     }
 }

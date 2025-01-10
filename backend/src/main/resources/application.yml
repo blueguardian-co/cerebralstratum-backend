@@ -28,10 +28,6 @@ quarkus:
     mapping:
       timezone:
         default-storage: normalize-utc
-  liquibase:
-    migrate-at-start: true
-    change-log: db/changeLog.yaml
-    default-schema-name: cerebralstratum
   oidc:
     client-id: cerebral-stratum-backend
   keycloak:
@@ -49,6 +45,10 @@ quarkus:
       port: 9092
 '%prod':
   quarkus:
+    liquibase:
+      migrate-at-start: true
+      change-log: db/changeLog.yaml
+      default-schema-name: cerebralstratum
     http:
       host: 0.0.0.0
       cors:
@@ -102,7 +102,11 @@ quarkus:
 #          username="${kafka-username}"
 #          password="${kafka-password}";
   quarkus:
-#    kubernetes-config:
+    liquibase:
+      migrate-at-start: true
+      change-log: devservices/changeLog.yaml
+      default-schema-name: cerebralstratum
+    #    kubernetes-config:
 #      secrets:
 #        ~:
 #          - db-creds
@@ -124,14 +128,17 @@ quarkus:
 mp:
  messaging:
    incoming:
-     kafka/device/location:
+     /device/location:
        topic: location
        connector: smallrye-kafka
-     kafka/device/status:
+       broadcast: true
+     /device/status:
        topic: status
        connector: smallrye-kafka
-     kafka/device/canbus:
+       broadcast: true
+     /device/canbus:
        topic: canbus
        connector: smallrye-kafka
+       broadcast: true
 keycloak:
   realm: External

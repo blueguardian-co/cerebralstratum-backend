@@ -1,17 +1,19 @@
 package co.blueguardian.cerebralstratum.backend.controllers.users;
 
+import java.util.UUID;
+
 public class CreateUserRequest {
-    public String username;
+    public UUID keycloak_user_id;
     public Integer organisation_id;
 
     public CreateUserRequest() {
     }
 
     public CreateUserRequest(
-            String username,
+            UUID keycloak_user_id,
             Integer organisation_id
     ) {
-        this.username = username;
+        this.keycloak_user_id = keycloak_user_id;
         this.organisation_id = organisation_id;
     }
 }
