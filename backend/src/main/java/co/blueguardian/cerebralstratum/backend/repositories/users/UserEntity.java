@@ -5,11 +5,12 @@ import co.blueguardian.cerebralstratum.backend.repositories.organisations.Organi
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u ORDER BY u.username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
-@NamedQuery(name = "UserEntity.getByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
+@NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u ORDER BY u.keycloak_user_id", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
+@NamedQuery(name = "UserEntity.getByKeycloakUserId", query = "SELECT u FROM UserEntity u WHERE u.keycloak_user_id = :keycloak_user_id", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
 @Cacheable
 public class UserEntity {
 
@@ -24,8 +25,8 @@ public class UserEntity {
     @GeneratedValue(generator = "userSequence")
     private Integer id;
 
-    @Column(length = 255, unique = true)
-    private String username;
+    @Column(unique = true)
+    private UUID keycloak_user_id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -44,7 +45,7 @@ public class UserEntity {
     }
 
     public UserEntity(
-        String username,
+        UUID keycloak_user_id,
         OrganisationEntity organisation,
         LocalDateTime created,
         Boolean subscription_active,
@@ -52,7 +53,7 @@ public class UserEntity {
 
 
     ) {
-        this.username = username;
+        this.keycloak_user_id = keycloak_user_id;
         this.organisation = organisation;
         this.created = created;
         this.subscription_active = subscription_active;
@@ -68,12 +69,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public UUID getKeycloakUserId() {
+        return keycloak_user_id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setKeycloakUserId(UUID keycloak_user_id) {
+        this.keycloak_user_id = keycloak_user_id;
     }
 
     public OrganisationEntity getOrganisation() {

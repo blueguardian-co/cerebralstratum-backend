@@ -1,7 +1,5 @@
 ---
 databaseChangeLog:
-- preConditions:
-    onFail: MARK_RAN
 - includeAll:
     path: changeLogs/
     relativeToChangelogFile: true

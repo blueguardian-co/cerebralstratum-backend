@@ -8,6 +8,7 @@ import co.blueguardian.cerebralstratum.backend.repositories.organisations.Organi
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,8 +27,8 @@ public class EntityManagerUserRepository implements UserRepository {
     private static User mapEntityToUser (UserEntity user) {
         return new User(
             user.getId(),
-            user.getUsername(),
-            user.getOrganisation(),
+            user.getKeycloakUserId(),
+            user.getOrganisation().getId(),
             user.getCreated(),
             user.getSubscriptionActive(),
             user.getSubscriptionDiscount()
@@ -45,7 +46,7 @@ public class EntityManagerUserRepository implements UserRepository {
         Boolean subscription_active = true;
         Integer subscription_discount = 0;
         return new UserEntity(
-                request.username,
+                request.keycloak_user_id,
                 organisation,
                 created,
                 subscription_active,
@@ -70,13 +71,10 @@ public class EntityManagerUserRepository implements UserRepository {
         return mapEntityToUser(user);
     }
 
-    public User getByUsername(String username) {
-        if (username == null || username.isEmpty()) {
-            return null;
-        }
+    public User getByKeycloakUserId(UUID keycloak_user_id) {
         try {
-            UserEntity user = entityManager.createNamedQuery("UserEntity.getUser", UserEntity.class)
-                    .setParameter("username", username)
+            UserEntity user = entityManager.createNamedQuery("UserEntity.getByKeycloakUserId", UserEntity.class)
+                    .setParameter("keycloak_user_id", keycloak_user_id)
                     .getSingleResult();
             return mapEntityToUser(user);
         } catch (jakarta.persistence.NoResultException e) {
@@ -86,7 +84,7 @@ public class EntityManagerUserRepository implements UserRepository {
 
     @Transactional
     public User create(CreateUserRequest request) {
-        User user = getByUsername(request.username);
+        User user = getByKeycloakUserId(request.keycloak_user_id);
         if (user != null) {
             return user;
         } else {

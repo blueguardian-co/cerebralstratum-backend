@@ -1,10 +1,10 @@
 mp:
   messaging:
     incoming:
-      kafka/device/location:
+      /device/location:
         topic: location
         connector: smallrye-kafka
-      kafka/device/status:
+      /device/status:
         topic: status
         connector: smallrye-kafka
 quarkus:

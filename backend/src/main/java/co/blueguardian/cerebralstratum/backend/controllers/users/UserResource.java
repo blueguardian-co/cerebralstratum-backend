@@ -19,6 +19,7 @@ import jakarta.annotation.security.RolesAllowed;
 
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("/api/v1/authorisation/users")
 @Authenticated
@@ -28,6 +29,9 @@ public class UserResource {
 
     @Inject
     SecurityIdentity securityIdentity;
+
+    @Inject
+    JsonWebToken jwtToken;
 
     @Inject
     UserRepository userRepository;
@@ -68,7 +72,7 @@ public class UserResource {
     @GET
     @Path("me")
     public Response getMe() {
-        User user = userRepository.getByUsername(securityIdentity.getPrincipal().getName());
+        User user = userRepository.getByKeycloakUserId(jwtToken.getClaim("sub"));
         if (user != null) {
             return Response.ok(user).status(200).build();
         } else {
@@ -80,7 +84,7 @@ public class UserResource {
     @Path("me")
     @Transactional
     public Response createMe(CreateMeRequest request) {
-        User user = userRepository.create(new CreateUserRequest(securityIdentity.getPrincipal().getName(), null));
+        User user = userRepository.create(new CreateUserRequest(jwtToken.getClaim("sub"), null));
         return Response.ok(user).status(201).build();
     }
 }

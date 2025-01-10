@@ -1,0 +1,63 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id:  1
+      author:  Alex Henshaw
+      labels: cerebral-stratum
+      context: test
+      comment: create initial test data
+      changes:
+        - insert:
+            tableName: organisations
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: keycloak_org_id
+                  value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
+              - column:
+                  name: owner_id
+                  value: 1
+              - column:
+                  name: created
+                  value: 02-02-2024T10:40
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: keycloak_user_id
+                  value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
+              - column:
+                  name: organisation_id
+                  value: 1
+              - column:
+                  name: created
+                  value: 02-02-2024T10:43
+              - column:
+                  name: subscription_active
+                  value: true
+              - column:
+                  name: subscription_discount
+                  type: 0
+        - insert:
+            tableName: devices
+            columns:
+              - column:
+                 name: uuid
+                 value: e4bb7b63-6619-589b-98a3-549d0cedc8bc
+              - column:
+                  name: name
+                  value: test device
+              - column:
+                  name: description
+                  value: this is a test device
+              - column:
+                  name: registered
+                  value: 02-02-2024T10:43
+              - column:
+                  name: owner_id
+                  value: 1
+              - column:
+                  name: organisation_id
+                  value: 1

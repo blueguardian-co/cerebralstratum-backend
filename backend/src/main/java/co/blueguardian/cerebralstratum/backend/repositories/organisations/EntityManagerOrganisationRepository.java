@@ -1,11 +1,9 @@
 package co.blueguardian.cerebralstratum.backend.repositories.organisations;
 
-import co.blueguardian.cerebralstratum.backend.controllers.organisations.Organisation;
-import co.blueguardian.cerebralstratum.backend.controllers.organisations.CreateOrganisationRequest;
-import co.blueguardian.cerebralstratum.backend.controllers.organisations.DeleteOrganisationRequest;
-import co.blueguardian.cerebralstratum.backend.controllers.organisations.UpdateOrganisationRequest;
+import co.blueguardian.cerebralstratum.backend.controllers.organisations.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,23 +22,32 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
     private static Organisation mapEntityToOrganisation (OrganisationEntity organisation) {
         return new Organisation(
             organisation.getId(),
-            organisation.getName(),
+            organisation.getKeycloakOrgId(),
             organisation.getOwnerId(),
             organisation.getCreated()
         );
     }
 
+    private static GetOrganisationRequest mapEntityToGetOrganisationRequest (OrganisationEntity organisation) {
+        return new GetOrganisationRequest(
+                organisation.getId(),
+                organisation.getKeycloakOrgId(),
+                organisation.getOwnerId(),
+                organisation.getCreated()
+        );
+    }
+
     private static OrganisationEntity mapCreateRequestToEntity (CreateOrganisationRequest request) {
         return new OrganisationEntity(
-                request.name,
+                request.keycloak_org_id,
                 request.owner,
                 request.created
         );
     }
 
     private static void mapUpdateRequestToEntity (OrganisationEntity organisation, UpdateOrganisationRequest request) {
-        if (!request.name.isEmpty()) {
-            organisation.setName(request.name);
+        if (request.keycloak_org_id != null) {
+            organisation.setKeycloakOrgId(request.keycloak_org_id);
         }
         if (request.owner_id != null) {
             organisation.setOwnerId(request.owner_id);
@@ -57,13 +64,13 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
         return mapEntityToOrganisation(organisation);
     }
 
-    public Organisation getByName(String name) {
-        if (name == null || name.isEmpty()) {
+    public Organisation getByKeycloakOrgId(UUID keycloak_org_id) {
+        if (keycloak_org_id == null) {
             return null;
         }
         try {
-            OrganisationEntity organisation = entityManager.createNamedQuery("OrganisationEntity.getOrganisationByName", OrganisationEntity.class)
-                    .setParameter("name", name)
+            OrganisationEntity organisation = entityManager.createNamedQuery("OrganisationEntity.getOrganisationByKeycloakOrgId", OrganisationEntity.class)
+                    .setParameter("keycloak_org_id", keycloak_org_id)
                     .getSingleResult();
             return mapEntityToOrganisation(organisation);
         } catch (jakarta.persistence.NoResultException e) {
@@ -73,7 +80,7 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
 
     @Transactional
     public Organisation create(CreateOrganisationRequest request) {
-        Organisation organisation = getByName(request.name);
+        Organisation organisation = getByKeycloakOrgId(request.keycloak_org_id);
         if (organisation != null) {
             return organisation;
         } else {
