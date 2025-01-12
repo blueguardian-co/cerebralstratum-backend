@@ -26,9 +26,8 @@ public class EntityManagerUserRepository implements UserRepository {
 
     private static User mapEntityToUser (UserEntity user) {
         return new User(
-            user.getId(),
             user.getKeycloakUserId(),
-            user.getOrganisation().getId(),
+            user.getOrganisation().getKeycloakOrgId(),
             user.getCreated(),
             user.getSubscriptionActive(),
             user.getSubscriptionDiscount()
@@ -37,8 +36,8 @@ public class EntityManagerUserRepository implements UserRepository {
 
     private UserEntity mapCreateRequestToEntity (CreateUserRequest request) {
         OrganisationEntity organisation;
-        if (request.organisation_id != null) {
-           organisation = entityManager.find(OrganisationEntity.class, request.organisation_id);
+        if (request.keycloak_org_id != null) {
+           organisation = entityManager.find(OrganisationEntity.class, request.keycloak_org_id);
         } else {
            organisation = null;
         }
@@ -55,8 +54,8 @@ public class EntityManagerUserRepository implements UserRepository {
     }
 
     private void mapUpdateRequestToEntity (UserEntity user, UpdateUserRequest request) {
-        if (request.organisation_id != null) {
-            OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.organisation_id);
+        if (request.keycloak_org_id != null) {
+            OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.keycloak_org_id);
             user.setOrganisation(organisation);
         }
     }
@@ -96,14 +95,14 @@ public class EntityManagerUserRepository implements UserRepository {
 
     @Transactional
     public User delete(DeleteUserRequest request) {
-        UserEntity user = entityManager.find(UserEntity.class, request.user_id);
+        UserEntity user = entityManager.find(UserEntity.class, request.keycloak_user_id);
         entityManager.remove(user);
         return mapEntityToUser(user);
     }
 
     @Transactional
     public User update(UpdateUserRequest request) {
-        UserEntity user = entityManager.find(UserEntity.class, request.user_id);
+        UserEntity user = entityManager.find(UserEntity.class, request.keycloak_user_id);
         mapUpdateRequestToEntity(user, request);
         entityManager.merge(user);
         return mapEntityToUser(user);

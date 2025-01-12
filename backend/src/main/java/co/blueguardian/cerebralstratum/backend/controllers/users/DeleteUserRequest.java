@@ -1,14 +1,16 @@
 package co.blueguardian.cerebralstratum.backend.controllers.users;
 
+import java.util.UUID;
+
 public class DeleteUserRequest {
-    public int user_id;
+    public UUID keycloak_user_id;
 
     public DeleteUserRequest() {
     }
 
     public DeleteUserRequest(
-            int user_id
+            UUID keycloak_user_id
     ) {
-        this.user_id = user_id;
+        this.keycloak_user_id = keycloak_user_id;
     }
 }

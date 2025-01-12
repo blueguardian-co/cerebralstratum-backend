@@ -21,18 +21,16 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
 
     private static Organisation mapEntityToOrganisation (OrganisationEntity organisation) {
         return new Organisation(
-            organisation.getId(),
             organisation.getKeycloakOrgId(),
-            organisation.getOwnerId(),
+            organisation.getKeycloakUserId(),
             organisation.getCreated()
         );
     }
 
     private static GetOrganisationRequest mapEntityToGetOrganisationRequest (OrganisationEntity organisation) {
         return new GetOrganisationRequest(
-                organisation.getId(),
                 organisation.getKeycloakOrgId(),
-                organisation.getOwnerId(),
+                organisation.getKeycloakUserId(),
                 organisation.getCreated()
         );
     }
@@ -40,7 +38,7 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
     private static OrganisationEntity mapCreateRequestToEntity (CreateOrganisationRequest request) {
         return new OrganisationEntity(
                 request.keycloak_org_id,
-                request.owner,
+                request.keycloak_user_id,
                 request.created
         );
     }
@@ -49,8 +47,8 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
         if (request.keycloak_org_id != null) {
             organisation.setKeycloakOrgId(request.keycloak_org_id);
         }
-        if (request.owner_id != null) {
-            organisation.setOwnerId(request.owner_id);
+        if (request.keycloak_user_id != null) {
+            organisation.setKeycloakUserId(request.keycloak_user_id);
         }
     }
 
@@ -92,14 +90,14 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
 
     @Transactional
     public Organisation delete(DeleteOrganisationRequest request) {
-        OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.id);
+        OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.keycloak_org_id);
         entityManager.remove(organisation);
         return mapEntityToOrganisation(organisation);
     }
 
     @Transactional
     public Organisation update(UpdateOrganisationRequest request) {
-        OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.id);
+        OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.keycloak_org_id);
         mapUpdateRequestToEntity(organisation, request);
         entityManager.merge(organisation);
         return mapEntityToOrganisation(organisation);

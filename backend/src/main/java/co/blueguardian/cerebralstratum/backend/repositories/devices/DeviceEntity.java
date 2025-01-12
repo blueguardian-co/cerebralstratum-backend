@@ -5,7 +5,6 @@ import co.blueguardian.cerebralstratum.backend.repositories.organisations.Organi
 import co.blueguardian.cerebralstratum.backend.repositories.users.UserEntity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -29,28 +28,10 @@ import org.hibernate.type.SqlTypes;
                 value = "false"
         )
 )
-@NamedQuery(
-        name = "DeviceEntity.getDeviceByUUID",
-        query = "SELECT d FROM DeviceEntity d WHERE d.uuid = :uuid",
-        hints = @QueryHint(
-                name = "org.hibernate.cacheable",
-                value = "false"
-        )
-)
 @Cacheable
 public class DeviceEntity {
 
     @Id
-    @SequenceGenerator(
-            name = "devicesSequence",
-            sequenceName = "devices_id_seq",
-            schema = "cerebralstratum",
-            allocationSize = 1,
-            initialValue = 1
-    )
-    @GeneratedValue(generator = "devicesSequence")
-    private Integer id;
-
     @Column(unique = true)
     private UUID uuid;
 
@@ -82,8 +63,8 @@ public class DeviceEntity {
     }
 
     public DeviceEntity(
-        String name,
         UUID uuid,
+        String name,
         String description,
         LocalDateTime registered,
         UserEntity owner,
@@ -91,8 +72,8 @@ public class DeviceEntity {
         String image_path,
         Status status
     ) {
-        this.name = name;
         this.uuid = uuid;
+        this.name = name;
         this.description = description;
         this.registered = registered;
         this.owner = owner;
@@ -100,13 +81,12 @@ public class DeviceEntity {
         this.image_path = image_path;
         this.status = status;
     }
-
-    public Integer getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
@@ -115,14 +95,6 @@ public class DeviceEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     public String getDescription() {

@@ -1,6 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
-import co.blueguardian.cerebralstratum.backend.controllers.locations.InboundLocation;
+import co.blueguardian.cerebralstratum.backend.controllers.locations.GetLocationRequest;
 
 import io.quarkus.security.PermissionsAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,7 +17,7 @@ public class DeviceWebSocket {
     Integer device_id;
     public enum MessageType {CURRENT_LOCATION, DEVICE_NOTIFICATION, CANBUS_MESSAGE, TEXT_MESSAGE}
 
-    public record CurrentLocationMessage(MessageType type, UUID device_uuid, InboundLocation location) {
+    public record CurrentLocationMessage(MessageType type, UUID device_uuid, GetLocationRequest location) {
     }
     public record DeviceNotification(MessageType type, UUID device_uuid, Status status) {
     }
@@ -42,7 +42,7 @@ public class DeviceWebSocket {
 
     @PermissionsAllowed("message-classifier")
     @Incoming("/device/location")
-    public void consumeLocation(ConsumerRecord<UUID, InboundLocation> record) {
+    public void consumeLocation(ConsumerRecord<UUID, GetLocationRequest> record) {
         for (WebSocketConnection c : openConnections) {
             try {
                 c.sendTextAndAwait(

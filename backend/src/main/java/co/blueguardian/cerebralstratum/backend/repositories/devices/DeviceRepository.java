@@ -12,16 +12,16 @@ public interface DeviceRepository {
 
     public List<Device> findAll();
 
-    public Device getById(int id);
+    public Device getById(UUID device_id);
 
     public Device create(UUID keycloak_user_id, CreateDeviceRequest request);
 
-    public Device delete(int auction_id);
+    public Device delete(UUID device_id);
 
-    public Device update(Integer device_id, UpdateDeviceRequest request);
+    public Device update(UUID device_id, UpdateDeviceRequest request);
 
     public Device register(UUID keycloak_user_id, RegisterDeviceRequest request);
 
-    public Device unregister(UUID keycloak_user_id, Integer device_id);
+    public Device unregister(UUID keycloak_user_id, UUID device_id);
     
 }

@@ -23,13 +23,12 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
 
     private static Device mapEntityToDevice (DeviceEntity device) {
         return new Device(
-            device.getId(),
-            device.getName(),
             device.getUuid(),
+            device.getName(),
             device.getDescription(),
             device.getRegistered(),
-            device.getOwner().getId(),
-            device.getOrganisation().getId(),
+            device.getOwner().getKeycloakUserId(),
+            device.getOrganisation().getKeycloakOrgId(),
             device.getImagePath(),
             device.getStatus()
         );
@@ -44,8 +43,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         OrganisationEntity organisation = null;
         Status status = new Status("Device Created", "Healthy", 1.00F);
         return new DeviceEntity(
-            request.name,
             uuid,
+            request.name,
             request.description,
             registered,
             owner,
@@ -62,12 +61,12 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         if (!request.description.isEmpty()) {
             device.setDescription(request.description);
         }
-        if (request.owner_id != null) {
-            UserEntity owner = entityManager.find(UserEntity.class, request.owner_id);
+        if (request.keycloak_user_id != null) {
+            UserEntity owner = entityManager.find(UserEntity.class, request.keycloak_user_id);
             device.setOwner(owner);
         }
-        if (request.organisation_id != null) {
-            OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.organisation_id);
+        if (request.keycloak_org_id != null) {
+            OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, request.keycloak_org_id);
             device.setOrganisation(organisation);
         }
         if (!request.image_path.isEmpty()) {
@@ -80,8 +79,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
             .getResultList().stream().map(EntityManagerDeviceRepository::mapEntityToDevice).collect(Collectors.toList());
     }
 
-    public Device getById(int id) {
-        DeviceEntity device = entityManager.find(DeviceEntity.class, id);
+    public Device getById(UUID device_id) {
+        DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         return mapEntityToDevice(device);
     }
 
@@ -93,14 +92,14 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device delete(int device_id) {
+    public Device delete(UUID device_id) {
         DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         entityManager.remove(device);
         return mapEntityToDevice(device);
     }
 
     @Transactional
-    public Device update(Integer device_id, UpdateDeviceRequest request) {
+    public Device update(UUID device_id, UpdateDeviceRequest request) {
         DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         updateRequestToEntity(device, request);
         entityManager.merge(device);
@@ -109,9 +108,7 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
 
     @Transactional
     public Device register(UUID keycloak_user_id, RegisterDeviceRequest request) {
-        DeviceEntity device = entityManager.createNamedQuery("DeviceEntity.getDeviceByUUID", DeviceEntity.class)
-                .setParameter("uuid", request.serial_number)
-                .getSingleResult();
+        DeviceEntity device = entityManager.find(DeviceEntity.class, request.serial_number);
         if (device.getOwner() == null) {
             UserEntity owner = entityManager.createNamedQuery("UserEntity.getByKeycloakUserId", UserEntity.class)
                  .setParameter("keycloak_user_id", keycloak_user_id)
@@ -126,7 +123,7 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device unregister(UUID keycloak_user_id, Integer device_id) {
+    public Device unregister(UUID keycloak_user_id, UUID device_id) {
         DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         UserEntity owner = device.getOwner();
         if (Objects.equals(owner.getKeycloakUserId(), keycloak_user_id)) {

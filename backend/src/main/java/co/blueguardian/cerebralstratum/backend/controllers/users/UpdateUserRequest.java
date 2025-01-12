@@ -1,17 +1,19 @@
 package co.blueguardian.cerebralstratum.backend.controllers.users;
 
+import java.util.UUID;
+
 public class UpdateUserRequest {
-    public Integer user_id;
-    public Integer organisation_id;
+    public UUID keycloak_user_id;
+    public UUID keycloak_org_id;
 
     public UpdateUserRequest() {
     }
 
     public UpdateUserRequest(
-            Integer user_id,
-            Integer organisation_id
+            UUID keycloak_user_id,
+            UUID keycloak_org_id
     ) {
-        this.user_id = user_id;
-        this.organisation_id = organisation_id;
+        this.keycloak_user_id = keycloak_user_id;
+        this.keycloak_org_id = keycloak_org_id;
     }
 }
