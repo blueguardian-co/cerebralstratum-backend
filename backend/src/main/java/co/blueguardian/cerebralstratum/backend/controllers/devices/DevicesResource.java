@@ -60,7 +60,7 @@ public class DevicesResource {
     @PUT
     @Transactional
     @PermissionsAllowed("member-of-group")
-    public Response update(Integer device_id, UpdateDeviceRequest request) {
+    public Response update(UUID device_id, UpdateDeviceRequest request) {
         Device device = deviceRepository.update(device_id, request);
         return Response.ok(device).status(200).build();
     }
@@ -69,7 +69,7 @@ public class DevicesResource {
     @Path("{device_id}")
     @RolesAllowed("admin")
     @Transactional
-    public Response delete(Integer device_id) {
+    public Response delete(UUID device_id) {
         Device device = deviceRepository.delete(device_id);
         return Response.ok(device).status(200).build();
     }
@@ -77,7 +77,7 @@ public class DevicesResource {
     @GET
     @Path("{device_id}")
     @RolesAllowed("admin")
-    public Device getDeviceById(Integer device_id) {
+    public Device getDeviceById(UUID device_id) {
         Device device = deviceRepository.getById(device_id);
         if (device == null) {
             throw new WebApplicationException("Device with id of " + device_id + " does not exist.", 404);
@@ -101,7 +101,7 @@ public class DevicesResource {
     @POST
     @Transactional
     @PermissionsAllowed("is-member-of")
-    public Response unregister(Integer device_id) {
+    public Response unregister(UUID device_id) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
             Device device = deviceRepository.unregister(keycloak_user_id, device_id);

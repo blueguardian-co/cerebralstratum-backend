@@ -70,10 +70,6 @@ quarkus:
       auth-server-url: https://sso.blueguardian.co/realms/External
       credentials:
         secret: ${oidc-secret}
-        token-cache:
-          max-size: 1000
-          time-to-live: 5M
-          clean-up-timer-interval: 1M
     keycloak:
       policy-enforcer:
         enable: true
@@ -141,4 +137,4 @@ mp:
        connector: smallrye-kafka
        broadcast: true
 keycloak:
-  realm: External
+  realm: external

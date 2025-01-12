@@ -1,6 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
-import co.blueguardian.cerebralstratum.backend.controllers.locations.InboundLocation;
+import co.blueguardian.cerebralstratum.backend.controllers.locations.GetLocationRequest;
 
 import io.quarkus.security.PermissionsAllowed;
 import io.smallrye.mutiny.Multi;
@@ -35,8 +35,8 @@ public class DeviceServerSentEvents {
         this.canBusMessages = canBusMessages;
     }
 
-    public record CurrentLocationMessage(int id, UUID device_uuid, InboundLocation location) {
-        public CurrentLocationMessage(UUID device_uuid, InboundLocation location) {
+    public record CurrentLocationMessage(int id, UUID device_uuid, GetLocationRequest location) {
+        public CurrentLocationMessage(UUID device_uuid, GetLocationRequest location) {
             this(-1,device_uuid,location);
         }
     }

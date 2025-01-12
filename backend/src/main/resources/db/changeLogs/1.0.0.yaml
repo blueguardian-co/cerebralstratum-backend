@@ -63,11 +63,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: latitude
-                  type: decimal
-              - column:
-                  name: longitude
-                  type: decimal
+                  name: coordinates
+                  type: GEOMETRY(Point, 4326)
               - column:
                   name: timestamp
                   type: timestamp
@@ -75,16 +72,10 @@ databaseChangeLog:
             tableName: organisations
             columns:
               - column:
-                  name: id
-                  type: int
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
                   name: keycloak_org_id
                   type: uuid
                   constraints:
+                    primaryKey: true
                     nullable: false
               - column:
                   name: owner_id
@@ -98,16 +89,10 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: id
-                  type: int
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
                   name: keycloak_user_id
                   type: uuid
                   constraints:
+                    primaryKey: true
                     nullable: false
               - column:
                   name: organisation_id
@@ -145,7 +130,7 @@ databaseChangeLog:
              initiallyDeferred:  true
              onDelete:  CASCADE
              onUpdate:  CASCADE
-             referencedColumnNames: id
+             referencedColumnNames: keycloak_org_id
              referencedTableName:  organisations
              referencedTableSchemaName:  cerebralstratum
              validate:  true
@@ -171,7 +156,7 @@ databaseChangeLog:
              initiallyDeferred:  true
              onDelete:  CASCADE
              onUpdate:  CASCADE
-             referencedColumnNames: id
+             referencedColumnNames: keycloak_user_id
              referencedTableName:  users
              referencedTableSchemaName:  cerebralstratum
              validate:  true
@@ -184,7 +169,7 @@ databaseChangeLog:
             initiallyDeferred: true
             onDelete: CASCADE
             onUpdate: CASCADE
-            referencedColumnNames: id
+            referencedColumnNames: keycloak_org_id
             referencedTableName: organisations
             referencedTableSchemaName: cerebralstratum
             validate: true
@@ -197,14 +182,4 @@ databaseChangeLog:
             incrementBy: 1
             schemaName: cerebralstratum
             sequenceName: locations_id_seq
-            startValue: 1
-        - createSequence:
-            incrementBy: 1
-            schemaName: cerebralstratum
-            sequenceName: users_id_seq
-            startValue: 1
-        - createSequence:
-            incrementBy: 1
-            schemaName: cerebralstratum
-            sequenceName: organisations_id_seq
             startValue: 1

@@ -3,6 +3,7 @@ package co.blueguardian.cerebralstratum.backend.repositories.locations;
 import co.blueguardian.cerebralstratum.backend.controllers.locations.Location;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,7 +20,7 @@ public class EntityManagerLocationRepository implements LocationRepository {
     EntityManager entityManager;
 
     private static Location mapEntityToLocation (LocationEntity location) {
-        int device_id =  location.getDevice().getId();
+        UUID device_id =  location.getDevice().getUuid();
         return new Location(
             location.getId(),
             device_id,

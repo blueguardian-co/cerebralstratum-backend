@@ -1,28 +1,28 @@
 package co.blueguardian.cerebralstratum.backend.controllers.locations;
 
 import java.time.LocalDateTime;
+import org.locationtech.jts.geom.Point;
 
-/*
-TODO:
-- Use the GeoTools library to define the Latitude and Longitude types
- */
+public class GetLocationRequest {
 
-public class InboundLocation {
-
+    public Point coordinates;
     public LocalDateTime timestamp;
 
-    public InboundLocation() {
+    public GetLocationRequest() {
     }
 
-    public InboundLocation(
+    public GetLocationRequest(
+            Point coordinates,
             LocalDateTime timestamp
     ) {
+        this.coordinates = coordinates;
         this.timestamp = timestamp;
     }
 
     @Override
     public String toString() {
         return "-- Status --" +
+                "Coordinates: " + coordinates + '\n' +
                 "Timestamp: " + timestamp;
     }
 }

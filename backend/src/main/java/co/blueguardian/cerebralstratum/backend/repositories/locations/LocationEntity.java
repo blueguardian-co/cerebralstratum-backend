@@ -17,6 +17,8 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.CascadeType;
 
+import org.locationtech.jts.geom.Point;
+
 @Entity
 @Table(name = "locations")
 @NamedQuery(
@@ -25,10 +27,10 @@ import jakarta.persistence.CascadeType;
 )
 @NamedNativeQuery(
     name="Locations.latest",
-    query = "DISTINCT ON (b.device_id) b.id, b.device_id, b.latitude, b.longtitude "
+    query = "SELECT DISTINCT ON (b.device_id) b.id, b.device_id, b.latitude, b.longitude "
             + "FROM locations b "
-            + "WHERE b.auction_id = :deviceId "
-            + "ORDER BY b.timestamp;",
+            + "WHERE b.device_id = :deviceId "
+            + "ORDER BY b.device_id, b.timestamp DESC;",
     resultClass = LocationEntity.class
 )
 @Cacheable
@@ -42,7 +44,10 @@ public class LocationEntity {
     @PrimaryKeyJoinColumn
     private DeviceEntity device;
 
-    @Column(columnDefinition="timestamp")
+    @Column(columnDefinition = "GEOMETRY(Point, 4326)")
+    private Point coordinates;
+
+    @Column(columnDefinition = "timestamp")
     private LocalDateTime timestamp;
 
     public LocationEntity() {
@@ -50,9 +55,11 @@ public class LocationEntity {
 
     public LocationEntity(
         DeviceEntity device,
+        Point coordinates,
         LocalDateTime timestamp
     ) {
         this.device = device;
+        this.coordinates = coordinates;
         this.timestamp = timestamp;
     }
 
@@ -70,6 +77,14 @@ public class LocationEntity {
 
     public void setDevice(DeviceEntity device) {
         this.device = device;
+    }
+
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
     }
 
     public LocalDateTime getTimestamp() {

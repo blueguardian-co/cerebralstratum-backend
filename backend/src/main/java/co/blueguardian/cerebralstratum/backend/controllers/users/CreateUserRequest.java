@@ -4,16 +4,16 @@ import java.util.UUID;
 
 public class CreateUserRequest {
     public UUID keycloak_user_id;
-    public Integer organisation_id;
+    public UUID keycloak_org_id;
 
     public CreateUserRequest() {
     }
 
     public CreateUserRequest(
             UUID keycloak_user_id,
-            Integer organisation_id
+            UUID keycloak_org_id
     ) {
         this.keycloak_user_id = keycloak_user_id;
-        this.organisation_id = organisation_id;
+        this.keycloak_org_id = keycloak_org_id;
     }
 }
