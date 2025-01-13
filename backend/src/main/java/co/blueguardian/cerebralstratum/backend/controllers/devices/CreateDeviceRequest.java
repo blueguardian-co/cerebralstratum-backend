@@ -1,22 +1,17 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
+import java.util.UUID;
 
 public class CreateDeviceRequest {
 
-    public String name;
-    public String description;
-    public String image_path;
+    public UUID uuid;
 
     public CreateDeviceRequest() {
     }
 
     public CreateDeviceRequest(
-            String name,
-            String description,
-            String image_path
+            UUID uuid
     ) {
-        this.name = name;
-        this.description = description;
-        this.image_path = image_path;
+        this.uuid = uuid;
     }
 }

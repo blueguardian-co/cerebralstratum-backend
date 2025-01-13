@@ -11,14 +11,11 @@ databaseChangeLog:
             tableName: organisations
             columns:
               - column:
-                  name: id
-                  value: 1
-              - column:
                   name: keycloak_org_id
                   value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
               - column:
-                  name: owner_id
-                  value: 1
+                  name: owner
+                  value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
                   name: created
                   value: 02-02-2024T10:40
@@ -29,8 +26,8 @@ databaseChangeLog:
                   name: keycloak_user_id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
-                  name: organisation_id
-                  value: 1
+                  name: organisation
+                  value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
               - column:
                   name: created
                   value: 02-02-2024T10:43
@@ -56,8 +53,8 @@ databaseChangeLog:
                   name: registered
                   value: 02-02-2024T10:43
               - column:
-                  name: owner_id
-                  value: 1
+                  name: owner
+                  value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
-                  name: organisation_id
-                  value: 1
+                  name: organisation
+                  value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
