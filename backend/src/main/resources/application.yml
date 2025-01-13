@@ -21,6 +21,7 @@ quarkus:
       db-name: cerebral-stratum
       init-script-path: devservices/init.sql
       port: 5432
+      image-name: docker.io/postgis/postgis:17-master
   hibernate-orm:
     database:
       default-schema: ${quarkus.liquibase.default-schema-name}

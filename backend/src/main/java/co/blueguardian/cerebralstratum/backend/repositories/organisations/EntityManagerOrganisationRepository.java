@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import co.blueguardian.cerebralstratum.backend.repositories.users.UserEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.inject.Inject;
@@ -22,7 +23,7 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
     private static Organisation mapEntityToOrganisation (OrganisationEntity organisation) {
         return new Organisation(
             organisation.getKeycloakOrgId(),
-            organisation.getKeycloakUserId(),
+            organisation.getOwner().getKeycloakUserId(),
             organisation.getCreated()
         );
     }
@@ -30,25 +31,27 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
     private static GetOrganisationRequest mapEntityToGetOrganisationRequest (OrganisationEntity organisation) {
         return new GetOrganisationRequest(
                 organisation.getKeycloakOrgId(),
-                organisation.getKeycloakUserId(),
+                organisation.getOwner().getKeycloakUserId(),
                 organisation.getCreated()
         );
     }
 
-    private static OrganisationEntity mapCreateRequestToEntity (CreateOrganisationRequest request) {
+    private OrganisationEntity mapCreateRequestToEntity (CreateOrganisationRequest request) {
+        UserEntity user = entityManager.find(UserEntity.class, request.keycloak_user_id);
         return new OrganisationEntity(
                 request.keycloak_org_id,
-                request.keycloak_user_id,
+                user,
                 request.created
         );
     }
 
-    private static void mapUpdateRequestToEntity (OrganisationEntity organisation, UpdateOrganisationRequest request) {
+    private void mapUpdateRequestToEntity (OrganisationEntity organisation, UpdateOrganisationRequest request) {
         if (request.keycloak_org_id != null) {
             organisation.setKeycloakOrgId(request.keycloak_org_id);
         }
         if (request.keycloak_user_id != null) {
-            organisation.setKeycloakUserId(request.keycloak_user_id);
+            UserEntity user = entityManager.find(UserEntity.class, request.keycloak_user_id);
+            organisation.setOwner(user);
         }
     }
 

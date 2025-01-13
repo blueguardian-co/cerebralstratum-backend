@@ -11,22 +11,14 @@ databaseChangeLog:
             tableName: devices
             columns:
               - column:
-                  name: id
-                  type: int
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable:  false
-              - column:
                  name: uuid
                  type: uuid
                  constraints:
-                   nullable: false
+                   primaryKey: true
+                   nullable:  false
               - column:
                   name: name
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: description
                   type: varchar(255)
@@ -34,13 +26,11 @@ databaseChangeLog:
                   name: registered
                   type: timestamp
               - column:
-                  name: owner_id
-                  type: int
-                  constraints:
-                    nullable: false
+                  name: owner
+                  type: uuid
               - column:
-                  name: organisation_id
-                  type: int
+                  name: organisation
+                  type: uuid
               - column:
                   name: image_path
                   type: varchar(255)
@@ -58,16 +48,20 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: device_id
-                  type: int
+                  name: device
+                  type: uuid
                   constraints:
                     nullable: false
               - column:
                   name: coordinates
                   type: GEOMETRY(Point, 4326)
+                  constraints:
+                    nullable: false
               - column:
                   name: timestamp
                   type: timestamp
+                  constraints:
+                    nullable: false
         - createTable:
             tableName: organisations
             columns:
@@ -78,8 +72,8 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: owner_id
-                  type: int
+                  name: owner
+                  type: uuid
                   constraints:
                     nullable: false
               - column:
@@ -95,8 +89,8 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: organisation_id
-                  type: int
+                  name: organisation
+                  type: uuid
                   constraints:
                     nullable: true
               - column:
@@ -109,7 +103,7 @@ databaseChangeLog:
                   name: subscription_discount
                   type: int
         -  addForeignKeyConstraint:
-            baseColumnNames: device_id
+            baseColumnNames: device
             baseTableName:  locations
             baseTableSchemaName:  cerebralstratum
             constraintName:  fk_devices_locations_id
@@ -117,12 +111,12 @@ databaseChangeLog:
             initiallyDeferred:  true
             onDelete:  CASCADE
             onUpdate:  CASCADE
-            referencedColumnNames:  id
+            referencedColumnNames:  uuid
             referencedTableName:  devices
             referencedTableSchemaName:  cerebralstratum
             validate:  true
         -  addForeignKeyConstraint:
-             baseColumnNames: organisation_id
+             baseColumnNames: organisation
              baseTableName:  devices
              baseTableSchemaName:  cerebralstratum
              constraintName:  fk_devices_organisations_id
@@ -135,7 +129,7 @@ databaseChangeLog:
              referencedTableSchemaName:  cerebralstratum
              validate:  true
         -  addForeignKeyConstraint:
-            baseColumnNames: owner_id
+            baseColumnNames: owner
             baseTableName:  organisations
             baseTableSchemaName:  cerebralstratum
             constraintName:  fk_users_organisations_id
@@ -143,12 +137,12 @@ databaseChangeLog:
             initiallyDeferred:  true
             onDelete:  CASCADE
             onUpdate:  CASCADE
-            referencedColumnNames: id
+            referencedColumnNames: keycloak_user_id
             referencedTableName:  users
             referencedTableSchemaName:  cerebralstratum
             validate:  true
         -  addForeignKeyConstraint:
-             baseColumnNames: owner_id
+             baseColumnNames: owner
              baseTableName:  devices
              baseTableSchemaName:  cerebralstratum
              constraintName:  fk_users_devices_id
@@ -161,7 +155,7 @@ databaseChangeLog:
              referencedTableSchemaName:  cerebralstratum
              validate:  true
         - addForeignKeyConstraint:
-            baseColumnNames: organisation_id
+            baseColumnNames: organisation
             baseTableName: users
             baseTableSchemaName: cerebralstratum
             constraintName: fk_organisations_users_id
@@ -173,11 +167,6 @@ databaseChangeLog:
             referencedTableName: organisations
             referencedTableSchemaName: cerebralstratum
             validate: true
-        - createSequence:
-            incrementBy: 1
-            schemaName: cerebralstratum
-            sequenceName: devices_id_seq
-            startValue: 1
         - createSequence:
             incrementBy: 1
             schemaName: cerebralstratum

@@ -34,23 +34,16 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         );
     }
 
-    private DeviceEntity mapCreateRequestToEntity (UUID keycloak_user_id, CreateDeviceRequest request) {
-        UUID uuid = UUID.randomUUID();
-        LocalDateTime registered = LocalDateTime.now();
-        UserEntity owner = entityManager.createNamedQuery("UserEntity.getByKeycloakUserId", UserEntity.class)
-                .setParameter("keycloak_user_id", keycloak_user_id)
-                .getSingleResult();
-        OrganisationEntity organisation = null;
-        Status status = new Status("Device Created", "Healthy", 1.00F);
+    private DeviceEntity mapCreateRequestToEntity (CreateDeviceRequest request) {
         return new DeviceEntity(
-            uuid,
-            request.name,
-            request.description,
-            registered,
-            owner,
-            organisation,
-            request.image_path,
-            status
+            request.uuid,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         );
     }
 
@@ -85,8 +78,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device create(UUID keycloak_user_id, CreateDeviceRequest request) {
-        DeviceEntity newDevice = mapCreateRequestToEntity(keycloak_user_id, request);
+    public Device create(CreateDeviceRequest request) {
+        DeviceEntity newDevice = mapCreateRequestToEntity(request);
         entityManager.persist(newDevice);
         return mapEntityToDevice(newDevice);
     }
@@ -107,8 +100,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     }
 
     @Transactional
-    public Device register(UUID keycloak_user_id, RegisterDeviceRequest request) {
-        DeviceEntity device = entityManager.find(DeviceEntity.class, request.serial_number);
+    public Device register(UUID keycloak_user_id, UUID device_id) {
+        DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         if (device.getOwner() == null) {
             UserEntity owner = entityManager.createNamedQuery("UserEntity.getByKeycloakUserId", UserEntity.class)
                  .setParameter("keycloak_user_id", keycloak_user_id)

@@ -35,7 +35,7 @@ public class DeviceEntity {
     @Column(unique = true)
     private UUID uuid;
 
-    @Column(length = 255, unique = true)
+    @Column(length = 255)
     private String name;
 
     @Column(length = 255)

@@ -1,12 +1,8 @@
 package co.blueguardian.cerebralstratum.backend.repositories.organisations;
 
-import jakarta.persistence.Cacheable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.QueryHint;
-import jakarta.persistence.Table;
+import co.blueguardian.cerebralstratum.backend.repositories.users.UserEntity;
+
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -36,8 +32,9 @@ public class OrganisationEntity {
     @Column(unique = true)
     private UUID keycloak_org_id;
 
-    @Column
-    private UUID keycloak_user_id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private UserEntity owner;
 
     @Column
     private LocalDateTime created;
@@ -47,13 +44,14 @@ public class OrganisationEntity {
 
     public OrganisationEntity(
             UUID keycloak_org_id,
-            UUID keycloak_user_id,
+            UserEntity owner,
             LocalDateTime created
     ) {
         this.keycloak_org_id = keycloak_org_id;
-        this.keycloak_user_id = keycloak_user_id;
+        this.owner = owner;
         this.created = created;
     }
+
 
     public UUID getKeycloakOrgId() {
         return keycloak_org_id;
@@ -63,12 +61,12 @@ public class OrganisationEntity {
         this.keycloak_org_id = keycloak_org_id;
     }
 
-    public UUID getKeycloakUserId() {
-        return keycloak_user_id;
+    public UserEntity getOwner() {
+        return owner;
     }
 
-    public void setKeycloakUserId(UUID keycloak_user_id) {
-        this.keycloak_user_id = keycloak_user_id;
+    public void setOwner(UserEntity owner) {
+        this.owner = owner;
     }
 
     public LocalDateTime getCreated() {

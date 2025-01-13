@@ -50,9 +50,9 @@ public class DevicesResource {
 
     @POST
     @Transactional
+    @PermissionsAllowed("platform-admin")
     public Response create(CreateDeviceRequest request) {
-        UUID keycloak_user_id = jwtToken.getClaim("sub");
-        Device device = deviceRepository.create(keycloak_user_id, request);
+        Device device = deviceRepository.create(request);
         return Response.ok(device).status(201).build();
     }
 
@@ -67,7 +67,7 @@ public class DevicesResource {
 
     @DELETE
     @Path("{device_id}")
-    @RolesAllowed("admin")
+    @PermissionsAllowed("platform-admin")
     @Transactional
     public Response delete(UUID device_id) {
         Device device = deviceRepository.delete(device_id);
@@ -76,7 +76,7 @@ public class DevicesResource {
 
     @GET
     @Path("{device_id}")
-    @RolesAllowed("admin")
+    @PermissionsAllowed("platform-admin")
     public Device getDeviceById(UUID device_id) {
         Device device = deviceRepository.getById(device_id);
         if (device == null) {
@@ -85,13 +85,13 @@ public class DevicesResource {
         return device;
     }
 
-    @Path("register")
+    @Path("{device_id}/register")
     @POST
     @Transactional
-    public Response register(RegisterDeviceRequest request) {
+    public Response register(UUID device_id) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
-            Device device = deviceRepository.register(keycloak_user_id, request);
+            Device device = deviceRepository.register(keycloak_user_id, device_id);
             return Response.ok(device).status(201).build();
         } catch (Exception e) {
             throw new WebApplicationException("Device already registered. Please contact owner to unregister the device, and then try again.", Response.Status.UNAUTHORIZED);
@@ -100,7 +100,7 @@ public class DevicesResource {
     @Path("{device_id}/unregister")
     @POST
     @Transactional
-    @PermissionsAllowed("is-member-of")
+    @PermissionsAllowed("member-of-group")
     public Response unregister(UUID device_id) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
