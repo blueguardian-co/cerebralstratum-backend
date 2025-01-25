@@ -22,16 +22,16 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
 
     private static Organisation mapEntityToOrganisation (OrganisationEntity organisation) {
         return new Organisation(
-            organisation.getKeycloakOrgId(),
-            organisation.getOwner().getKeycloakUserId(),
+            organisation.getId(),
+            organisation.getUser().getId(),
             organisation.getCreated()
         );
     }
 
     private static GetOrganisationRequest mapEntityToGetOrganisationRequest (OrganisationEntity organisation) {
         return new GetOrganisationRequest(
-                organisation.getKeycloakOrgId(),
-                organisation.getOwner().getKeycloakUserId(),
+                organisation.getId(),
+                organisation.getUser().getId(),
                 organisation.getCreated()
         );
     }
@@ -47,11 +47,11 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
 
     private void mapUpdateRequestToEntity (OrganisationEntity organisation, UpdateOrganisationRequest request) {
         if (request.keycloak_org_id != null) {
-            organisation.setKeycloakOrgId(request.keycloak_org_id);
+            organisation.setId(request.keycloak_org_id);
         }
         if (request.keycloak_user_id != null) {
             UserEntity user = entityManager.find(UserEntity.class, request.keycloak_user_id);
-            organisation.setOwner(user);
+            organisation.setUser(user);
         }
     }
 
@@ -60,7 +60,7 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
             .getResultList().stream().map(EntityManagerOrganisationRepository::mapEntityToOrganisation).collect(Collectors.toList());
     }
 
-    public Organisation getById(int organisation_id) {
+    public Organisation getById(UUID organisation_id) {
         OrganisationEntity organisation = entityManager.find(OrganisationEntity.class, organisation_id);
         return mapEntityToOrganisation(organisation);
     }
@@ -71,7 +71,7 @@ public class EntityManagerOrganisationRepository implements OrganisationReposito
         }
         try {
             OrganisationEntity organisation = entityManager.createNamedQuery("OrganisationEntity.getOrganisationByKeycloakOrgId", OrganisationEntity.class)
-                    .setParameter("keycloak_org_id", keycloak_org_id)
+                    .setParameter("Keycloak_organisation_id", keycloak_org_id)
                     .getSingleResult();
             return mapEntityToOrganisation(organisation);
         } catch (jakarta.persistence.NoResultException e) {

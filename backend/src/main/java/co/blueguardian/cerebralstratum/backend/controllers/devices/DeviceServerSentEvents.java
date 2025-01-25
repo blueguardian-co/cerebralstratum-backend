@@ -51,27 +51,27 @@ public class DeviceServerSentEvents {
         }
     }
 
-    @PermissionsAllowed("member-of-group")
+    @PermissionsAllowed("member-of-device-group")
     @GET
     @Path("/location")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<CurrentLocationMessage> broadcastLocation() {
+    public Multi<CurrentLocationMessage> broadcastLocation(UUID device_uuid) {
         return this.currentLocationMessages;
     }
 
-    @PermissionsAllowed("member-of-group")
+    @PermissionsAllowed("member-of-device-group")
     @GET
     @Path("/status")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<DeviceNotification> broadcastStatus() {
+    public Multi<DeviceNotification> broadcastStatus(UUID device_uuid) {
         return this.deviceNotifications;
     }
 
-    @PermissionsAllowed("member-of-group")
+    @PermissionsAllowed("member-of-device-group")
     @GET
     @Path("/canbus")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<CANBusMessage> broadcastCANBus() {
+    public Multi<CANBusMessage> broadcastCANBus(UUID device_uuid) {
         return this.canBusMessages;
     }
 }

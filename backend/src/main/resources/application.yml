@@ -10,6 +10,9 @@ quarkus:
     port: 6443
     cors:
       ~: true
+    auth:
+      roles-mapping:
+        admin: platform-admins
   dev-ui:
     cors:
       enabled: false
@@ -33,10 +36,11 @@ quarkus:
     client-id: cerebral-stratum-backend
   keycloak:
     devservices:
-      realm-path: devservices/realm.json
-      port: 8000
-      start-command: >-
-        start-dev --http-enabled=true --proxy-headers=xforwarded --features=organization:v1
+      enabled: false
+#      realm-path: devservices/realm.json
+#      port: 8000
+#      start-command: >-
+#        start-dev --http-enabled=true --proxy-headers=xforwarded --features=organization:v1
     policy-enforcer:
       enable: false
   scheduler:
@@ -114,6 +118,10 @@ quarkus:
       host: localhost
       cors:
         origins: /.*/
+    oidc:
+      auth-server-url: http://localhost:8000/realms/${keycloak.realm}
+      credentials:
+        secret: yxj6VJfZB8plW95iLkGn9ebWPPhic6yY
     keycloak:
       admin-client:
         server-url: http://localhost:8000

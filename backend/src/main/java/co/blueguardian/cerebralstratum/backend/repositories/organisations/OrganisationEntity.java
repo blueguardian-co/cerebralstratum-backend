@@ -11,7 +11,7 @@ import java.util.UUID;
 @Table(name = "organisations")
 @NamedQuery(
         name = "OrganisationEntity.findAll",
-        query = "SELECT o FROM OrganisationEntity o ORDER BY o.keycloak_org_id",
+        query = "SELECT o FROM OrganisationEntity o ORDER BY o.id",
         hints = @QueryHint(
                 name = "org.hibernate.cacheable",
                 value = "false"
@@ -19,7 +19,7 @@ import java.util.UUID;
 )
 @NamedQuery(
         name = "OrganisationEntity.getOrganisationByKeycloakOrgId",
-        query = "SELECT o FROM OrganisationEntity o WHERE o.keycloak_org_id = :keycloak_org_id",
+        query = "SELECT o FROM OrganisationEntity o WHERE o.id = :Keycloak_organisation_id",
         hints = @QueryHint(
                 name = "org.hibernate.cacheable",
                 value = "false"
@@ -30,11 +30,11 @@ public class OrganisationEntity {
 
     @Id
     @Column(unique = true)
-    private UUID keycloak_org_id;
+    private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private UserEntity owner;
+    private UserEntity user;
 
     @Column
     private LocalDateTime created;
@@ -43,30 +43,30 @@ public class OrganisationEntity {
     }
 
     public OrganisationEntity(
-            UUID keycloak_org_id,
-            UserEntity owner,
+            UUID id,
+            UserEntity user,
             LocalDateTime created
     ) {
-        this.keycloak_org_id = keycloak_org_id;
-        this.owner = owner;
+        this.id = id;
+        this.user = user;
         this.created = created;
     }
 
 
-    public UUID getKeycloakOrgId() {
-        return keycloak_org_id;
+    public UUID getId() {
+        return id;
     }
 
-    public void setKeycloakOrgId(UUID keycloak_org_id) {
-        this.keycloak_org_id = keycloak_org_id;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public UserEntity getOwner() {
-        return owner;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setOwner(UserEntity owner) {
-        this.owner = owner;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public LocalDateTime getCreated() {

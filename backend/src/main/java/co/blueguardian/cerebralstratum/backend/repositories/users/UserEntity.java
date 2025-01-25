@@ -9,14 +9,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u ORDER BY u.keycloak_user_id", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
-@NamedQuery(name = "UserEntity.getByKeycloakUserId", query = "SELECT u FROM UserEntity u WHERE u.keycloak_user_id = :keycloak_user_id", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
+@NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u ORDER BY u.id", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
+@NamedQuery(name = "UserEntity.getByKeycloakUserId", query = "SELECT u FROM UserEntity u WHERE u.id = :keycloak_user_id", hints = @QueryHint(name = "org.hibernate.cacheable", value = "false"))
 @Cacheable
 public class UserEntity {
 
     @Id
     @Column(unique = true)
-    private UUID keycloak_user_id;
+    private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -31,30 +31,40 @@ public class UserEntity {
     @Column
     private Integer subscription_discount;
 
+    @Column
+    private Integer subscription_entitlement;
+
+    @Column
+    private Integer subscription_used;
+
     public UserEntity() {
     }
 
     public UserEntity(
-        UUID keycloak_user_id,
+        UUID id,
         OrganisationEntity organisation,
         LocalDateTime created,
         Boolean subscription_active,
-        Integer subscription_discount
+        Integer subscription_discount,
+        Integer subscription_entitlement,
+        Integer subscription_used
     ) {
-        this.keycloak_user_id = keycloak_user_id;
+        this.id = id;
         this.organisation = organisation;
         this.created = created;
         this.subscription_active = subscription_active;
         this.subscription_discount = subscription_discount;
+        this.subscription_entitlement = subscription_entitlement;
+        this.subscription_used = subscription_used;
 
     }
 
-    public UUID getKeycloakUserId() {
-        return keycloak_user_id;
+    public UUID getId() {
+        return id;
     }
 
-    public void setKeycloakUserId(UUID keycloak_user_id) {
-        this.keycloak_user_id = keycloak_user_id;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public OrganisationEntity getOrganisation() {
@@ -87,6 +97,21 @@ public class UserEntity {
 
     public void setSubscriptionDiscount(Integer subscription_discount) {
         this.subscription_discount = subscription_discount;
+    }
+    public Integer getSubscriptionEntitlement() {
+        return subscription_entitlement;
+    }
+
+    public void setSubscriptionEntitlement(Integer subscription_entitlement) {
+        this.subscription_entitlement = subscription_entitlement;
+    }
+
+    public Integer getSubscriptionUsed() {
+        return subscription_used;
+    }
+
+    public void setSubscriptionUsed(Integer subscription_used) {
+        this.subscription_used = subscription_used;
     }
 
 }

@@ -40,6 +40,7 @@
   "bruteForceProtected" : false,
   "permanentLockout" : false,
   "maxTemporaryLockouts" : 0,
+  "bruteForceStrategy" : "MULTIPLE",
   "maxFailureWaitSeconds" : 900,
   "minimumQuickLoginWaitSeconds" : 60,
   "waitIncrementSeconds" : 60,
@@ -2208,6 +2209,7 @@
   "organizations" : [ {
     "id" : "4fca28bd-e2ca-4b68-8736-eb883818bf6d",
     "name" : "test-organization",
+    "alias" : "test-organization",
     "enabled" : true,
     "description" : "",
     "attributes" : { },

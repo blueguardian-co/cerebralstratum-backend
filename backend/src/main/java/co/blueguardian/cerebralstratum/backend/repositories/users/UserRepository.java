@@ -12,7 +12,7 @@ public interface UserRepository {
 
     public List<User> findAll();
 
-    public User getById(int id);
+    public User getById(UUID id);
 
     public User getByKeycloakUserId(UUID keycloak_user_id);
 

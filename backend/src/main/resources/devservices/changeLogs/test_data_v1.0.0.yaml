@@ -11,10 +11,10 @@ databaseChangeLog:
             tableName: organisations
             columns:
               - column:
-                  name: keycloak_org_id
+                  name: id
                   value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
               - column:
-                  name: owner
+                  name: user_id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
                   name: created
@@ -23,10 +23,10 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: keycloak_user_id
+                  name: id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
-                  name: organisation
+                  name: organisation_id
                   value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
               - column:
                   name: created
@@ -36,12 +36,18 @@ databaseChangeLog:
                   value: true
               - column:
                   name: subscription_discount
-                  type: 0
+                  value: 0
+              - column:
+                  name: subscription_entitlement
+                  value: 1
+              - column:
+                  name: subscription_used
+                  value: 1
         - insert:
             tableName: devices
             columns:
               - column:
-                 name: uuid
+                 name: id
                  value: e4bb7b63-6619-589b-98a3-549d0cedc8bc
               - column:
                   name: name
@@ -53,8 +59,8 @@ databaseChangeLog:
                   name: registered
                   value: 02-02-2024T10:43
               - column:
-                  name: owner
+                  name: user_id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
-                  name: organisation
+                  name: organisation_id
                   value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
