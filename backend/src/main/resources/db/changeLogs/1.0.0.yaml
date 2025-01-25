@@ -11,7 +11,7 @@ databaseChangeLog:
             tableName: devices
             columns:
               - column:
-                 name: uuid
+                 name: id
                  type: uuid
                  constraints:
                    primaryKey: true
@@ -26,10 +26,10 @@ databaseChangeLog:
                   name: registered
                   type: timestamp
               - column:
-                  name: owner
+                  name: user_id
                   type: uuid
               - column:
-                  name: organisation
+                  name: organisation_id
                   type: uuid
               - column:
                   name: image_path
@@ -48,13 +48,33 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: device
+                  name: device_id
                   type: uuid
                   constraints:
                     nullable: false
               - column:
                   name: coordinates
                   type: GEOMETRY(Point, 4326)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_frequency
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: accuracy
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: speed
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: bearing
+                  type: int
                   constraints:
                     nullable: false
               - column:
@@ -66,13 +86,13 @@ databaseChangeLog:
             tableName: organisations
             columns:
               - column:
-                  name: keycloak_org_id
+                  name: id
                   type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: owner
+                  name: user_id
                   type: uuid
                   constraints:
                     nullable: false
@@ -83,13 +103,13 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: keycloak_user_id
+                  name: id
                   type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: organisation
+                  name: organisation_id
                   type: uuid
                   constraints:
                     nullable: true
@@ -102,8 +122,14 @@ databaseChangeLog:
               - column:
                   name: subscription_discount
                   type: int
+              - column:
+                  name: subscription_entitlement
+                  type: int
+              - column:
+                  name: subscription_used
+                  type: int
         -  addForeignKeyConstraint:
-            baseColumnNames: device
+            baseColumnNames: device_id
             baseTableName:  locations
             baseTableSchemaName:  cerebralstratum
             constraintName:  fk_devices_locations_id
@@ -111,12 +137,12 @@ databaseChangeLog:
             initiallyDeferred:  true
             onDelete:  CASCADE
             onUpdate:  CASCADE
-            referencedColumnNames:  uuid
+            referencedColumnNames:  id
             referencedTableName:  devices
             referencedTableSchemaName:  cerebralstratum
             validate:  true
         -  addForeignKeyConstraint:
-             baseColumnNames: organisation
+             baseColumnNames: organisation_id
              baseTableName:  devices
              baseTableSchemaName:  cerebralstratum
              constraintName:  fk_devices_organisations_id
@@ -124,12 +150,12 @@ databaseChangeLog:
              initiallyDeferred:  true
              onDelete:  CASCADE
              onUpdate:  CASCADE
-             referencedColumnNames: keycloak_org_id
+             referencedColumnNames: id
              referencedTableName:  organisations
              referencedTableSchemaName:  cerebralstratum
              validate:  true
         -  addForeignKeyConstraint:
-            baseColumnNames: owner
+            baseColumnNames: user_id
             baseTableName:  organisations
             baseTableSchemaName:  cerebralstratum
             constraintName:  fk_users_organisations_id
@@ -137,12 +163,12 @@ databaseChangeLog:
             initiallyDeferred:  true
             onDelete:  CASCADE
             onUpdate:  CASCADE
-            referencedColumnNames: keycloak_user_id
+            referencedColumnNames: id
             referencedTableName:  users
             referencedTableSchemaName:  cerebralstratum
             validate:  true
         -  addForeignKeyConstraint:
-             baseColumnNames: owner
+             baseColumnNames: user_id
              baseTableName:  devices
              baseTableSchemaName:  cerebralstratum
              constraintName:  fk_users_devices_id
@@ -150,12 +176,12 @@ databaseChangeLog:
              initiallyDeferred:  true
              onDelete:  CASCADE
              onUpdate:  CASCADE
-             referencedColumnNames: keycloak_user_id
+             referencedColumnNames: id
              referencedTableName:  users
              referencedTableSchemaName:  cerebralstratum
              validate:  true
         - addForeignKeyConstraint:
-            baseColumnNames: organisation
+            baseColumnNames: organisation_id
             baseTableName: users
             baseTableSchemaName: cerebralstratum
             constraintName: fk_organisations_users_id
@@ -163,7 +189,7 @@ databaseChangeLog:
             initiallyDeferred: true
             onDelete: CASCADE
             onUpdate: CASCADE
-            referencedColumnNames: keycloak_org_id
+            referencedColumnNames: id
             referencedTableName: organisations
             referencedTableSchemaName: cerebralstratum
             validate: true

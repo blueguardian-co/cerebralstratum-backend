@@ -2,8 +2,13 @@ package co.blueguardian.cerebralstratum.backend.controllers.users;
 
 import co.blueguardian.cerebralstratum.backend.repositories.users.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import com.google.type.DateTime;
+import io.quarkus.security.PermissionsAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
@@ -15,10 +20,8 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import jakarta.annotation.security.RolesAllowed;
 
 import io.quarkus.security.Authenticated;
-import io.quarkus.security.identity.SecurityIdentity;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("/api/v1/authorisation/users")
@@ -27,8 +30,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    @Inject
-    SecurityIdentity securityIdentity;
 
     @Inject
     JsonWebToken jwtToken;
@@ -44,25 +45,27 @@ public class UserResource {
 
     @POST
     @Transactional
-    @RolesAllowed("admin")
-    public Response create(CreateUserRequest request) {
+    @PermissionsAllowed("user-admin")
+    @Path("{user_uuid}")
+    public Response create(UUID user_uuid, CreateUserRequest request) {
         User user = userRepository.create(request);
         return Response.ok(user).status(201).build();
     }
 
     @DELETE
     @Transactional
-    @RolesAllowed("admin")
-    public Response delete(DeleteUserRequest request) {
+    @PermissionsAllowed("user-admin")
+    @Path("{user_uuid}")
+    public Response delete(UUID user_uuid, DeleteUserRequest request) {
         User user = userRepository.delete(request);
         return Response.ok(user).status(201).build();
     }
 
     @GET
-    @Path("{user_id}")
-    @RolesAllowed("admin")
-    public User getUser(Integer user_id) {
-        User user = userRepository.getById(user_id);
+    @PermissionsAllowed("user-admin")
+    @Path("{user_uuid}")
+    public User getUser(UUID user_uuid) {
+        User user = userRepository.getById(user_uuid);
         if (user == null) {
             throw new WebApplicationException("User does not exist.", 404);
         }
@@ -72,7 +75,7 @@ public class UserResource {
     @GET
     @Path("me")
     public Response getMe() {
-        User user = userRepository.getByKeycloakUserId(jwtToken.getClaim("sub"));
+        User user = userRepository.getByKeycloakUserId(UUID.fromString(jwtToken.getClaim("sub")));
         if (user != null) {
             return Response.ok(user).status(200).build();
         } else {
@@ -83,8 +86,20 @@ public class UserResource {
     @POST
     @Path("me")
     @Transactional
-    public Response createMe(CreateMeRequest request) {
-        User user = userRepository.create(new CreateUserRequest(jwtToken.getClaim("sub"), null));
+    public Response createMe() {
+        UUID keycloak_user_id = UUID.fromString(jwtToken.getClaim("sub"));
+        UUID keycloak_org_id = UUID.fromString(jwtToken.getClaim("organization_id"));
+        LocalDateTime created = LocalDateTime.now();
+        User user = userRepository.create(new CreateUserRequest(
+                keycloak_user_id,
+                keycloak_org_id,
+                created,
+                false,
+                0,
+                0,
+                0
+                )
+        );
         return Response.ok(user).status(201).build();
     }
 }

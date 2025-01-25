@@ -9,7 +9,7 @@ public interface OrganisationRepository {
 
     public List<Organisation> findAll();
 
-    public Organisation getById(int organisation_id);
+    public Organisation getById(UUID organisation_id);
 
     public Organisation getByKeycloakOrgId(UUID keycloak_org_id);
 

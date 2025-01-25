@@ -20,10 +20,15 @@ public class EntityManagerLocationRepository implements LocationRepository {
     EntityManager entityManager;
 
     private static Location mapEntityToLocation (LocationEntity location) {
-        UUID device_id =  location.getDevice().getUuid();
+        UUID device_uuid =  location.getDevice().getId();
         return new Location(
             location.getId(),
-            device_id,
+            device_uuid,
+            location.getCoordinates(),
+            location.getUpdate_frequency(),
+            location.getAccuracy(),
+            location.getSpeed(),
+            location.getBearing(),
             location.getTimestamp()
         );
     }
@@ -35,9 +40,9 @@ public class EntityManagerLocationRepository implements LocationRepository {
         return mapEntityToLocation(location);
     }
 
-    public List<Location> findAll(int device_id) {
+    public List<Location> findAll(UUID device_uuid) {
         return entityManager.createNamedQuery("Locations.findAll", LocationEntity.class)
-            .setParameter("deviceId", device_id)
+            .setParameter("deviceId", device_uuid)
             .getResultList().stream().map(EntityManagerLocationRepository::mapEntityToLocation).collect(Collectors.toList());
     }
 
@@ -46,9 +51,9 @@ public class EntityManagerLocationRepository implements LocationRepository {
         return mapEntityToLocation(location);
     }
 
-    public Location getLatest(int device_id) {
+    public Location getLatest(UUID device_uuid) {
         return mapEntityToLocation(entityManager.createNamedQuery("Locations.latest", LocationEntity.class)
-            .setParameter("deviceId", device_id)
+            .setParameter("deviceId", device_uuid)
             .getSingleResult()
         );
     }

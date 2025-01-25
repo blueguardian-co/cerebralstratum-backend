@@ -37,9 +37,6 @@ public class DevicesResource {
     DeviceRepository deviceRepository;
 
     @Inject
-    SecurityIdentity securityIdentity;
-
-    @Inject
     JsonWebToken jwtToken;
 
     @GET
@@ -49,62 +46,63 @@ public class DevicesResource {
     }
 
     @POST
+    @Path("{device_uuid}")
     @Transactional
-    @PermissionsAllowed("platform-admin")
+    @PermissionsAllowed("platform-admin-devices")
     public Response create(CreateDeviceRequest request) {
         Device device = deviceRepository.create(request);
         return Response.ok(device).status(201).build();
     }
 
-    @Path("{device_id}")
     @PUT
+    @Path("{device_uuid}")
     @Transactional
-    @PermissionsAllowed("member-of-group")
-    public Response update(UUID device_id, UpdateDeviceRequest request) {
-        Device device = deviceRepository.update(device_id, request);
+    @PermissionsAllowed("member-of-device-group")
+    public Response update(UUID device_uuid, UpdateDeviceRequest request) {
+        Device device = deviceRepository.update(device_uuid, request);
         return Response.ok(device).status(200).build();
     }
 
     @DELETE
-    @Path("{device_id}")
-    @PermissionsAllowed("platform-admin")
+    @Path("{device_uuid}")
+    @PermissionsAllowed("platform-admin-devices")
     @Transactional
-    public Response delete(UUID device_id) {
-        Device device = deviceRepository.delete(device_id);
+    public Response delete(UUID device_uuid) {
+        Device device = deviceRepository.delete(device_uuid);
         return Response.ok(device).status(200).build();
     }
 
     @GET
-    @Path("{device_id}")
-    @PermissionsAllowed("platform-admin")
-    public Device getDeviceById(UUID device_id) {
-        Device device = deviceRepository.getById(device_id);
+    @Path("{device_uuid}")
+    @PermissionsAllowed("platform-admin-devices")
+    public Device getDeviceById(UUID device_uuid) {
+        Device device = deviceRepository.getById(device_uuid);
         if (device == null) {
-            throw new WebApplicationException("Device with id of " + device_id + " does not exist.", 404);
+            throw new WebApplicationException("Device with id of " + device_uuid + " does not exist.", 404);
         }
         return device;
     }
 
-    @Path("{device_id}/register")
+    @Path("{device_uuid}/register")
     @POST
     @Transactional
-    public Response register(UUID device_id) {
+    public Response register(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
-            Device device = deviceRepository.register(keycloak_user_id, device_id);
+            Device device = deviceRepository.register(keycloak_user_id, device_uuid);
             return Response.ok(device).status(201).build();
         } catch (Exception e) {
             throw new WebApplicationException("Device already registered. Please contact owner to unregister the device, and then try again.", Response.Status.UNAUTHORIZED);
         }
     }
-    @Path("{device_id}/unregister")
+    @Path("{device_uuid}/unregister")
     @POST
     @Transactional
-    @PermissionsAllowed("member-of-group")
-    public Response unregister(UUID device_id) {
+    @PermissionsAllowed("member-of-device-group")
+    public Response unregister(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         try {
-            Device device = deviceRepository.unregister(keycloak_user_id, device_id);
+            Device device = deviceRepository.unregister(keycloak_user_id, device_uuid);
             return Response.ok(device).status(201).build();
         } catch (Exception e) {
             throw new WebApplicationException("Failed to unregister device", Response.Status.INTERNAL_SERVER_ERROR);

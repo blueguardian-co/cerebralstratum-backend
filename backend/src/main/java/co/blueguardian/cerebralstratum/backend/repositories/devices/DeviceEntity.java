@@ -33,7 +33,7 @@ public class DeviceEntity {
 
     @Id
     @Column(unique = true)
-    private UUID uuid;
+    private UUID id;
 
     @Column(length = 255)
     private String name;
@@ -46,7 +46,7 @@ public class DeviceEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private UserEntity owner;
+    private UserEntity user;
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -63,30 +63,30 @@ public class DeviceEntity {
     }
 
     public DeviceEntity(
-        UUID uuid,
+        UUID id,
         String name,
         String description,
         LocalDateTime registered,
-        UserEntity owner,
+        UserEntity user,
         OrganisationEntity organisation,
         String image_path,
         Status status
     ) {
-        this.uuid = uuid;
+        this.id = id;
         this.name = name;
         this.description = description;
         this.registered = registered;
-        this.owner = owner;
+        this.user = user;
         this.organisation = organisation;
         this.image_path = image_path;
         this.status = status;
     }
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -113,12 +113,12 @@ public class DeviceEntity {
         this.registered = registered;
     }
 
-    public UserEntity getOwner() {
-        return this.owner;
+    public UserEntity getUser() {
+        return this.user;
     }
 
-    public void setOwner(UserEntity owner) {
-        this.owner = owner;
+    public void setUser(UserEntity owner) {
+        this.user = user;
     }
 
     public OrganisationEntity getOrganisation() {

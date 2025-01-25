@@ -26,11 +26,13 @@ public class EntityManagerUserRepository implements UserRepository {
 
     private static User mapEntityToUser (UserEntity user) {
         return new User(
-            user.getKeycloakUserId(),
-            user.getOrganisation().getKeycloakOrgId(),
+            user.getId(),
+            user.getOrganisation().getId(),
             user.getCreated(),
             user.getSubscriptionActive(),
-            user.getSubscriptionDiscount()
+            user.getSubscriptionDiscount(),
+            user.getSubscriptionEntitlement(),
+            user.getSubscriptionUsed()
         );
     }
 
@@ -41,15 +43,14 @@ public class EntityManagerUserRepository implements UserRepository {
         } else {
            organisation = null;
         }
-        LocalDateTime created = LocalDateTime.now();
-        Boolean subscription_active = true;
-        Integer subscription_discount = 0;
         return new UserEntity(
                 request.keycloak_user_id,
                 organisation,
-                created,
-                subscription_active,
-                subscription_discount
+                request.created,
+                request.subscription_active,
+                request.subscription_discount,
+                request.subscription_entitlement,
+                request.subscription_used
         );
     }
 
@@ -65,7 +66,7 @@ public class EntityManagerUserRepository implements UserRepository {
             .getResultList().stream().map(EntityManagerUserRepository::mapEntityToUser).collect(Collectors.toList());          
     }
 
-    public User getById(int id) {
+    public User getById(UUID id) {
         UserEntity user = entityManager.find(UserEntity.class, id);
         return mapEntityToUser(user);
     }
