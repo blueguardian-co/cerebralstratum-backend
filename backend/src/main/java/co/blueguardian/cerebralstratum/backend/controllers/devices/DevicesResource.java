@@ -1,6 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
-import co.blueguardian.cerebralstratum.backend.repositories.devices.DeviceRepository;
+import co.blueguardian.cerebralstratum.backend.controllers.users.User;
 
 import io.quarkus.security.PermissionsAllowed;
 
@@ -34,7 +34,10 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 public class DevicesResource {
 
     @Inject
-    DeviceRepository deviceRepository;
+    co.blueguardian.cerebralstratum.backend.repositories.devices.DeviceRepository deviceRepository;
+
+    @Inject
+    co.blueguardian.cerebralstratum.backend.repositories.users.UserRepository userRepository;
 
     @Inject
     JsonWebToken jwtToken;
@@ -88,11 +91,19 @@ public class DevicesResource {
     @Transactional
     public Response register(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
-        try {
-            Device device = deviceRepository.register(keycloak_user_id, device_uuid);
-            return Response.ok(device).status(201).build();
-        } catch (Exception e) {
-            throw new WebApplicationException("Device already registered. Please contact owner to unregister the device, and then try again.", Response.Status.UNAUTHORIZED);
+        User user = userRepository.getById(keycloak_user_id);
+
+        // Ensure user has subscription entitlements available for registration
+        if (user.subscription_entitlement >= user.subscription_used) {
+            try {
+                Device device = deviceRepository.register(keycloak_user_id, device_uuid);
+                user.subscription_used ++;
+                return Response.ok(device).status(201).build();
+            } catch (Exception e) {
+                throw new WebApplicationException("Device already registered. Please contact owner to unregister the device, and then try again.", Response.Status.UNAUTHORIZED);
+            }
+        } else {
+            throw new WebApplicationException("No entitlements available for registration.", Response.Status.UNAUTHORIZED);
         }
     }
     @Path("{device_uuid}/unregister")
@@ -101,8 +112,10 @@ public class DevicesResource {
     @PermissionsAllowed("member-of-device-group")
     public Response unregister(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
+        User user = userRepository.getById(keycloak_user_id);
         try {
             Device device = deviceRepository.unregister(keycloak_user_id, device_uuid);
+            user.subscription_used --;
             return Response.ok(device).status(201).build();
         } catch (Exception e) {
             throw new WebApplicationException("Failed to unregister device", Response.Status.INTERNAL_SERVER_ERROR);
