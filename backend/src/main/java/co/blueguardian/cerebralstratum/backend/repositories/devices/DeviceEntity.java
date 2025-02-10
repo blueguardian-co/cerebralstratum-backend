@@ -28,6 +28,14 @@ import org.hibernate.type.SqlTypes;
                 value = "false"
         )
 )
+@NamedQuery(
+        name = "DeviceEntity.findAllDevicesByUserId",
+        query = "SELECT d FROM DeviceEntity d WHERE d.user.id = :keycloak_user_id",
+        hints = @QueryHint(
+                name = "org.hibernate.cacheable",
+                value = "false"
+        )
+)
 @Cacheable
 public class DeviceEntity {
 

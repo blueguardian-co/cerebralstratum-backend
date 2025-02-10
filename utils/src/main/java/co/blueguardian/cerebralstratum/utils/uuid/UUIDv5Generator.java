@@ -13,7 +13,10 @@ public class UUIDv5Generator {
         // Name for which UUID needs to be generated
         String name = "cerebral-stratum.blueguardian.co";
 
-        UUID uuid = generateUUIDv5(UUID.fromString(namespaceDNS), name);
+        String nameWithTimestamp = name + ":" + System.currentTimeMillis();
+        System.out.println("Name with timestamp: " + nameWithTimestamp);
+
+        UUID uuid = generateUUIDv5(UUID.fromString(namespaceDNS), nameWithTimestamp);
 
         // Print the generated UUID
         System.out.println("Generated v5 UUID: " + uuid);

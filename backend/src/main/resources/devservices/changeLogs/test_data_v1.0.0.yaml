@@ -39,10 +39,31 @@ databaseChangeLog:
                   value: 0
               - column:
                   name: subscription_entitlement
-                  value: 1
+                  value: 2
               - column:
                   name: subscription_used
-                  value: 1
+                  value: 2
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: c2150083-8742-4161-9bcf-f1819251953d
+              - column:
+                  name: created
+                  value: 10-02-2024T14:35
+              - column:
+                  name: subscription_active
+                  value: false
+              - column:
+                  name: subscription_discount
+                  value: 0
+              - column:
+                  name: subscription_entitlement
+                  value: 0
+              - column:
+                  name: subscription_used
+                  value: 0
         - insert:
             tableName: devices
             columns:
@@ -64,3 +85,15 @@ databaseChangeLog:
               - column:
                   name: organisation_id
                   value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
+        - insert:
+            tableName: devices
+            columns:
+              - column:
+                  name: id
+                  value: da8922d4-34fb-543f-ae15-0c4d34815f70
+              - column:
+                  name: registered
+                  value: 10-02-2024T14:34
+              - column:
+                  name: user_id
+                  value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
