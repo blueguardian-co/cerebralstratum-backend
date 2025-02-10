@@ -11,6 +11,8 @@ public interface DeviceRepository {
 
     public List<Device> findAll();
 
+    public List<Device> findAllByUserId(UUID keycloak_user_id);
+
     public Device getById(UUID device_id);
 
     public Device create(CreateDeviceRequest request);

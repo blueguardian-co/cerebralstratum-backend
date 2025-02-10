@@ -71,6 +71,12 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
             .getResultList().stream().map(EntityManagerDeviceRepository::mapEntityToDevice).collect(Collectors.toList());
     }
 
+    public List<Device> findAllByUserId(UUID keycloak_user_id) {
+        return entityManager.createNamedQuery("DeviceEntity.findAllDevicesByUserId", DeviceEntity.class)
+                .setParameter("keycloak_user_id", keycloak_user_id)
+                .getResultList().stream().map(EntityManagerDeviceRepository::mapEntityToDevice).collect(Collectors.toList());
+    }
+
     public Device getById(UUID device_id) {
         DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
         return mapEntityToDevice(device);

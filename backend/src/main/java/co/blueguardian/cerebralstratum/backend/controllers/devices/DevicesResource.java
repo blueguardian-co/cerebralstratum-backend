@@ -48,6 +48,13 @@ public class DevicesResource {
         return deviceRepository.findAll();
     }
 
+    @GET
+    @Path("mine")
+    public List<Device> getAllDevicesByUserId() {
+        UUID keycloak_user_id = jwtToken.getClaim("sub");
+        return deviceRepository.findAllByUserId(keycloak_user_id);
+    }
+
     @POST
     @Path("{device_uuid}")
     @Transactional
