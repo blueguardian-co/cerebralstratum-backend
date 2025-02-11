@@ -9,7 +9,7 @@
     <groupId>co.blueguardian.cerebralstratum</groupId>
     <artifactId>utils</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
+    <packaging>pom</packaging>
     <properties>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
