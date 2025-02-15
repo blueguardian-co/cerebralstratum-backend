@@ -60,7 +60,8 @@ public class DeviceSimulator{
                         device_id,
                         status.summary,
                         status.overall,
-                        status.battery
+                        status.battery,
+                        status.timestamp
                 )
         );
     }
