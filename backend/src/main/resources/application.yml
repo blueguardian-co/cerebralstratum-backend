@@ -10,9 +10,7 @@ quarkus:
     port: 6443
     cors:
       ~: true
-    auth:
-      roles-mapping:
-        admin: platform-admins
+    root-path: /
   dev-ui:
     cors:
       enabled: false
@@ -122,6 +120,7 @@ quarkus:
       auth-server-url: http://localhost:8000/realms/${keycloak.realm}
       credentials:
         secret: yxj6VJfZB8plW95iLkGn9ebWPPhic6yY
+      client-id: cerebral-stratum-backend
     keycloak:
       admin-client:
         server-url: http://localhost:8000

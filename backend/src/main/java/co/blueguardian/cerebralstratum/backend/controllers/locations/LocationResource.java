@@ -28,7 +28,7 @@ public class LocationResource {
 
     @Inject
     LocationRepository locationRepository;
-    @RolesAllowed("admin")
+    @RolesAllowed("admins")
     @GET
     public List<Location> getAllLocations(UUID device_uuid) {
         return locationRepository.findAll(device_uuid);

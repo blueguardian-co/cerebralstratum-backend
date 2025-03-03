@@ -25,9 +25,10 @@ public class EntityManagerUserRepository implements UserRepository {
     EntityManager entityManager;
 
     private static User mapEntityToUser (UserEntity user) {
+        UUID organisationId = user.getOrganisation() != null ? user.getOrganisation().getId() : null;
         return new User(
             user.getId(),
-            user.getOrganisation().getId(),
+            organisationId,
             user.getCreated(),
             user.getSubscriptionActive(),
             user.getSubscriptionDiscount(),

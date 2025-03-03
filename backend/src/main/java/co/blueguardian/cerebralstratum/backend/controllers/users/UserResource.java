@@ -38,7 +38,7 @@ public class UserResource {
     UserRepository userRepository;
 
     @GET
-    @RolesAllowed("admin")
+    @RolesAllowed("admins")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

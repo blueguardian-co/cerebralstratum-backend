@@ -26,7 +26,7 @@ public class OrganisationResource {
     OrganisationRepository organisationRepository;
 
     @GET
-    @RolesAllowed("admin")
+    @RolesAllowed("admins")
     public List<Organisation> getAllOrganisations() {
         return organisationRepository.findAll();
     }

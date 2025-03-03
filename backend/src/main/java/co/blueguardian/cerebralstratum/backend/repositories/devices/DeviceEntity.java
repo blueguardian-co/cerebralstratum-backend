@@ -14,7 +14,7 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "devices")
 @NamedQuery(
         name = "DeviceEntity.findAll",
-        query = "SELECT a FROM DeviceEntity a ORDER BY a.name",
+        query = "SELECT d FROM DeviceEntity d ORDER BY d.name",
         hints = @QueryHint(
                 name = "org.hibernate.cacheable",
                 value = "false"
@@ -53,11 +53,11 @@ public class DeviceEntity {
     private LocalDateTime registered;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "organisation_id", referencedColumnName = "id")
     private OrganisationEntity organisation;
 
     @Column(length = 255)

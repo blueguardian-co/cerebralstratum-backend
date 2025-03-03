@@ -4,8 +4,6 @@ import co.blueguardian.cerebralstratum.backend.controllers.users.User;
 
 import io.quarkus.security.PermissionsAllowed;
 
-import io.quarkus.security.identity.SecurityIdentity;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -25,13 +23,16 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 import io.quarkus.security.Authenticated;
-import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import org.jboss.logging.Logger;
 
 @Path("/api/v1/devices")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DevicesResource {
+
+    private static final Logger LOG = Logger.getLogger(DevicesResource.class);
 
     @Inject
     co.blueguardian.cerebralstratum.backend.repositories.devices.DeviceRepository deviceRepository;
@@ -40,25 +41,25 @@ public class DevicesResource {
     co.blueguardian.cerebralstratum.backend.repositories.users.UserRepository userRepository;
 
     @Inject
-    JsonWebToken jwtToken;
+    org.eclipse.microprofile.jwt.JsonWebToken jwtToken;
 
     @GET
-    @RolesAllowed("admin")
+    @RolesAllowed("admins")
     public List<Device> getAllDevices() {
         return deviceRepository.findAll();
     }
 
     @GET
     @Path("mine")
-    public List<Device> getAllDevicesByUserId() {
-        UUID keycloak_user_id = jwtToken.getClaim("sub");
+    public List<Device> getMyDevices() {
+        UUID keycloak_user_id = UUID.fromString(jwtToken.getClaim("sub"));
         return deviceRepository.findAllByUserId(keycloak_user_id);
     }
 
     @POST
     @Path("{device_uuid}")
     @Transactional
-    @PermissionsAllowed("platform-admin-devices")
+    @RolesAllowed("admins")
     public Response create(CreateDeviceRequest request) {
         Device device = deviceRepository.create(request);
         return Response.ok(device).status(201).build();
@@ -75,7 +76,7 @@ public class DevicesResource {
 
     @DELETE
     @Path("{device_uuid}")
-    @PermissionsAllowed("platform-admin-devices")
+    @RolesAllowed("admins")
     @Transactional
     public Response delete(UUID device_uuid) {
         Device device = deviceRepository.delete(device_uuid);
@@ -84,7 +85,7 @@ public class DevicesResource {
 
     @GET
     @Path("{device_uuid}")
-    @PermissionsAllowed("platform-admin-devices")
+    @PermissionsAllowed("member-of-device-group")
     public Device getDeviceById(UUID device_uuid) {
         Device device = deviceRepository.getById(device_uuid);
         if (device == null) {
@@ -115,8 +116,8 @@ public class DevicesResource {
     }
     @Path("{device_uuid}/unregister")
     @POST
-    @Transactional
     @PermissionsAllowed("member-of-device-group")
+    @Transactional
     public Response unregister(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         User user = userRepository.getById(keycloak_user_id);

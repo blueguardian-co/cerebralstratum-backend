@@ -42,7 +42,7 @@ public class PermissionCheckers {
         return (groups.contains(PlatformAdminsGroupName) || groups.contains(organisation_uuid));
     }
     @PermissionChecker("user-admin")
-    public boolean isAnUserAdminString(String user_uuid) {
+    public boolean isAnUserAdminString(UUID user_uuid) {
         Set<String> groups = jwtToken.getGroups();
         return (groups.contains(PlatformAdminsGroupName) || groups.contains(user_uuid));
     }

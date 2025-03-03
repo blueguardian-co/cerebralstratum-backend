@@ -21,13 +21,15 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     EntityManager entityManager;
 
     private static Device mapEntityToDevice (DeviceEntity device) {
+        UUID userId = device.getUser() != null ? device.getUser().getId() : null;
+        UUID organisationId = device.getOrganisation() != null ? device.getOrganisation().getId() : null;
         return new Device(
             device.getId(),
             device.getName(),
             device.getDescription(),
             device.getRegistered(),
-            device.getUser().getId(),
-            device.getOrganisation().getId(),
+            userId,
+            organisationId,
             device.getImagePath(),
             device.getStatus()
         );
