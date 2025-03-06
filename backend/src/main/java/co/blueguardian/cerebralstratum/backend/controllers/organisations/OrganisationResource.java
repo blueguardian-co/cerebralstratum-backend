@@ -34,7 +34,7 @@ public class OrganisationResource {
     @POST
     @Transactional
     @PermissionsAllowed("organisation-admin")
-    @Path("{organisation_uuid}")
+    @Path("/by-id/{organisation_uuid}")
     public Response create(UUID organisation_uuid, CreateOrganisationRequest request) {
         Organisation user = organisationRepository.create(request);
         return Response.ok(user).status(201).build();
@@ -43,7 +43,7 @@ public class OrganisationResource {
     @DELETE
     @Transactional
     @PermissionsAllowed("organisation-admin")
-    @Path("{organisation_uuid}")
+    @Path("/by-id/{organisation_uuid}")
     public Response delete(UUID organisation_uuid, DeleteOrganisationRequest request) {
         Organisation user = organisationRepository.delete(request);
         return Response.ok(user).status(201).build();
@@ -51,7 +51,7 @@ public class OrganisationResource {
 
     @GET
     @PermissionsAllowed("organisation-admin")
-    @Path("{organisation_uuid}")
+    @Path("/by-id/{organisation_uuid}")
     public Organisation getOrganisation(UUID organisation_uuid) {
         Organisation organisation = organisationRepository.getById(organisation_uuid);
         if (organisation == null) {

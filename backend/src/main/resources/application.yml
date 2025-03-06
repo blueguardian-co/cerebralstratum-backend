@@ -10,7 +10,6 @@ quarkus:
     port: 6443
     cors:
       ~: true
-    root-path: /
   dev-ui:
     cors:
       enabled: false
@@ -36,11 +35,16 @@ quarkus:
     devservices:
       enabled: false
 #      realm-path: devservices/realm.json
+#      realm-name: external
 #      port: 8000
 #      start-command: >-
 #        start-dev --http-enabled=true --proxy-headers=xforwarded --features=organization:v1
+#      java-opts: >-
+#        -XX:UseSVE=0
     policy-enforcer:
       enable: false
+    admin-client:
+      realm: ${keycloak.realm}
   scheduler:
     start-mode: normal
   kafka:
@@ -70,10 +74,18 @@ quarkus:
       username: ${jdbc-username}
       password: ${jdbc-password}
     oidc:
-      auth-server-url: https://sso.blueguardian.co/realms/External
+      auth-server-url: https://sso.blueguardian.co/realms/external
       credentials:
         secret: ${oidc-secret}
     keycloak:
+      admin-client:
+        server-url: https://sso.blueguardian.co
+        username:
+        password:
+        realm: ${keycloak.realm}
+        grant-type: CLIENT_CREDENTIALS
+        client-id: ${quarkus.oidc.client-id}
+        client-secret: ${quarkus.oidc.credentials.secret}
       policy-enforcer:
         enable: true
         paths:
@@ -105,7 +117,7 @@ quarkus:
       migrate-at-start: true
       change-log: devservices/changeLog.yaml
       default-schema-name: cerebralstratum
-    #    kubernetes-config:
+#    kubernetes-config:
 #      secrets:
 #        ~:
 #          - db-creds
@@ -124,6 +136,12 @@ quarkus:
     keycloak:
       admin-client:
         server-url: http://localhost:8000
+        username:
+        password:
+        realm: ${keycloak.realm}
+        grant-type: CLIENT_CREDENTIALS
+        client-id: ${quarkus.oidc.client-id}
+        client-secret: ${quarkus.oidc.credentials.secret}
 #    datasource:
 #      jdbc:
 #        url: ${jdbc-url}?defaultSchema=cerebralstratum

@@ -1,5 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.controllers.groups;
 
+import co.blueguardian.cerebralstratum.backend.controllers.users.UserResource;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.PermissionsAllowed;
 
@@ -9,6 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -20,6 +22,9 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupsResource {
+
+    private static final Logger LOG = Logger.getLogger(GroupsResource.class);
+
     @Inject
     Keycloak keycloak;
 
@@ -27,7 +32,7 @@ public class GroupsResource {
     String KeycloakRealm;
 
     @GET
-    @Path("{group_name}/membership")
+    @Path("/by-name/{group_name}/members")
     @PermissionsAllowed("member-of-group")
     public List<UserRepresentation> getGroupMembership(String group_name) {
         try {
@@ -37,6 +42,8 @@ public class GroupsResource {
             throw new WebApplicationException("Group not found", Response.Status.NOT_FOUND);
         } catch (Exception e) {
             throw new WebApplicationException("An error occurred while fetching group membership", Response.Status.INTERNAL_SERVER_ERROR);
+        } finally {
+            LOG.warn("Issue with getGroupMembership request");
         }
     }
 

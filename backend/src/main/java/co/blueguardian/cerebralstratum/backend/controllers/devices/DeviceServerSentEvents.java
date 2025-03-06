@@ -18,7 +18,8 @@ TODO:
 - Add group `e4bb7b63-6619-589b-98a3-549d0cedc8bc` in Keycloak with `admin@exampl.com` as the only member
 */
 @ApplicationScoped
-@Path("/api/v1/devices/{device_uuid}")
+@PermissionsAllowed("member-of-device-group")
+@Path("/api/v1/devices/by-id/{device_uuid}")
 public class DeviceServerSentEvents {
 
     private final Multi<CurrentLocationMessage> currentLocationMessages;
@@ -51,7 +52,6 @@ public class DeviceServerSentEvents {
         }
     }
 
-    @PermissionsAllowed("member-of-device-group")
     @GET
     @Path("/location")
     @Produces(MediaType.SERVER_SENT_EVENTS)
@@ -59,7 +59,6 @@ public class DeviceServerSentEvents {
         return this.currentLocationMessages;
     }
 
-    @PermissionsAllowed("member-of-device-group")
     @GET
     @Path("/status")
     @Produces(MediaType.SERVER_SENT_EVENTS)
@@ -67,7 +66,6 @@ public class DeviceServerSentEvents {
         return this.deviceNotifications;
     }
 
-    @PermissionsAllowed("member-of-device-group")
     @GET
     @Path("/canbus")
     @Produces(MediaType.SERVER_SENT_EVENTS)

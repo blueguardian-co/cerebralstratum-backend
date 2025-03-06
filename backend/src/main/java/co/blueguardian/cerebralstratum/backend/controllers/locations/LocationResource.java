@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response;
 
 import io.quarkus.security.Authenticated;
 
-@Path("/api/v1/devices/{device_uuid}/locations")
+@Path("/api/v1/devices/by-id/{device_uuid}/locations")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

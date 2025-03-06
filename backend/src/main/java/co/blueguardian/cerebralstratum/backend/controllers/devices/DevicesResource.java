@@ -57,7 +57,7 @@ public class DevicesResource {
     }
 
     @POST
-    @Path("{device_uuid}")
+    @Path("by-id/{device_uuid}")
     @Transactional
     @RolesAllowed("admins")
     public Response create(CreateDeviceRequest request) {
@@ -66,25 +66,25 @@ public class DevicesResource {
     }
 
     @PUT
-    @Path("{device_uuid}")
+    @Path("by-id/{device_uuid}")
     @Transactional
     @PermissionsAllowed("member-of-device-group")
-    public Response update(UUID device_uuid, UpdateDeviceRequest request) {
+    public Response updateDevice(UUID device_uuid, UpdateDeviceRequest request) {
         Device device = deviceRepository.update(device_uuid, request);
         return Response.ok(device).status(200).build();
     }
 
     @DELETE
-    @Path("{device_uuid}")
+    @Path("by-id/{device_uuid}")
     @RolesAllowed("admins")
     @Transactional
-    public Response delete(UUID device_uuid) {
+    public Response deleteDevice(UUID device_uuid) {
         Device device = deviceRepository.delete(device_uuid);
         return Response.ok(device).status(200).build();
     }
 
     @GET
-    @Path("{device_uuid}")
+    @Path("by-id/{device_uuid}")
     @PermissionsAllowed("member-of-device-group")
     public Device getDeviceById(UUID device_uuid) {
         Device device = deviceRepository.getById(device_uuid);
@@ -94,10 +94,10 @@ public class DevicesResource {
         return device;
     }
 
-    @Path("{device_uuid}/register")
+    @Path("by-id/{device_uuid}/register")
     @POST
     @Transactional
-    public Response register(UUID device_uuid) {
+    public Response registerDevice(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         User user = userRepository.getById(keycloak_user_id);
 
@@ -114,11 +114,11 @@ public class DevicesResource {
             throw new WebApplicationException("No entitlements available for registration.", Response.Status.UNAUTHORIZED);
         }
     }
-    @Path("{device_uuid}/unregister")
+    @Path("by-id/{device_uuid}/unregister")
     @POST
     @PermissionsAllowed("member-of-device-group")
     @Transactional
-    public Response unregister(UUID device_uuid) {
+    public Response unregisterDevice(UUID device_uuid) {
         UUID keycloak_user_id = jwtToken.getClaim("sub");
         User user = userRepository.getById(keycloak_user_id);
         try {

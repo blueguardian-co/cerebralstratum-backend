@@ -2271,7 +2271,6 @@
       "membershipType" : "UNMANAGED"
     } ]
   } ],
-  "verifiableCredentialsEnabled" : false,
   "adminPermissionsEnabled" : false,
   "clientProfiles" : {
     "profiles" : [ ]

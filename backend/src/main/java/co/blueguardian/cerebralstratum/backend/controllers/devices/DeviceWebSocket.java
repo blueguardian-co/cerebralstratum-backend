@@ -12,7 +12,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import java.util.UUID;
 
 @ApplicationScoped
-@WebSocket(path = "/api/v1/devices/{device_uuid}/ws")
+@WebSocket(path = "/api/v1/devices/by-id/{device_uuid}/ws")
 public class DeviceWebSocket {
     public enum MessageType {CURRENT_LOCATION, DEVICE_NOTIFICATION, CANBUS_MESSAGE, TEXT_MESSAGE}
 
