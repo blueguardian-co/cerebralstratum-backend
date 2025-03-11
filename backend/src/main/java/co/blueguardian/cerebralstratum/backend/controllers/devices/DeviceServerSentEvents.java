@@ -1,6 +1,7 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
-import co.blueguardian.cerebralstratum.backend.controllers.locations.GetLocationRequest;
+import co.blueguardian.cerebralstratum.backend.controllers.locations.Location;
+import co.blueguardian.cerebralstratum.utils.messaging.LocationMessage;
 
 import io.quarkus.security.PermissionsAllowed;
 import io.smallrye.mutiny.Multi;
@@ -10,37 +11,30 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.jboss.logging.Logger;
 
 import java.util.UUID;
 
-/*
-TODO:
-- Add group `e4bb7b63-6619-589b-98a3-549d0cedc8bc` in Keycloak with `admin@exampl.com` as the only member
-*/
 @ApplicationScoped
 @PermissionsAllowed("member-of-device-group")
 @Path("/api/v1/devices/by-id/{device_uuid}")
 public class DeviceServerSentEvents {
+    private static final Logger LOG = Logger.getLogger(DeviceServerSentEvents.class);
 
-    private final Multi<CurrentLocationMessage> currentLocationMessages;
+    private final Multi<LocationMessage> locationMessages;
     private final Multi<DeviceNotification> deviceNotifications;
     private final Multi<CANBusMessage> canBusMessages;
 
     public DeviceServerSentEvents(
-            @Channel("/device/location") Multi<CurrentLocationMessage> currentLocationMessages,
-            @Channel("/device/status") Multi<DeviceNotification> deviceNotifications,
-            @Channel("/device/canbus") Multi<CANBusMessage> canBusMessages
+            @Channel("location") Multi<LocationMessage> locationMessages,
+            @Channel("status") Multi<DeviceNotification> deviceNotifications,
+            @Channel("canbus") Multi<CANBusMessage> canBusMessages
     ) {
-        this.currentLocationMessages = currentLocationMessages;
+        this.locationMessages = locationMessages;
         this.deviceNotifications = deviceNotifications;
         this.canBusMessages = canBusMessages;
     }
 
-    public record CurrentLocationMessage(int id, UUID device_uuid, GetLocationRequest location) {
-        public CurrentLocationMessage(UUID device_uuid, GetLocationRequest location) {
-            this(-1,device_uuid,location);
-        }
-    }
     public record DeviceNotification(int id, UUID device_uuid, Status status) {
         public DeviceNotification(UUID device_uuid, Status status) {
             this(-1,device_uuid,status);
@@ -55,21 +49,29 @@ public class DeviceServerSentEvents {
     @GET
     @Path("/location")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<CurrentLocationMessage> broadcastLocation(UUID device_uuid) {
-        return this.currentLocationMessages;
+    public Multi<LocationMessage> broadcastLocation(String device_uuid) {
+        LOG.info("Subscribing to location messages for device: " + device_uuid);
+        return this.locationMessages
+                .filter(
+                        currentMessage -> currentMessage.device_id
+                                        .equals(
+                                                UUID.fromString(device_uuid)
+                                        )
+                )
+                .log();
     }
 
     @GET
     @Path("/status")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<DeviceNotification> broadcastStatus(UUID device_uuid) {
+    public Multi<DeviceNotification> broadcastStatus(String device_uuid) {
         return this.deviceNotifications;
     }
 
     @GET
     @Path("/canbus")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<CANBusMessage> broadcastCANBus(UUID device_uuid) {
+    public Multi<CANBusMessage> broadcastCANBus(String device_uuid) {
         return this.canBusMessages;
     }
 }

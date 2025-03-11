@@ -150,15 +150,15 @@ quarkus:
 mp:
  messaging:
    incoming:
-     /device/location:
+     location:
        topic: location
        connector: smallrye-kafka
        broadcast: true
-     /device/status:
+     status:
        topic: status
        connector: smallrye-kafka
        broadcast: true
-     /device/canbus:
+     canbus:
        topic: canbus
        connector: smallrye-kafka
        broadcast: true

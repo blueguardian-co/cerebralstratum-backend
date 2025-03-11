@@ -32,8 +32,9 @@ public class PermissionCheckers {
     }
     @PermissionChecker("member-of-device-group")
     public boolean isMemberOfDeviceGroup(String device_uuid) {
+        LOG.info("Checking if user is a member of device group: " + device_uuid);
         Set<String> groups = jwtToken.getGroups();
-        LOG.info("Is /" + device_uuid + " in these groups " + groups);
+        LOG.info("Is /" + device_uuid + "(/view-only|/modify)" + " in these groups " + groups + ": " + (groups.contains("/" + device_uuid) || groups.contains("/" + device_uuid + "/view-only") || groups.contains("/" + device_uuid + "/modify")));
         return (groups.contains("/" + device_uuid) || groups.contains("/" + device_uuid + "/view-only") || groups.contains("/" + device_uuid + "/modify"));
     }
 
