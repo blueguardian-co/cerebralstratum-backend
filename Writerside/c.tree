@@ -3,7 +3,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="c"
-                 name="cerebral-stratum-backend"
+                 name="CEREBRAL STRATUM - Backend"
                  start-page="Overview.md">
 
     <toc-element topic="Overview.md"/>
