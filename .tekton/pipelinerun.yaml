@@ -5,7 +5,7 @@ metadata:
   name: cerebral-stratum-backend
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
-    pipelinesascode.tekton.dev/on-target-branch: "[main]"
+    pipelinesascode.tekton.dev/on-target-branch: '[main, qa]'
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
     pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/mvnw-build.yaml]'
@@ -17,6 +17,8 @@ spec:
       value: "{{ repo_url }}"
     - name: revision
       value: "{{ revision }}"
+    - name: repo_branch
+      value: '{{ target_branch }}'
     - name: image
       value: quay.io/blueguardian-co/cerebral-stratum/backend
     - name: argocd-git-url
@@ -92,8 +94,8 @@ spec:
         runAfter:
           - git-clone-argocd-repo
         params:
-          - name: kustomization_directory
-            value: 4-workloads/production
+          - name: repo_branch
+            value: $(params.repo_branch)
           - name: image_url
             value: $(params.image)
           - name: image_digest
