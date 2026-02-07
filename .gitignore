@@ -1,3 +1,6 @@
+#Project Specific
+postgres
+
 #Maven
 target/
 pom.xml.tag

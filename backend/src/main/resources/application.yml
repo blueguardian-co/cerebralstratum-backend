@@ -10,6 +10,10 @@ quarkus:
     port: 6443
     cors:
       ~: true
+  grpc:
+    server:
+      port: 9000
+      enable-reflection-service: true
   dev-ui:
     cors:
       enabled: false
@@ -21,7 +25,9 @@ quarkus:
       db-name: cerebral-stratum
       init-script-path: devservices/init.sql
       port: 5432
-      image-name: docker.io/postgis/postgis:17-master
+      image-name: quay.io/enterprisedb/postgresql:17-postgis-multiarch-ubi9
+      container-env:
+        "POSTGRES_HOST_AUTH_METHOD": trust
   hibernate-orm:
     database:
       default-schema: ${quarkus.liquibase.default-schema-name}

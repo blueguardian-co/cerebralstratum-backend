@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "co.blueguardian.cerebralstratum.backend.grpc";
+option java_outer_classname = "DeviceStreamProto";
+
+package devicestream;
+
+import "google/protobuf/timestamp.proto";
+
+// Service definition for device data streaming
+service DeviceStreamService {
+  // Server-streaming RPC for real-time device updates
+  rpc StreamDeviceUpdates(DeviceStreamRequest) returns (stream DeviceUpdate);
+
+  // Bidirectional streaming for text messages
+  rpc StreamTextMessages(stream TextMessage) returns (stream TextMessage);
+}
+
+// Request to start streaming device updates
+message DeviceStreamRequest {
+  string device_uuid = 1;
+}
+
+// Union type for different device update messages
+message DeviceUpdate {
+  MessageType type = 1;
+  string device_uuid = 2;
+
+  oneof payload {
+    CurrentLocation current_location = 3;
+    DeviceNotification device_notification = 4;
+    CANBusMessage canbus_message = 5;
+    TextMessage text_message = 6;
+  }
+}
+
+enum MessageType {
+  CURRENT_LOCATION = 0;
+  DEVICE_NOTIFICATION = 1;
+  CANBUS_MESSAGE = 2;
+  TEXT_MESSAGE = 3;
+}
+
+// Location data message
+message CurrentLocation {
+  Coordinates coordinates = 1;
+  int32 update_frequency = 2;
+  int32 accuracy = 3;
+  double speed = 4;
+  double bearing = 5;
+  google.protobuf.Timestamp timestamp = 6;
+}
+
+message Coordinates {
+  double x = 1;  // longitude
+  double y = 2;  // latitude
+  double z = 3;  // altitude/height
+}
+
+// Device status notification
+message DeviceNotification {
+  string summary = 1;
+  string overall = 2;
+  float battery = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+// CAN Bus message
+message CANBusMessage {
+  string payload = 1;
+}
+
+// Text message
+message TextMessage {
+  string message = 1;
+}
