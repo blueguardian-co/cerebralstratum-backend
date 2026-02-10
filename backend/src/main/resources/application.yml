@@ -31,26 +31,20 @@ quarkus:
   hibernate-orm:
     database:
       default-schema: ${quarkus.liquibase.default-schema-name}
-      generation: none
     mapping:
       timezone:
         default-storage: normalize-utc
+   schema-management:
+    strategy: none
   oidc:
     client-id: cerebral-stratum-backend
   keycloak:
     devservices:
       enabled: false
-#      realm-path: devservices/realm.json
-#      realm-name: external
-#      port: 8000
-#      start-command: >-
-#        start-dev --http-enabled=true --proxy-headers=xforwarded --features=organization:v1
-#      java-opts: >-
-#        -XX:UseSVE=0
-    policy-enforcer:
-      enable: false
     admin-client:
       realm: ${keycloak.realm}
+   policy-enforcer:
+    enabled: false
   scheduler:
     start-mode: normal
   kafka:
@@ -93,7 +87,6 @@ quarkus:
         client-id: ${quarkus.oidc.client-id}
         client-secret: ${quarkus.oidc.credentials.secret}
       policy-enforcer:
-        enable: true
         paths:
           quarkus-status:
             paths: /q/*
@@ -104,6 +97,7 @@ quarkus:
           openapi:
             paths: /openapi
             enforcement-mode: disabled
+       enabled: true
 '%dev':
 #  kafka:
 #    bootstrap:
