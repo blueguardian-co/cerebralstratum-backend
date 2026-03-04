@@ -21,6 +21,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
 
 import io.quarkus.security.Authenticated;
 
@@ -28,6 +29,7 @@ import org.jboss.logging.Logger;
 
 @Path("/api/v1/devices")
 @Authenticated
+@RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DevicesResource {

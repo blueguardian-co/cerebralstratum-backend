@@ -19,6 +19,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
@@ -29,19 +30,20 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("/api/v1/authorisation/users")
 @Authenticated
+@RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
     private static final Logger LOG = Logger.getLogger(UserResource.class);
 
     @Inject
-    JsonWebToken jwtToken;
+    org.eclipse.microprofile.jwt.JsonWebToken jwtToken;
 
     @Inject
-    UserRepository userRepository;
+    co.blueguardian.cerebralstratum.backend.repositories.users.UserRepository userRepository;
 
     @Inject
-    Keycloak keycloak;
+    org.keycloak.admin.client.Keycloak keycloak;
 
     @ConfigProperty(name = "keycloak.realm", defaultValue = "cerebral-stratum-backend")
     String KeycloakRealm;

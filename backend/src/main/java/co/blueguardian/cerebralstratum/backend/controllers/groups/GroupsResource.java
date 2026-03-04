@@ -7,6 +7,7 @@ import io.quarkus.security.PermissionsAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.enterprise.context.RequestScoped;
 
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Path("/api/v1/authorisation/groups")
 @Authenticated
+@RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupsResource {
@@ -26,7 +28,7 @@ public class GroupsResource {
     private static final Logger LOG = Logger.getLogger(GroupsResource.class);
 
     @Inject
-    Keycloak keycloak;
+    org.keycloak.admin.client.Keycloak keycloak;
 
     @ConfigProperty(name = "keycloak.realm", defaultValue = "cerebral-stratum-backend")
     String KeycloakRealm;

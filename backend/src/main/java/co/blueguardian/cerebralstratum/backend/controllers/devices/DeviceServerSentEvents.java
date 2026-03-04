@@ -9,6 +9,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.inject.Inject;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.jboss.logging.Logger;
@@ -25,6 +26,7 @@ public class DeviceServerSentEvents {
     private final Multi<DeviceNotification> deviceNotifications;
     private final Multi<CANBusMessage> canBusMessages;
 
+    @Inject
     public DeviceServerSentEvents(
             @Channel("location") Multi<LocationMessage> locationMessages,
             @Channel("status") Multi<DeviceNotification> deviceNotifications,

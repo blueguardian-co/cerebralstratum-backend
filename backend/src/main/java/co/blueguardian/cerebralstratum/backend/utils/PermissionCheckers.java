@@ -1,22 +1,21 @@
 package co.blueguardian.cerebralstratum.backend.utils;
 
 import io.quarkus.security.PermissionChecker;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
 import java.util.Set;
 import java.util.UUID;
 
-@ApplicationScoped
+@RequestScoped
 public class PermissionCheckers {
 
     private static final Logger LOG = Logger.getLogger(PermissionCheckers.class);
 
     @Inject
-    JsonWebToken jwtToken;
+    org.eclipse.microprofile.jwt.JsonWebToken jwtToken;
 
     @ConfigProperty(name = "cerebral-stratum.platform-admin-group", defaultValue = "platform-admins")
     String PlatformAdminsGroupName;
