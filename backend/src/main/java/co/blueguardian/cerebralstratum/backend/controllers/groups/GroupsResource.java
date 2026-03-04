@@ -1,6 +1,5 @@
 package co.blueguardian.cerebralstratum.backend.controllers.groups;
 
-import co.blueguardian.cerebralstratum.backend.controllers.users.UserResource;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.PermissionsAllowed;
 
@@ -12,7 +11,6 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
-import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 

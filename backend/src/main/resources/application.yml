@@ -114,26 +114,12 @@ quarkus:
       client-id: cerebral-stratum-backend
     keycloak:
       admin-client:
+        server-url: ${quarkus.oidc.auth-server-url}
         username: admin
         password: admin
         realm: ${keycloak.realm}
         grant-type: CLIENT_CREDENTIALS
         client-id: ${quarkus.oidc.client-id}
         client-secret: ${quarkus.oidc.credentials.secret}
-mp:
- messaging:
-   incoming:
-     location:
-       topic: location
-       connector: smallrye-kafka
-       broadcast: true
-     status:
-       topic: status
-       connector: smallrye-kafka
-       broadcast: true
-     canbus:
-       topic: canbus
-       connector: smallrye-kafka
-       broadcast: true
 keycloak:
   realm: external

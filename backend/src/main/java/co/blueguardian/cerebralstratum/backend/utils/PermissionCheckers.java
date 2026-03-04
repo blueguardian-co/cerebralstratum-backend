@@ -4,6 +4,7 @@ import io.quarkus.security.PermissionChecker;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
 import java.util.Set;
@@ -15,7 +16,10 @@ public class PermissionCheckers {
     private static final Logger LOG = Logger.getLogger(PermissionCheckers.class);
 
     @Inject
-    org.eclipse.microprofile.jwt.JsonWebToken jwtToken;
+    io.quarkus.security.identity.SecurityIdentity securityIdentity;
+    private JsonWebToken getJwt() {
+        return (JsonWebToken) securityIdentity.getPrincipal();
+    }
 
     @ConfigProperty(name = "cerebral-stratum.platform-admin-group", defaultValue = "platform-admins")
     String PlatformAdminsGroupName;
@@ -25,32 +29,32 @@ public class PermissionCheckers {
 
     @PermissionChecker("member-of-group")
     public boolean isMemberOfGroup(String group_name) {
-        Set<String> groups = jwtToken.getClaim("groups");
+        Set<String> groups = getJwt().getClaim("groups");
         LOG.info("Is /" + group_name + " in these groups " + groups + " = " + groups.contains("/" + group_name));
         return groups.contains("/" + group_name);
     }
     @PermissionChecker("member-of-device-group")
     public boolean isMemberOfDeviceGroup(String device_uuid) {
         LOG.info("Checking if user is a member of device group: " + device_uuid);
-        Set<String> groups = jwtToken.getGroups();
+        Set<String> groups = getJwt().getGroups();
         LOG.info("Is /" + device_uuid + "(/view-only|/modify)" + " in these groups " + groups + ": " + (groups.contains("/" + device_uuid) || groups.contains("/" + device_uuid + "/view-only") || groups.contains("/" + device_uuid + "/modify")));
         return (groups.contains("/" + device_uuid) || groups.contains("/" + device_uuid + "/view-only") || groups.contains("/" + device_uuid + "/modify"));
     }
 
     @PermissionChecker("device-admin")
     public boolean isADeviceAdmin(String device_uuid) {
-        Set<String> groups = jwtToken.getGroups();
+        Set<String> groups = getJwt().getGroups();
         return (groups.contains("/" + PlatformAdminsGroupName) || groups.contains("/" + device_uuid));
     }
     @PermissionChecker("organisation-admin")
     public boolean isAnOrganisationAdmin(String organisation_uuid) {
-        Set<String> groups = jwtToken.getGroups();
+        Set<String> groups = getJwt().getGroups();
         return (groups.contains(PlatformAdminsGroupName) || groups.contains("/" + organisation_uuid));
     }
     @PermissionChecker("user-admin")
     public boolean isAnUserAdminString(UUID user_uuid) {
-        Set<String> groups = jwtToken.getGroups();
-        UUID user = UUID.fromString(jwtToken.getClaim("sub"));
+        Set<String> groups = getJwt().getGroups();
+        UUID user = UUID.fromString(getJwt().getClaim("sub"));
         LOG.info("Checking user: " + user + " against user_uuid: " + user_uuid + " or platform admin: " + PlatformAdminsGroupName);
         return (groups.contains("/" + PlatformAdminsGroupName) || user.equals(user_uuid));
     }

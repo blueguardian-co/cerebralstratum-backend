@@ -24,6 +24,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.RequestScoped;
 
 import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import org.jboss.logging.Logger;
 
@@ -43,7 +44,10 @@ public class DevicesResource {
     co.blueguardian.cerebralstratum.backend.repositories.users.UserRepository userRepository;
 
     @Inject
-    org.eclipse.microprofile.jwt.JsonWebToken jwtToken;
+    io.quarkus.security.identity.SecurityIdentity securityIdentity;
+    private JsonWebToken getJwt() {
+        return (JsonWebToken) securityIdentity.getPrincipal();
+    }
 
     @GET
     @RolesAllowed("admins")
@@ -54,7 +58,7 @@ public class DevicesResource {
     @GET
     @Path("mine")
     public List<Device> getMyDevices() {
-        UUID keycloak_user_id = UUID.fromString(jwtToken.getClaim("sub"));
+        UUID keycloak_user_id = UUID.fromString(getJwt().getClaim("sub"));
         return deviceRepository.findAllByUserId(keycloak_user_id);
     }
 
@@ -100,7 +104,7 @@ public class DevicesResource {
     @POST
     @Transactional
     public Response registerDevice(UUID device_uuid) {
-        UUID keycloak_user_id = jwtToken.getClaim("sub");
+        UUID keycloak_user_id = UUID.fromString(getJwt().getClaim("sub"));
         User user = userRepository.getById(keycloak_user_id);
 
         // Ensure user has subscription entitlements available for registration
@@ -121,7 +125,7 @@ public class DevicesResource {
     @PermissionsAllowed("member-of-device-group")
     @Transactional
     public Response unregisterDevice(UUID device_uuid) {
-        UUID keycloak_user_id = jwtToken.getClaim("sub");
+        UUID keycloak_user_id = UUID.fromString(getJwt().getClaim("sub"));
         User user = userRepository.getById(keycloak_user_id);
         try {
             Device device = deviceRepository.unregister(keycloak_user_id, device_uuid);

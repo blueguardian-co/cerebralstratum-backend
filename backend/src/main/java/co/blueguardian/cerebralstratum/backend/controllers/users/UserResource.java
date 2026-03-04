@@ -26,6 +26,7 @@ import org.jboss.logging.Logger;
 import org.keycloak.admin.client.*;
 import org.keycloak.representations.idm.*;
 import io.quarkus.security.Authenticated;
+import io.quarkus.security.identity.SecurityIdentity;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("/api/v1/authorisation/users")
@@ -37,7 +38,11 @@ public class UserResource {
     private static final Logger LOG = Logger.getLogger(UserResource.class);
 
     @Inject
-    org.eclipse.microprofile.jwt.JsonWebToken jwtToken;
+    SecurityIdentity securityIdentity;
+
+    private JsonWebToken getJwt() {
+        return (JsonWebToken) securityIdentity.getPrincipal();
+    }
 
     @Inject
     co.blueguardian.cerebralstratum.backend.repositories.users.UserRepository userRepository;
@@ -97,7 +102,7 @@ public class UserResource {
     @GET
     @Path("me")
     public Response getMe() {
-        User user = userRepository.getByKeycloakUserId(UUID.fromString(jwtToken.getClaim("sub")));
+        User user = userRepository.getByKeycloakUserId(UUID.fromString(getJwt().getClaim("sub")));
         if (user != null) {
             return Response.ok(user).status(200).build();
         } else {
@@ -109,8 +114,8 @@ public class UserResource {
     @Path("me")
     @Transactional
     public Response createMe() {
-        UUID keycloak_user_id = UUID.fromString(jwtToken.getClaim("sub"));
-        UUID keycloak_org_id = UUID.fromString(jwtToken.getClaim("organization_id"));
+        UUID keycloak_user_id = UUID.fromString(getJwt().getClaim("sub"));
+        UUID keycloak_org_id = UUID.fromString(getJwt().getClaim("organization_id"));
         LocalDateTime created = LocalDateTime.now();
         User user = userRepository.create(new CreateUserRequest(
                 keycloak_user_id,
