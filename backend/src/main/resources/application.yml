@@ -1,4 +1,6 @@
 quarkus:
+  application:
+    name: cerebral-stratum-backend
   devservices:
     enabled: true
   smallrye-openapi:
@@ -59,6 +61,15 @@ quarkus:
       port: 9092
 '%prod':
   quarkus:
+    otel:
+      traces:
+        enabled: true
+        eusp:
+          enabled: false
+      logs:
+        enabled: true
+      metrics:
+        enabled: true
     liquibase:
       migrate-at-start: true
       change-log: db/changeLog.yaml
@@ -100,6 +111,19 @@ quarkus:
         enabled: true
 '%dev':
   quarkus:
+    otel:
+      traces:
+        enabled: true
+        eusp:
+          enabled: true
+      logs:
+        enabled: true
+      metrics:
+        enabled: true
+      exporter:
+        otlp:
+          endpoint: https://otlp-gateway-prod-au-southeast-1.grafana.net/otlp
+          protocol: http/protobuf
     liquibase:
       migrate-at-start: true
       change-log: devservices/changeLog.yaml
