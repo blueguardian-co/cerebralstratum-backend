@@ -75,7 +75,7 @@ public class DeviceStreamService implements DeviceStreamServiceGrpc.AsyncService
 
     // Kafka consumer for location updates
     @PermissionsAllowed("message-classifier")
-    @Incoming("/device/location")
+    @Incoming("device.location")
     public void consumeLocation(ConsumerRecord<UUID, GetLocationRequest> record) {
         String deviceUuid = record.key().toString();
         GetLocationRequest location = record.value();
@@ -106,7 +106,7 @@ public class DeviceStreamService implements DeviceStreamServiceGrpc.AsyncService
 
     // Kafka consumer for device status updates
     @PermissionsAllowed("message-classifier")
-    @Incoming("/device/status")
+    @Incoming("device.status")
     public void consumeStatus(ConsumerRecord<UUID, Status> record) {
         String deviceUuid = record.key().toString();
         Status status = record.value();
@@ -131,7 +131,7 @@ public class DeviceStreamService implements DeviceStreamServiceGrpc.AsyncService
 
     // Kafka consumer for CAN Bus messages
     @PermissionsAllowed("message-classifier")
-    @Incoming("/device/canbus")
+    @Incoming("device.canbus")
     public void consumeCANBus(ConsumerRecord<UUID, CANBus> record) {
         String deviceUuid = record.key().toString();
         CANBus canBus = record.value();

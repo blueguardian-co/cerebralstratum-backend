@@ -41,18 +41,19 @@ public class PermissionCheckers {
     @PermissionChecker("device-admin")
     public boolean isADeviceAdmin(String device_uuid) {
         Set<String> groups = jwtToken.getGroups();
-        return (groups.contains(PlatformAdminsGroupName) || groups.contains(device_uuid));
+        return (groups.contains("/" + PlatformAdminsGroupName) || groups.contains("/" + device_uuid));
     }
     @PermissionChecker("organisation-admin")
     public boolean isAnOrganisationAdmin(String organisation_uuid) {
         Set<String> groups = jwtToken.getGroups();
-        return (groups.contains(PlatformAdminsGroupName) || groups.contains(organisation_uuid));
+        return (groups.contains(PlatformAdminsGroupName) || groups.contains("/" + organisation_uuid));
     }
     @PermissionChecker("user-admin")
     public boolean isAnUserAdminString(UUID user_uuid) {
         Set<String> groups = jwtToken.getGroups();
         UUID user = UUID.fromString(jwtToken.getClaim("sub"));
-        return (groups.contains(PlatformAdminsGroupName) || user.equals(user_uuid));
+        LOG.info("Checking user: " + user + " against user_uuid: " + user_uuid + " or platform admin: " + PlatformAdminsGroupName);
+        return (groups.contains("/" + PlatformAdminsGroupName) || user.equals(user_uuid));
     }
 //    @PermissionChecker("message-classifier")
 //    public boolean isAMessageClassifier(String device_uuid) {

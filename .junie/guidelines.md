@@ -23,14 +23,14 @@
     - `%dev`: `migrate-at-start: true` with `devservices/changeLog.yaml`.
     - `%prod`: `migrate-at-start: true` with `db/changeLog.yaml`.
   - Keycloak
-    - Quarkus Keycloak Dev Service is explicitly disabled: `quarkus.keycloak.devservices.enabled: false`.
-    - In `%dev`, OIDC points at `http://localhost:8000/realms/${keycloak.realm}` with a static client secret. If you don’t run a local Keycloak at `:8000`, you will need to either:
-      - Provide a Keycloak instance matching these URLs/realm/credentials, or
-      - Temporarily disable enforcement (policy enforcer is already `enable: false` by default) and stub out OIDC‑dependent calls during development.
+    - Quarkus Keycloak Dev Service is enabled: `quarkus.keycloak.devservices.enabled: true`.
+    - In `%dev`, OIDC points at `http://localhost:8000/realms/${keycloak.realm}` with a static client secret. The Dev Service will start a Keycloak container automatically; if you disable it, ensure a Keycloak instance is available at the configured URL, or temporarily stub out OIDC‑dependent calls (policy enforcer is `enabled: false` by default).
   - Kafka Dev Service
     - Enabled for `quarkus.kafka.devservices`, port pinned to `9092`.
   - HTTP
     - Default port `6443` in base config, `%dev` binds to `localhost` and enables permissive CORS.
+  - gRPC
+    - Server enabled on port `9000` with reflection service enabled.
 
 #### Build and Run
 - Full build (all modules):
@@ -80,7 +80,7 @@
 
 - Integration testing notes
   - Because Dev Services are used for the database and Kafka, ITs that hit the Quarkus runtime may start containers automatically and can be time‑consuming.
-  - If ITs depend on Keycloak, you must provide a running Keycloak aligned with `%dev` config (or enable Keycloak Dev Service by changing configuration) before running `verify` with `-DskipITs=false`.
+  - If ITs depend on Keycloak, the Keycloak Dev Service will start automatically. If you have disabled it, provide a running Keycloak aligned with `%dev` config before running `verify` with `-DskipITs=false`.
   - Native profile (`-Pnative`) sets `skipITs=false` as part of the profile properties. Ensure your environment has GraalVM/Native Image prerequisites if you plan to build/run native ITs.
 
 #### Additional Development Notes

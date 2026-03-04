@@ -38,7 +38,7 @@ public class UUIDv5Generator {
             hash[6] &= 0x0f; // clear version
             hash[6] |= 0x50; // set to version 5
             hash[8] &= 0x3f; // clear variant
-            hash[8] |= 0x80; // set to IETF variant
+            hash[8] |= (byte) 0x80; // set to IETF variant
 
             // Convert hash to UUID
             return toUUID(hash);

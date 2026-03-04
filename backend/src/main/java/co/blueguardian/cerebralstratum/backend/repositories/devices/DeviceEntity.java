@@ -126,7 +126,6 @@ public class DeviceEntity {
     }
 
     public void setUser(UserEntity owner) {
-        this.user = user;
     }
 
     public OrganisationEntity getOrganisation() {

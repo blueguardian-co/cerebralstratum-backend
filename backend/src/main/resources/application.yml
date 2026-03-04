@@ -1,6 +1,6 @@
 quarkus:
-#  devservices:
-#    enabled: false
+  devservices:
+    enabled: true
   smallrye-openapi:
     path: /openapi
   swagger-ui:
@@ -8,12 +8,11 @@ quarkus:
     always-include: true
   http:
     port: 6443
-    cors:
-      ~: true
   grpc:
     server:
       port: 9000
       enable-reflection-service: true
+      use-separate-server: false
   dev-ui:
     cors:
       enabled: false
@@ -25,26 +24,34 @@ quarkus:
       db-name: cerebral-stratum
       init-script-path: devservices/init.sql
       port: 5432
-      image-name: quay.io/enterprisedb/postgresql:17-postgis-multiarch-ubi9
+      image-name: postgis/postgis:16-3.4
+      command: postgres
       container-env:
         "POSTGRES_HOST_AUTH_METHOD": trust
   hibernate-orm:
     database:
       default-schema: ${quarkus.liquibase.default-schema-name}
     mapping:
+      format:
+        global: ignore
       timezone:
         default-storage: normalize-utc
-   schema-management:
-    strategy: none
+    schema-management:
+      strategy: none
   oidc:
     client-id: cerebral-stratum-backend
+    roles:
+        role-claim-path: realm_access/roles
   keycloak:
     devservices:
-      enabled: false
+      enabled: true
+      java-opts: -XX:UseSVE=0
+      realm-path: devservices/realm.json
+      realm-name: ${keycloak.realm}
     admin-client:
       realm: ${keycloak.realm}
-   policy-enforcer:
-    enabled: false
+    policy-enforcer:
+     enabled: false
   scheduler:
     start-mode: normal
   kafka:
@@ -59,29 +66,22 @@ quarkus:
     http:
       host: 0.0.0.0
       cors:
-        origins: /.*/
-    kubernetes-config:
-      secrets:
-        ~:
-          - db-creds
-          - backend-oidc
         enabled: true
-      secrets-role-config:
-        name: cerebral-stratum-backend
+        origins: /.*/
     datasource:
       jdbc:
-        url: ${jdbc-url}?defaultSchema=cerebralstratum
-      username: ${jdbc-username}
-      password: ${jdbc-password}
+        url: ${JDBC_URL:jdbc:postgresql://localhost:5432/cerebral-stratum}?defaultSchema=cerebralstratum
+      username: ${JDBC_USERNAME:postgres}
+      password: ${JDBC_PASSWORD}
     oidc:
-      auth-server-url: https://sso.blueguardian.co/realms/external
+      auth-server-url: ${OIDC_AUTH_SERVER_URL:https://sso.blueguardian.co/realms/external}
       credentials:
-        secret: ${oidc-secret}
+        secret: ${OIDC_SECRET}
     keycloak:
       admin-client:
         server-url: https://sso.blueguardian.co
-        username:
-        password:
+        username: ${keycloak.username}
+        password: ${keycloak.password}
         realm: ${keycloak.realm}
         grant-type: CLIENT_CREDENTIALS
         client-id: ${quarkus.oidc.client-id}
@@ -97,56 +97,29 @@ quarkus:
           openapi:
             paths: /openapi
             enforcement-mode: disabled
-       enabled: true
+        enabled: true
 '%dev':
-#  kafka:
-#    bootstrap:
-#      servers:
-#        - kafka-cluster-kafka-bootstrap.development.svc.cluster.local:9092
-#    security:
-#      protocol: SASL_PLAINTEXT
-#    sasl:
-#      mechanism: PLAIN
-#      jaas:
-#        config: >-
-#          org.apache.kafka.common.security.plain.PlainLoginModule required
-#          username="${kafka-username}"
-#          password="${kafka-password}";
   quarkus:
     liquibase:
       migrate-at-start: true
       change-log: devservices/changeLog.yaml
       default-schema-name: cerebralstratum
-#    kubernetes-config:
-#      secrets:
-#        ~:
-#          - db-creds
-#          - oidc-creds
-#          - message-bus-creds
-#        enabled: true
     http:
       host: localhost
       cors:
         origins: /.*/
     oidc:
-      auth-server-url: http://localhost:8000/realms/${keycloak.realm}
       credentials:
         secret: yxj6VJfZB8plW95iLkGn9ebWPPhic6yY
       client-id: cerebral-stratum-backend
     keycloak:
       admin-client:
-        server-url: http://localhost:8000
-        username:
-        password:
+        username: admin
+        password: admin
         realm: ${keycloak.realm}
         grant-type: CLIENT_CREDENTIALS
         client-id: ${quarkus.oidc.client-id}
         client-secret: ${quarkus.oidc.credentials.secret}
-#    datasource:
-#      jdbc:
-#        url: ${jdbc-url}?defaultSchema=cerebralstratum
-#      username: ${jdbc-username}
-#      password: ${jdbc-password}
 mp:
  messaging:
    incoming:
