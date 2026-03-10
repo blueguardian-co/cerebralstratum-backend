@@ -19,8 +19,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>backend</module>
-        <module>ingress-classifier</module>
-        <module>device-data-persist</module>
+        <module>device-registrar</module>
+        <module>notification-dispatcher</module>
         <module>device-simulator</module>
         <module>utils</module>
     </modules>

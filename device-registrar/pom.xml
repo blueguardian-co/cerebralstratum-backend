@@ -7,7 +7,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>co.blueguardian.cerebralstratum</groupId>
-    <artifactId>ingress-classifier</artifactId>
+    <artifactId>device-registrar</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>

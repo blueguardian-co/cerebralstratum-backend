@@ -7,7 +7,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>co.blueguardian.cerebralstratum</groupId>
-    <artifactId>device-data-persist</artifactId>
+    <artifactId>notification-dispatcher</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
