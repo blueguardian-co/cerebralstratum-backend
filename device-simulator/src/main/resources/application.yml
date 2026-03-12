@@ -3,11 +3,11 @@ mp:
     outgoing:
       /device/location:
         topic: location
-        connector: smallrye-kafka
+        host: ${MQTT_HOST:localhost}
+        port: 1883
+        connector: smallrye-mqtt
       /device/status:
         topic: status
-        connector: smallrye-kafka
-quarkus:
-  kafka:
-    devservices:
-      port: 9092
+        host: ${MQTT_HOST:localhost}
+        port: 1883
+        connector: smallrye-mqtt

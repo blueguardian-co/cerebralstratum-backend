@@ -1,10 +1,32 @@
 # device-simulator
 
+Simulates IoT devices sending location and status messages via MQTT for development and testing of the CEREBRAL STRATUM backend services.
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
 
-## Running the application in dev mode
+## Prerequisites
+
+- Docker (for running the MQTT broker)
+- Java 21+
+- Maven
+
+## Development Setup
+
+The device simulator publishes messages to an MQTT broker, which are then consumed by the `device-registrar` service and forwarded to Kafka for backend processing.
+
+### 1. Start the MQTT Broker
+
+Before running the simulator, start the Mosquitto MQTT broker:
+
+```shell script
+./start-mqtt.sh
+```
+
+This will start an Eclipse Mosquitto container listening on `localhost:1883`.
+
+### 2. Run the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 
@@ -13,6 +35,26 @@ You can run your application in dev mode that enables live coding using:
 ```
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+
+### 3. Stop the MQTT Broker
+
+When you're done developing, stop the MQTT broker:
+
+```shell script
+./stop-mqtt.sh
+```
+
+## Message Flow
+
+```
+Device Simulator → MQTT (Eclipse Hono) → backend
+```
+
+The `device-registrar` service is used for device onboarding, lifecycle management, and offboarding, but is not in the message flow for location and status updates.
+
+The simulator publishes to two MQTT topics:
+- `location` - Device location updates
+- `status` - Device status updates
 
 ## Packaging and running the application
 
