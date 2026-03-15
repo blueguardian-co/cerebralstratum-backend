@@ -62,6 +62,8 @@ quarkus:
 '%prod':
   quarkus:
     otel:
+      resource:
+        attributes: "service.name=cerebral-stratum-backend,service.namespace=cerebral-stratum,deployment.environment=production"
       traces:
         enabled: true
         eusp:
@@ -112,6 +114,8 @@ quarkus:
 '%dev':
   quarkus:
     otel:
+      resource:
+        attributes: "service.name=cerebral-stratum-backend,service.namespace=${env:HOSTNAME},deployment.environment=development"
       traces:
         enabled: true
         eusp:
