@@ -63,14 +63,14 @@ quarkus:
   quarkus:
     otel:
       resource:
-        attributes: "service.name=cerebral-stratum-backend,service.namespace=cerebral-stratum,deployment.environment=production"
+        attributes: "service.instance.id=${HOSTNAME:unknown-prod},service.name=cerebral-stratum-backend,service.namespace=cerebral-stratum,deployment.environment.name=production"
       traces:
         enabled: true
         eusp:
           enabled: false
-      logs:
-        enabled: true
       metrics:
+          enabled: true
+      logs:
         enabled: true
     liquibase:
       migrate-at-start: true
@@ -115,7 +115,7 @@ quarkus:
   quarkus:
     otel:
       resource:
-        attributes: "service.name=cerebral-stratum-backend,service.namespace=${env:HOSTNAME},deployment.environment=development"
+        attributes: "service.instance.id=${HOSTNAME:unknown-dev},service.name=cerebral-stratum-backend,deployment.environment.name=development"
       traces:
         enabled: true
         eusp:
@@ -128,6 +128,7 @@ quarkus:
         otlp:
           endpoint: https://otlp-gateway-prod-au-southeast-1.grafana.net/otlp
           protocol: http/protobuf
+          headers: ${QUARKUS_OTEL_EXPORTER_OTLP_HEADERS}
     liquibase:
       migrate-at-start: true
       change-log: devservices/changeLog.yaml

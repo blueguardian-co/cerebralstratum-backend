@@ -82,6 +82,10 @@ export QUARKUS_OTEL_EXPORTER_OTLP_HEADERS
 QUARKUS_OTEL_EXPORTER_OTLP_HEADERS=$(/opt/homebrew/bin/op item get --account 3LZPARPJEFBELCRVCYC7CY7N2M --vault l6qbxfd27ppoeo65ndkrbxlx6i 4sbrziyztyqbvjzyzo4ys5cjua --fields=label=password --reveal)
 echo -e "${GREEN}Secrets loaded${NC}"
 
+# Set HOSTNAME if not already set
+export HOSTNAME="${HOSTNAME:-$(hostname)}"
+echo -e "${BLUE}Using hostname: ${HOSTNAME}${NC}"
+
 # Start each module in background with module-specific setup
 for module in "${MODULES[@]}"; do
     # Module-specific pre-start actions
@@ -103,7 +107,7 @@ for module in "${MODULES[@]}"; do
     case "$module" in
         backend)
             echo -e "${BLUE}Opening backend in browser...${NC}"
-            sleep 10  # Give the server a moment to start
+            sleep 30  # Give the server a moment to start
             open "http://localhost:6443" 2>/dev/null || echo -e "${YELLOW}Could not open browser automatically${NC}"
             ;;
     esac
