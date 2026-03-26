@@ -1,4 +1,10 @@
 version: 2
+registries:
+  container-redhat:
+    type: docker-registry
+    url: https://registry.redhat.io
+    username: 16798353|github
+    password: ${{secrets.REDHAT_REGISTRY_SECRET}}
 updates:
   - package-ecosystem: "maven"
     directory: "/"
