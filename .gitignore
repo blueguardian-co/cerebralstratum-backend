@@ -1,5 +1,7 @@
 #Project Specific
 postgres
+.junie/
+.ai/
 
 #Maven
 target/
