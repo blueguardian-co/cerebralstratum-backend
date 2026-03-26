@@ -6,6 +6,10 @@ registries:
     username: 16798353|github
     password: ${{secrets.REDHAT_REGISTRY_SECRET}}
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
   - package-ecosystem: "maven"
     directory: "/"
     open-pull-requests-limit: 3
