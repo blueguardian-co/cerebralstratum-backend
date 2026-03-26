@@ -16,16 +16,19 @@ updates:
     schedule:
       interval: "weekly"
   - package-ecosystem: "docker"
+    registries: "*"
     directory: "/backend/src/main/docker"
     open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
   - package-ecosystem: "docker"
+    registries: "*"
     directory: "/device-registrar/src/main/docker"
     open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
   - package-ecosystem: "docker"
+    registries: "*"
     directory: "/notification-dispatcher/src/main/docker"
     open-pull-requests-limit: 1
     schedule:
