@@ -9,7 +9,7 @@ permissions:
   id-token: write
   pages: write
 env:
-  INSTANCE: 'Writerside/bc'
+  INSTANCE: 'Writerside/c'
   DOCKER_VERSION: '2025.03.8312'
   # IS_GROUP: 'true' # Uncomment to build a group
 jobs:
