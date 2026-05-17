@@ -2,12 +2,17 @@
 <!DOCTYPE instance-profile
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
-<instance-profile id="c"
+<instance-profile id="cs-b"
                  name="CEREBRAL STRATUM - Backend"
                  start-page="Overview.md">
 
     <toc-element topic="Overview.md"/>
-    <toc-element topic="ADRs.md" />
+    <toc-element topic="Architecture.md"/>
+    <toc-element topic="ADRs.md">
+        <toc-element topic="0001-iam-and-device-registration-architecture.md"/>
+        <toc-element topic="0002-observability-and-fleet-dashboard-embedding.md"/>
+        <toc-element topic="0003-loyalty-programme-integration.md"/>
+    </toc-element>
     <toc-element topic="Road-Map.md"/>
     <toc-element topic="Contributing.md"/>
     <toc-element topic="starter-topic.md"/>
