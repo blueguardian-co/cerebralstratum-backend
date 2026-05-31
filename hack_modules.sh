@@ -8,26 +8,32 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Available modules with Dockerfiles
-AVAILABLE_MODULES=("backend" "device-data-persist" "device-simulator" "ingress-classifier" "utils")
+# Runnable services (library modules such as utils are excluded)
+AVAILABLE_MODULES=("backend" "device-registrar" "notification-dispatcher" "device-simulator")
 
 # Array to store background process PIDs and their module names
 declare -A PIDS
 MODULES_STARTED=()
+MQTT_STARTED=false
+
+# Start the shared MQTT broker (idempotent within a session)
+mqtt_start() {
+    if [[ "$MQTT_STARTED" == "true" ]]; then
+        return 0
+    fi
+    echo -e "${BLUE}Starting MQTT broker...${NC}"
+    (cd device-simulator && ./start-mqtt.sh) || echo -e "${YELLOW}Warning: MQTT broker start failed (may already be running)${NC}"
+    MQTT_STARTED=true
+}
 
 # Cleanup function to kill all background processes
 cleanup() {
     echo -e "\n${YELLOW}Shutting down services...${NC}"
 
-    # Module-specific cleanup
-    for module in "${MODULES_STARTED[@]}"; do
-        case "$module" in
-            device-simulator)
-                echo -e "${BLUE}Stopping MQTT broker for device-simulator...${NC}"
-                (cd device-simulator && ./stop-mqtt.sh) 2>/dev/null || echo -e "${YELLOW}MQTT broker cleanup failed or already stopped${NC}"
-                ;;
-        esac
-    done
+    if [[ "$MQTT_STARTED" == "true" ]]; then
+        echo -e "${BLUE}Stopping MQTT broker...${NC}"
+        (cd device-simulator && ./stop-mqtt.sh) 2>/dev/null || echo -e "${YELLOW}MQTT broker cleanup failed or already stopped${NC}"
+    fi
 
     # Kill all background processes
     for module in "${!PIDS[@]}"; do
@@ -90,9 +96,8 @@ echo -e "${BLUE}Using hostname: ${HOSTNAME}${NC}"
 for module in "${MODULES[@]}"; do
     # Module-specific pre-start actions
     case "$module" in
-        device-simulator)
-            echo -e "${BLUE}Starting MQTT broker for device-simulator...${NC}"
-            (cd device-simulator && ./start-mqtt.sh) || echo -e "${YELLOW}Warning: MQTT broker start failed${NC}"
+        device-registrar|device-simulator)
+            mqtt_start
             ;;
     esac
 
