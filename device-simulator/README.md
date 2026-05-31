@@ -2,43 +2,39 @@
 
 Simulates IoT devices sending location and status messages via MQTT for development and testing of the CEREBRAL STRATUM backend services.
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
-
 ## Prerequisites
 
-- Docker (for running the MQTT broker)
+- Podman (for running the MQTT broker)
 - Java 21+
 - Maven
 
 ## Development Setup
 
-The device simulator publishes messages to an MQTT broker, which are then consumed by the `device-registrar` service and forwarded to Kafka for backend processing.
+The device simulator publishes messages to an MQTT broker. The `device-registrar` service consumes from MQTT and forwards the messages to Kafka, where the primary backend and notification-dispatcher pick them up.
 
-### 1. Start the MQTT Broker
-
-Before running the simulator, start the Mosquitto MQTT broker:
+### 1. Start the MQTT broker
 
 ```shell script
 ./start-mqtt.sh
 ```
 
-This will start an Eclipse Mosquitto container listening on `localhost:1883`.
+This starts an Eclipse Mosquitto container on `localhost:1883`.
 
-### 2. Run the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
+### 2. Run in dev mode
 
 ```shell script
-./mvnw compile quarkus:dev
+make dev-simulator
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Or with automatic secret injection and MQTT lifecycle management (1Password CLI required):
 
-### 3. Stop the MQTT Broker
+```shell script
+make hack-simulator
+```
 
-When you're done developing, stop the MQTT broker:
+The Quarkus Dev UI is available at <http://localhost:8080/q/dev/>.
+
+### 3. Stop the MQTT broker
 
 ```shell script
 ./stop-mqtt.sh
@@ -47,58 +43,16 @@ When you're done developing, stop the MQTT broker:
 ## Message Flow
 
 ```
-Device Simulator → MQTT (Eclipse Hono) → backend
+device-simulator
+    └── MQTT (localhost:1883)
+            └── device-registrar
+                    └── Kafka
+                            ├── Primary Backend
+                            └── Notification Dispatcher
 ```
 
-The `device-registrar` service is used for device onboarding, lifecycle management, and offboarding, but is not in the message flow for location and status updates.
+The simulator publishes to three MQTT topics:
+- `location` — device location updates
+- `status` — device status updates
+- `canbus` — CAN bus data
 
-The simulator publishes to two MQTT topics:
-- `location` - Device location updates
-- `status` - Device status updates
-
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
-```
-
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/device-simulator-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and Jakarta Persistence
-- Apache Kafka Client ([guide](https://quarkus.io/guides/kafka)): Connect to Apache Kafka with its native API
-- OpenTelemetry ([guide](https://quarkus.io/guides/opentelemetry)): Use OpenTelemetry to trace services
-- Redis Cache ([guide](https://quarkus.io/guides/cache-redis-reference)): Use Redis as the caching backend
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC

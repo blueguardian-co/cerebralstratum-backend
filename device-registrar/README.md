@@ -1,62 +1,55 @@
-# ingress-classifier
+# device-registrar
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Bridges MQTT device traffic to Kafka. Subscribes to `location`, `status`, and `canbus` topics on the MQTT broker and forwards each message as a typed event onto the corresponding Kafka topic for downstream consumption by the primary backend and notification-dispatcher.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Prerequisites
 
-## Running the application in dev mode
+- Podman (for running the MQTT broker)
+- Java 21+
+- Maven
 
-You can run your application in dev mode that enables live coding using:
+## Development Setup
 
-```shell script
-./mvnw compile quarkus:dev
-```
+`device-registrar` consumes from MQTT and produces to Kafka. Kafka is managed automatically by Quarkus devservices. MQTT is not — you need to start the broker manually before running the service.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+### 1. Start the MQTT broker
 
-## Packaging and running the application
-
-The application can be packaged using:
+From the `device-simulator` directory (the broker config lives there):
 
 ```shell script
-./mvnw package
+cd device-simulator && ./start-mqtt.sh
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+This starts an Eclipse Mosquitto container on `localhost:1883`.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
+### 2. Run in dev mode
 
 ```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+make dev-registrar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
+Or with automatic secret injection (1Password CLI required):
 
 ```shell script
-./mvnw package -Dnative
+make hack-registrar
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+The Quarkus Dev UI is available at <http://localhost:6444/q/dev/>.
+
+### 3. Stop the MQTT broker
 
 ```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+cd device-simulator && ./stop-mqtt.sh
 ```
 
-You can then execute your native executable with: `./target/ingress-classifier-1.0.0-SNAPSHOT-runner`
+## Message Flow
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+```
+Device Fleet
+    └── MQTT (localhost:1883)
+            └── device-registrar
+                    └── Kafka (devservice on localhost:9092)
+                            ├── Primary Backend
+                            └── Notification Dispatcher
+```
 
-## Related Guides
-
-- Apache Kafka Client ([guide](https://quarkus.io/guides/kafka)): Connect to Apache Kafka with its native API
-- YAML Configuration ([guide](https://quarkus.io/guides/config-yaml)): Use YAML to configure your Quarkus application
-- OpenTelemetry ([guide](https://quarkus.io/guides/opentelemetry)): Use OpenTelemetry to trace services
-- SmallRye Health ([guide](https://quarkus.io/guides/smallrye-health)): Monitor service health
-- Kubernetes Config ([guide](https://quarkus.io/guides/kubernetes-config)): Read runtime configuration from Kubernetes ConfigMaps and Secrets
