@@ -1,5 +1,7 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
+import co.blueguardian.cerebralstratum.utils.model.Status;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 

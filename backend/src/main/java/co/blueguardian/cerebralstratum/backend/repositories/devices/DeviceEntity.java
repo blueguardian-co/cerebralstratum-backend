@@ -1,6 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.repositories.devices;
 
-import co.blueguardian.cerebralstratum.backend.controllers.devices.Status;
+import co.blueguardian.cerebralstratum.utils.model.Status;
 import co.blueguardian.cerebralstratum.backend.repositories.organisations.OrganisationEntity;
 import co.blueguardian.cerebralstratum.backend.repositories.users.UserEntity;
 

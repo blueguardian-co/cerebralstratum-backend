@@ -1,6 +1,7 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
-import co.blueguardian.cerebralstratum.backend.controllers.locations.Location;
+import co.blueguardian.cerebralstratum.utils.model.Location;
+import co.blueguardian.cerebralstratum.utils.model.Status;
 import co.blueguardian.cerebralstratum.utils.messaging.LocationMessage;
 
 import io.quarkus.security.PermissionsAllowed;

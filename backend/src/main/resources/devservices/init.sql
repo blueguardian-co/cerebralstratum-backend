@@ -1,2 +1,3 @@
 CREATE SCHEMA IF NOT EXISTS cerebralstratum;
 ALTER SCHEMA cerebralstratum OWNER TO quarkus;
+CREATE EXTENSION IF NOT EXISTS postgis;

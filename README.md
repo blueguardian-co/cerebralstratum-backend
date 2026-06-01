@@ -9,7 +9,7 @@ Full documentation is published at [blueguardian.co](https://blueguardian.co/cer
 | Module | Description |
 |---|---|
 | [`backend`](backend/README.md) | Primary REST API — exposes all frontend endpoints, persists Kafka events to PostgreSQL |
-| [`device-registrar`](device-registrar/README.md) | MQTT → Kafka bridge for device telemetry |
+| [`device-registrar`](device-registrar/README.md) | Device whole-of-life management — platform registration, user association, firmware updates, and telemetry ingestion |
 | [`notification-dispatcher`](notification-dispatcher/README.md) | Kafka consumer that fans out push notifications via FCM / APNs |
 | [`device-simulator`](device-simulator/README.md) | Development tool — simulates devices publishing over MQTT |
 | [`utils`](utils/README.md) | Shared library JAR — common DTOs, Kafka deserializers, and utilities |

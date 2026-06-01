@@ -1,7 +1,7 @@
 package co.blueguardian.cerebralstratum.DeviceSimulator;
 
-import co.blueguardian.cerebralstratum.backend.controllers.locations.Location;
-import co.blueguardian.cerebralstratum.backend.controllers.devices.Status;
+import co.blueguardian.cerebralstratum.utils.model.Location;
+import co.blueguardian.cerebralstratum.utils.model.Status;
 import co.blueguardian.cerebralstratum.utils.messaging.*;
 
 import jakarta.enterprise.context.ApplicationScoped;

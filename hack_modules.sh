@@ -22,7 +22,12 @@ mqtt_start() {
         return 0
     fi
     echo -e "${BLUE}Starting MQTT broker...${NC}"
-    (cd device-simulator && ./start-mqtt.sh) || echo -e "${YELLOW}Warning: MQTT broker start failed (may already be running)${NC}"
+    podman run -d \
+        --name cerebralstratum-mqtt \
+        -p 1883:1883 \
+        docker.io/library/eclipse-mosquitto:latest \
+        sh -c 'printf "listener 1883\nallow_anonymous true\n" > /tmp/mqtt.conf && mosquitto -c /tmp/mqtt.conf' \
+        || echo -e "${YELLOW}Warning: MQTT broker start failed (may already be running)${NC}"
     MQTT_STARTED=true
 }
 
@@ -32,7 +37,9 @@ cleanup() {
 
     if [[ "$MQTT_STARTED" == "true" ]]; then
         echo -e "${BLUE}Stopping MQTT broker...${NC}"
-        (cd device-simulator && ./stop-mqtt.sh) 2>/dev/null || echo -e "${YELLOW}MQTT broker cleanup failed or already stopped${NC}"
+        podman container stop cerebralstratum-mqtt 2>/dev/null && \
+            podman container rm cerebralstratum-mqtt 2>/dev/null || \
+            echo -e "${YELLOW}MQTT broker cleanup failed or already stopped${NC}"
     fi
 
     # Kill all background processes

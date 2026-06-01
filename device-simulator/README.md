@@ -4,7 +4,8 @@ Simulates IoT devices sending location and status messages via MQTT for developm
 
 ## Prerequisites
 
-- Podman (for running the MQTT broker)
+- Podman (for running the MQTT broker via `hack_modules.sh`)
+- 1Password CLI (`op`) with access to the CEREBRAL STRATUM vault
 - Java 21+
 - Maven
 
@@ -12,33 +13,23 @@ Simulates IoT devices sending location and status messages via MQTT for developm
 
 The device simulator publishes messages to an MQTT broker. The `device-registrar` service consumes from MQTT and forwards the messages to Kafka, where the primary backend and notification-dispatcher pick them up.
 
-### 1. Start the MQTT broker
+The MQTT broker lifecycle is managed automatically by `hack_modules.sh` — no manual broker steps are required.
 
-```shell script
-./start-mqtt.sh
-```
-
-This starts an Eclipse Mosquitto container on `localhost:1883`.
-
-### 2. Run in dev mode
-
-```shell script
-make dev-simulator
-```
-
-Or with automatic secret injection and MQTT lifecycle management (1Password CLI required):
+### Run in dev mode
 
 ```shell script
 make hack-simulator
 ```
 
-The Quarkus Dev UI is available at <http://localhost:8080/q/dev/>.
+This starts an ephemeral Eclipse Mosquitto container on `localhost:1883`, injects secrets from 1Password, and launches the simulator in Quarkus dev mode.
 
-### 3. Stop the MQTT broker
+To run multiple services together (e.g. simulator + device-registrar sharing one broker):
 
 ```shell script
-./stop-mqtt.sh
+make hack-all
 ```
+
+The Quarkus Dev UI is available at <http://localhost:8080/q/dev/>.
 
 ## Message Flow
 
@@ -51,8 +42,6 @@ device-simulator
                             └── Notification Dispatcher
 ```
 
-The simulator publishes to three MQTT topics:
+The simulator publishes to the following MQTT topics:
 - `location` — device location updates
 - `status` — device status updates
-- `canbus` — CAN bus data
-

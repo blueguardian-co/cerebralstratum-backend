@@ -1,5 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
+import co.blueguardian.cerebralstratum.utils.model.Status;
 import co.blueguardian.cerebralstratum.backend.controllers.locations.GetLocationRequest;
 import co.blueguardian.cerebralstratum.backend.grpc.*;
 import io.grpc.stub.StreamObserver;

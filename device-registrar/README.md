@@ -1,6 +1,6 @@
 # device-registrar
 
-Bridges MQTT device traffic to Kafka. Subscribes to `location`, `status`, and `canbus` topics on the MQTT broker and forwards each message as a typed event onto the corresponding Kafka topic for downstream consumption by the primary backend and notification-dispatcher.
+Manages the full lifecycle of registered devices — from initial platform registration and user association through firmware update orchestration and ongoing telemetry ingestion. Subscribes to `location`, `status`, and `canbus` topics on the MQTT broker and produces typed events onto the corresponding Kafka topics for downstream consumption by the primary backend and notification-dispatcher.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ The Quarkus Dev UI is available at <http://localhost:6444/q/dev/>.
 cd device-simulator && ./stop-mqtt.sh
 ```
 
-## Message Flow
+## Telemetry Flow
 
 ```
 Device Fleet

@@ -1,5 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.controllers.locations;
 
+import co.blueguardian.cerebralstratum.utils.model.Location;
 import co.blueguardian.cerebralstratum.backend.repositories.locations.LocationRepository;
 
 import java.util.List;

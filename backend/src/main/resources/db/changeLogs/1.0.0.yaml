@@ -1,6 +1,16 @@
 ---
 databaseChangeLog:
   - changeSet:
+      id: 0
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      comment: enable PostGIS extension and create cerebralstratum schema
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS postgis
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS cerebralstratum
+  - changeSet:
       id:  1
       author:  Alex Henshaw
       labels: cerebral-stratum
