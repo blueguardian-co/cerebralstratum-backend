@@ -12,6 +12,10 @@
         <toc-element topic="0001-iam-and-device-registration-architecture.md"/>
         <toc-element topic="0002-observability-and-fleet-dashboard-embedding.md"/>
         <toc-element topic="0003-loyalty-programme-integration.md"/>
+        <toc-element topic="0005-uma2-device-resources.md"/>
+        <toc-element topic="0006-support-impersonation-consent-flow.md"/>
+        <toc-element topic="0007-emergency-sos.md"/>
+        <toc-element topic="0008-privacy-zones.md"/>
     </toc-element>
     <toc-element topic="Road-Map.md"/>
     <toc-element topic="Contributing.md"/>
