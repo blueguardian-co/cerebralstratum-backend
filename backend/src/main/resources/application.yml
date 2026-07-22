@@ -50,6 +50,9 @@ quarkus:
       java-opts: -XX:UseSVE=0
       realm-path: devservices/realm.json
       realm-name: ${keycloak.realm}
+      # Pinned (like the Postgres/Kafka dev-service ports above) so the frontend's
+      # env.js KEYCLOAK_URL doesn't need updating on every backend restart.
+      port: 8180
     admin-client:
       realm: ${keycloak.realm}
     policy-enforcer:
@@ -134,13 +137,22 @@ quarkus:
       change-log: devservices/changeLog.yaml
       default-schema-name: cerebralstratum
     http:
-      host: localhost
+      host: 0.0.0.0
       cors:
+        enabled: true
         origins: /.*/
     oidc:
       credentials:
         secret: yxj6VJfZB8plW95iLkGn9ebWPPhic6yY
       client-id: cerebral-stratum-backend
+      # Keycloak echoes back whatever hostname was used to reach it as the
+      # token's `iss` claim (request-based hostname resolution). The backend
+      # itself talks to the Keycloak dev-service via localhost, but browsers
+      # on other devices/LAN IPs get tokens issued with a different `iss` —
+      # relax issuer validation in dev (user-confirmed) rather than pin the
+      # backend to one hostname that not every client can actually reach.
+      token:
+        issuer: any
     keycloak:
       admin-client:
         server-url: ${quarkus.oidc.auth-server-url}

@@ -15,6 +15,7 @@ AVAILABLE_MODULES=("backend" "device-registrar" "notification-dispatcher" "devic
 declare -A PIDS
 MODULES_STARTED=()
 MQTT_STARTED=false
+HEADLESS=false
 
 # Start the shared MQTT broker (idempotent within a session)
 mqtt_start() {
@@ -73,6 +74,10 @@ is_valid_module() {
 MODULES=()
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --headless)
+            HEADLESS=true
+            shift
+            ;;
         *)
             MODULES+=("$1")
             shift
@@ -118,9 +123,13 @@ for module in "${MODULES[@]}"; do
     # Module-specific post-start actions
     case "$module" in
         backend)
-            echo -e "${BLUE}Opening backend in browser...${NC}"
-            sleep 30  # Give the server a moment to start
-            open "http://localhost:6443" 2>/dev/null || echo -e "${YELLOW}Could not open browser automatically${NC}"
+            if [[ "$HEADLESS" == "true" ]]; then
+                echo -e "${BLUE}Headless mode: skipping browser open${NC}"
+            else
+                echo -e "${BLUE}Opening backend in browser...${NC}"
+                sleep 30  # Give the server a moment to start
+                open "http://localhost:6443" 2>/dev/null || echo -e "${YELLOW}Could not open browser automatically${NC}"
+            fi
             ;;
     esac
 done
