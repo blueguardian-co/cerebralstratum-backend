@@ -17,3 +17,4 @@ ADRs document significant architectural decisions, capturing the context, option
 | [ADR-0007](0007-emergency-sos.md) | Emergency SOS | Proposed |
 | [ADR-0008](0008-privacy-zones.md) | Privacy Zones | Proposed |
 | [ADR-0009](0009-law-enforcement-device-share-authorization-boundary.md) | Law Enforcement Device Share — Authorization Boundary | Proposed |
+| [ADR-0010](0010-realtime-device-data-transport.md) | Real-Time Device Data Transport — SSE for Web, gRPC Reserved for Mobile/KMP | Proposed |
