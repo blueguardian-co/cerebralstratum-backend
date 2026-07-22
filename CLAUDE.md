@@ -59,6 +59,10 @@ Integration tests use the `*IT.java` naming convention and are skipped by defaul
 
 All modules inherit from the root `pom.xml` which pins Quarkus 3.35.4 and Java 21.
 
+## Knowledge Base
+
+`Writerside/topics/` is the source of truth for this platform's architecture — consult it before reasoning about cross-service design, edge/device connectivity, or the rationale behind a decision. `Writerside/topics/Architecture.md` gives the high-level service breakdown; `Writerside/topics/ADRs/` holds merged Architecture Decision Records with full context/decision/consequences for individual decisions (see the ADR lifecycle below for how content gets there). The summaries below are a quick reference — the Writerside docs are where the "why" lives, and take precedence if they ever disagree with this file.
+
 ## Architecture
 
 ### Backend — Hexagonal Layout
