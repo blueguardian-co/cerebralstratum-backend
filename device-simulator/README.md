@@ -11,7 +11,17 @@ Simulates IoT devices sending location and status messages via MQTT for developm
 
 ## Development Setup
 
-The device simulator publishes messages to an MQTT broker. The `device-registrar` service consumes from MQTT and forwards the messages to Kafka, where the primary backend and notification-dispatcher pick them up.
+The device simulator publishes location/status/canbus messages to an MQTT broker, the
+same way a real device would. It also runs a small dev-only bridge that subscribes to
+those same MQTT topics and republishes onto the Kafka topics backend's
+`DeviceStreamService` consumes (`device.location`, `device.status`, `device.canbus`),
+keyed by device UUID.
+
+This bridge stands in for Eclipse Hono, the edge middleware that will own MQTT-to-Kafka
+bridging (and device onboarding/association, handled separately by `device-registrar`)
+in the real deployment per the ADRs. Until Hono is wired up, running the simulator is
+enough to get realistic device data flowing all the way to the backend's gRPC stream
+and database for local testing.
 
 The MQTT broker lifecycle is managed automatically by `hack_modules.sh` — no manual broker steps are required.
 
@@ -23,7 +33,7 @@ make hack-simulator
 
 This starts an ephemeral Eclipse Mosquitto container on `localhost:1883`, injects secrets from 1Password, and launches the simulator in Quarkus dev mode.
 
-To run multiple services together (e.g. simulator + device-registrar sharing one broker):
+To run alongside the backend (sharing the Kafka Dev Service):
 
 ```shell script
 make hack-all
@@ -35,13 +45,14 @@ The Quarkus Dev UI is available at <http://localhost:8080/q/dev/>.
 
 ```
 device-simulator
-    └── MQTT (localhost:1883)
-            └── device-registrar
-                    └── Kafka
-                            ├── Primary Backend
-                            └── Notification Dispatcher
+    ├── MQTT (localhost:1883) — publishes location/status/canbus, as a real device would
+    └── DeviceMessageBridge (dev-only, stands in for Eclipse Hono)
+            └── subscribes to the same MQTT topics
+                    └── Kafka: device.location / device.status / device.canbus
+                            └── backend DeviceStreamService -> gRPC stream + DB
 ```
 
 The simulator publishes to the following MQTT topics:
 - `location` — device location updates
 - `status` — device status updates
+- `canbus` — CAN bus frames

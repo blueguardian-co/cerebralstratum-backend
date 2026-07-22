@@ -5,6 +5,17 @@ quarkus:
     enabled: true
   live-reload:
     instrumentation: true
+  kafka:
+    devservices:
+      port: 9092
+
+simulator:
+  device-count: 1
+  location-interval: 5s
+  status-interval: 30s
+  canbus-interval: 10s
+  origin-lat: -27.4698
+  origin-lon: 153.0251
 
 mp:
   messaging:
@@ -18,6 +29,46 @@ mp:
         topic: status
         host: ${MQTT_HOST:localhost}
         port: 1883
+        connector: smallrye-mqtt
+      /device/canbus:
+        topic: canbus
+        host: ${MQTT_HOST:localhost}
+        port: 1883
+        connector: smallrye-mqtt
+      # Dev-only MQTT->Kafka bridge (stands in for Eclipse Hono until it's wired up).
+      kafka-location:
+        topic: device.location
+        key:
+          serializer: org.apache.kafka.common.serialization.UUIDSerializer
+        connector: smallrye-kafka
+      kafka-status:
+        topic: device.status
+        key:
+          serializer: org.apache.kafka.common.serialization.UUIDSerializer
+        connector: smallrye-kafka
+      kafka-canbus:
+        topic: device.canbus
+        key:
+          serializer: org.apache.kafka.common.serialization.UUIDSerializer
+        connector: smallrye-kafka
+    incoming:
+      mqtt-location:
+        topic: location
+        host: ${MQTT_HOST:localhost}
+        port: 1883
+        auto-generated-client-id: true
+        connector: smallrye-mqtt
+      mqtt-status:
+        topic: status
+        host: ${MQTT_HOST:localhost}
+        port: 1883
+        auto-generated-client-id: true
+        connector: smallrye-mqtt
+      mqtt-canbus:
+        topic: canbus
+        host: ${MQTT_HOST:localhost}
+        port: 1883
+        auto-generated-client-id: true
         connector: smallrye-mqtt
 
 '%dev':

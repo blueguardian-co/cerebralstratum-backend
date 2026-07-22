@@ -3,11 +3,8 @@ package co.blueguardian.cerebralstratum.utils.messaging;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import org.locationtech.jts.geom.Point;
 
-@JsonDeserialize(using = LocationMessageDeserializer.class)
 public class LocationMessage {
     public UUID device_id;
     public Point coordinates; // x,y (need to add height)
