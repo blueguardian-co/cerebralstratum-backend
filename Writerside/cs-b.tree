@@ -17,6 +17,7 @@
         <toc-element topic="0006-support-impersonation-consent-flow.md"/>
         <toc-element topic="0007-emergency-sos.md"/>
         <toc-element topic="0008-privacy-zones.md"/>
+        <toc-element topic="0009-law-enforcement-device-share-authorization-boundary.md"/>
     </toc-element>
     <toc-element topic="Road-Map.md"/>
     <toc-element topic="Contributing.md"/>

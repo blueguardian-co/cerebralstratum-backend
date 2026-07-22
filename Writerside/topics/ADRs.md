@@ -16,3 +16,4 @@ ADRs document significant architectural decisions, capturing the context, option
 | [ADR-0006](0006-support-impersonation-consent-flow.md) | Support Impersonation and Consent Flow | Proposed |
 | [ADR-0007](0007-emergency-sos.md) | Emergency SOS | Proposed |
 | [ADR-0008](0008-privacy-zones.md) | Privacy Zones | Proposed |
+| [ADR-0009](0009-law-enforcement-device-share-authorization-boundary.md) | Law Enforcement Device Share — Authorization Boundary | Proposed |
