@@ -58,7 +58,7 @@ Responsibilities:
 
 ### 3. Notification Dispatch
 
-**Technology:** TBD
+**Technology:** Quarkus, Kafka (SmallRye Reactive Messaging), Redis (dedupe/rate-limit cache), PostgreSQL
 
 Responsibilities:
 
@@ -66,6 +66,8 @@ Responsibilities:
 - Writes notification records and per-recipient delivery rows to the appropriate tenant schema
 - Fans out push notifications via FCM (Android + Web) and APNs (iOS)
 - Manages push token lifecycle — removes stale tokens on FCM/APNs rejection
+
+> Bootstrapped in CSPROD-165: Kafka consumer → Redis-backed dedupe/rate-limit → Postgres delivery record, currently reading the existing `device.location`/`device.status` topics as a stand-in signal (no dedicated notification-trigger topics exist yet). Real-time in-app delivery and FCM/APNs push are a separate, not-yet-implemented layer — see ADR-0012 (Notification Delivery Transport) for that design: real-time delivery hands off to Primary Backend's existing SSE/gRPC surface via a `notification.created` Kafka event rather than Notification Dispatch holding its own client connections, and FCM/APNs push uses a deliberately generic wake-signal payload (no location/device identity/content) as a data-sovereignty control. ADR-0012 also resolves the entitlement-bypass question for high-priority notifications (see ADR-0011's exceptions table).
 
 ### 4. Device Onboarding & Registration
 
