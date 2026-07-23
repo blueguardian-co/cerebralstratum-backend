@@ -7,19 +7,22 @@ quarkus:
     enabled: true
   live-reload:
     instrumentation: true
+  datasource:
+    db-kind: postgresql
+    devservices:
+      db-name: cerebral-stratum
+      port: 5432
+      image-name: postgis/postgis:16-3.4
+      command: postgres
+      container-env:
+        "POSTGRES_HOST_AUTH_METHOD": trust
   kafka:
     devservices:
       port: 9092
-
-mp:
-  messaging:
-    incoming:
-      /device/location:
-        topic: location
-        connector: smallrye-kafka
-      /device/status:
-        topic: status
-        connector: smallrye-kafka
+  cache:
+    redis:
+      notification-dispatch:
+        expire-after-write: 5m
 
 '%dev':
   quarkus:
