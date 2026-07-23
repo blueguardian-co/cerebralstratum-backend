@@ -8,7 +8,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Available modules with Dockerfiles
-AVAILABLE_MODULES=("backend" "device-data-persist" "device-simulator" "ingress-classifier" "utils")
+AVAILABLE_MODULES=("backend" "device-registrar" "notification-dispatcher" "device-simulator")
 
 # Default values
 IMAGE_TAG="${IMAGE_TAG:-latest}"
