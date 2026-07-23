@@ -50,6 +50,7 @@ SUBSCRIPTION_PAST_DUE
 | Exception | Scope of bypass | Rationale | Defined in |
 |---|---|---|---|
 | Emergency SOS | Bypasses entitlement checks entirely — full functionality regardless of subscription state | Life-safety feature; a lapsed payment must never gate an SOS trigger | `cerebralstratum-backend` ADR-0007 (Emergency SOS) — cross-linked here as canonical justification |
+| Priority Notifications | Bypasses entitlement checks for high-priority delivery (SSE/gRPC + FCM/APNs) only; standard-priority notifications remain subject to normal entitlement gating at the read/delivery API | Time-sensitive alerts must reach the user regardless of subscription state; routine billing/lifecycle communication (renewal reminders, lapse warnings) is handled separately via Shopify email, not the in-platform notification system | `cerebralstratum-backend` ADR-0012 (Notification Delivery Transport) — cross-linked here as canonical justification |
 
 Future named exceptions should be added as new rows to this table, with the implementing ADR cross-linking back here rather than re-deriving the justification independently.
 
