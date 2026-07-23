@@ -3,12 +3,20 @@ package co.blueguardian.cerebralstratum.utils.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.locationtech.jts.geom.Point;
 
 public class Location {
 
     public int id;
     public UUID device_id;
+    // quarkus-rest-jackson generates build-time serializers for REST response types and
+    // can't see the runtime-registered GeometryJacksonModule, so it falls back to reflecting
+    // over Point's self-referential getters (getEnvelope(), getCentroid(), ...) and recurses
+    // forever. Pointing it at the real serializer/deserializer directly avoids that.
+    @JsonSerialize(using = PointSerializer.class)
+    @JsonDeserialize(using = PointDeserializer.class)
     public Point coordinates;
     public int update_frequency;
     public int accuracy;
