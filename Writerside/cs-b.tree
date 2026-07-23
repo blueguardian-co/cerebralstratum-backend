@@ -19,6 +19,7 @@
         <toc-element topic="0008-privacy-zones.md"/>
         <toc-element topic="0009-law-enforcement-device-share-authorization-boundary.md"/>
         <toc-element topic="0010-realtime-device-data-transport.md"/>
+        <toc-element topic="0011-subscription-entitlement-lifecycle.md"/>
     </toc-element>
     <toc-element topic="Road-Map.md"/>
     <toc-element topic="Contributing.md"/>
