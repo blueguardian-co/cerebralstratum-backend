@@ -54,7 +54,7 @@ Integration tests use the `*IT.java` naming convention and are skipped by defaul
 | `backend` | Active | REST API + gRPC streaming (port 6443 / 9000) |
 | `utils` | Active | Shared DTOs, Kafka deserializers, UUIDv5 |
 | `device-registrar` | Stub | MQTT → Kafka bridge, device lifecycle (port 6444) |
-| `notification-dispatcher` | Stub | Kafka consumer → FCM/APNs push (port 6445) |
+| `notification-dispatcher` | Active | Kafka consumer → Redis dedupe/rate-limit → Postgres delivery record (port 6445); FCM/APNs push not yet implemented |
 | `device-simulator` | Active | Dev tool — simulates MQTT device publishing |
 
 All modules inherit from the root `pom.xml` which pins Quarkus 3.35.4 and Java 21.
@@ -89,10 +89,14 @@ The domain record (e.g., `Device`) and its request types (`CreateDeviceRequest`,
 
 ### Real-Time Streaming
 
-`DeviceStreamService` is both a `@GrpcService` and a Kafka consumer. It maintains a `ConcurrentHashMap<deviceUuid, ConcurrentHashMap<connectionId, StreamObserver>>` and fans Kafka records out to all open gRPC streams. Three Kafka channels feed it: `device.location`, `device.status`, `device.canbus`.
+`DeviceEventBroadcaster` is the single point of Kafka consumption for device telemetry — one `@Incoming` consumer per topic (`device.location`, `device.status`, `device.canbus`), fanned out in-process via `BroadcastProcessor` and filtered per-device (`locationUpdatesFor`/`statusUpdatesFor`/`canBusUpdatesFor`). Two transports consume it (ADR-0010):
+- `DeviceServerSentEvents` — SSE, the actual web client transport (gRPC is unreachable from browsers without `grpc-web` + a proxy).
+- `DeviceStreamService` — `@GrpcService`, reserved for future mobile/KMP clients. Must be `@Singleton` and extend `DeviceStreamServiceGrpc.DeviceStreamServiceImplBase` (not just implement `AsyncService`) or Quarkus silently never binds it — see ADR-0010 for this and the merged-HTTP/gRPC-server gotcha. Fixed and verified against `device-simulator`, but no real client is integrated against it yet.
 
 Proto file: `backend/src/main/proto/device_stream.proto`  
 Generated classes land in `co.blueguardian.cerebralstratum.backend.grpc`.
+
+**Gotcha:** any REST/SSE-exposed DTO with a JTS `Point` field needs `@JsonSerialize(using = PointSerializer.class)` / `@JsonDeserialize(using = PointDeserializer.class)` (from `utils.model`) directly on the field. `quarkus-rest-jackson`'s build-time serializer codegen can't see the runtime-registered `GeometryJacksonModule` and falls back to its own reflection-based serializer, which recurses forever over `Point`'s self-referential getters (`getEnvelope()`, `getCentroid()`, ...) — a `StackOverflowError` in production, not a compile-time or dev-mode-only failure. See CSPROD-183.
 
 ### Security Model
 
@@ -116,7 +120,8 @@ Generated classes land in `co.blueguardian.cerebralstratum.backend.grpc`.
 
 Shared JAR on the classpath of all service modules:
 - `model/Status`, `model/Location` — Kafka message payloads (also stored as JSON columns in Postgres via `@JdbcTypeCode(SqlTypes.JSON)`)
-- `messaging/LocationMessageDeserializer`, `messaging/StatusMessage` — Kafka deserializers
+- `model/GeometryJacksonModule`, `model/PointSerializer`, `model/PointDeserializer` — JTS `Point` (de)serialization. Each consuming service registers `GeometryJacksonModule` at runtime via its own `ObjectMapperCustomizer` (there's no shared one) — see the Real-Time Streaming gotcha above for why REST/SSE DTOs also need the field-level annotations, not just this module registration.
+- `messaging/CANBusMessage`, `messaging/LocationMessage`, `messaging/StatusMessage` — Kafka message shape classes. Quarkus's zero-config Kafka messaging generates the Jackson (de)serializer per type from these at build time — there are no hand-written deserializer classes.
 - `uuid/UUIDv5Generator`
 
 ### Kafka Topics
@@ -128,6 +133,12 @@ Shared JAR on the classpath of all service modules:
 | `device.canbus` | `UUID` | `CANBus` |
 
 Dev Services pin Kafka to port `9092`.
+
+### Notification Dispatch
+
+`notification-dispatcher` consumes `device.location`/`device.status` (the same topics `DeviceEventBroadcaster` reads — there's no dedicated notification-trigger topic yet) via `NotificationEventConsumer`, and calls `NotificationDispatchService.dispatch(deviceId, eventType, occurredAt)` per event. That method is `@CacheResult(cacheName = "notification-dispatch")` with `deviceId`/`eventType` as `@CacheKey` — the method body (a Postgres write to the `notifications` table) only runs on a Redis cache miss, which is the dedupe/rate-limit mechanism (5 min window, `quarkus.cache.redis."notification-dispatch".expire-after-write`). `occurredAt` is deliberately excluded from the cache key since every event has a distinct timestamp.
+
+Real-time in-app delivery (SSE/gRPC hand-off to `backend`) and FCM/APNs push are decided but not yet implemented — see ADR-0012, tracked in CSPROD-181.
 
 ## YouTrack Bridge (ADRs & Implementation Tracking)
 
