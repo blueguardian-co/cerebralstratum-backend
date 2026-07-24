@@ -21,7 +21,7 @@ profile:
 projectJDK: "25" #(Applied in CI/CD pipeline)
 
 #Execute shell command before Qodana execution (Applied in CI/CD pipeline)
-#bootstrap: sh ./prepare-qodana.sh
+bootstrap: mvn -pl backend -am generate-sources
 
 #Install IDE plugins before Qodana execution (Applied in CI/CD pipeline)
 #plugins:
