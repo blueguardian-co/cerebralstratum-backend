@@ -17,6 +17,8 @@ MODULES_STARTED=()
 MQTT_STARTED=false
 HEADLESS=false
 
+export OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION=base2_exponential_bucket_histogram
+
 # Start the shared MQTT broker (idempotent within a session)
 mqtt_start() {
     if [[ "$MQTT_STARTED" == "true" ]]; then
