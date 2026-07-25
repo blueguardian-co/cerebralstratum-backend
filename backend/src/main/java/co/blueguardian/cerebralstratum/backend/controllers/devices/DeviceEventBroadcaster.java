@@ -1,6 +1,8 @@
 package co.blueguardian.cerebralstratum.backend.controllers.devices;
 
 import co.blueguardian.cerebralstratum.backend.controllers.locations.GetLocationRequest;
+import co.blueguardian.cerebralstratum.backend.repositories.locations.LocationRepository;
+import co.blueguardian.cerebralstratum.backend.repositories.statuses.StatusRepository;
 import co.blueguardian.cerebralstratum.utils.model.Status;
 
 import java.util.UUID;
@@ -8,6 +10,7 @@ import java.util.UUID;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
@@ -19,6 +22,12 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 @ApplicationScoped
 public class DeviceEventBroadcaster {
 
+    @Inject
+    StatusRepository statusRepository;
+
+    @Inject
+    LocationRepository locationRepository;
+
     private final BroadcastProcessor<DeviceLocationEvent> locationEvents = BroadcastProcessor.create();
     private final BroadcastProcessor<DeviceStatusEvent> statusEvents = BroadcastProcessor.create();
     private final BroadcastProcessor<DeviceCanBusEvent> canBusEvents = BroadcastProcessor.create();
@@ -26,11 +35,13 @@ public class DeviceEventBroadcaster {
     @Incoming("device.location")
     void onLocation(ConsumerRecord<UUID, GetLocationRequest> record) {
         locationEvents.onNext(new DeviceLocationEvent(record.key(), record.value()));
+        locationRepository.record(record.key(), record.value());
     }
 
     @Incoming("device.status")
     void onStatus(ConsumerRecord<UUID, Status> record) {
         statusEvents.onNext(new DeviceStatusEvent(record.key(), record.value()));
+        statusRepository.record(record.key(), record.value());
     }
 
     @Incoming("device.canbus")

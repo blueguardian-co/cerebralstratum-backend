@@ -1,0 +1,58 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      context: production
+      comment: create device_statuses table for persisted device status history
+      changes:
+        - createTable:
+            tableName: device_statuses
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: device_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: varchar(255)
+              - column:
+                  name: overall
+                  type: varchar(255)
+              - column:
+                  name: battery
+                  type: float4
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: device_id
+            baseTableName: device_statuses
+            baseTableSchemaName: cerebralstratum
+            constraintName: fk_devices_device_statuses_id
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: CASCADE
+            referencedColumnNames: id
+            referencedTableName: devices
+            referencedTableSchemaName: cerebralstratum
+            validate: true
+        - createSequence:
+            incrementBy: 1
+            schemaName: cerebralstratum
+            sequenceName: device_statuses_id_seq
+            startValue: 1

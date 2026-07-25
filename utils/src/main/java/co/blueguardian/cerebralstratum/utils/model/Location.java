@@ -23,6 +23,7 @@ public class Location {
     public double speed;
     public double bearing;
     public LocalDateTime timestamp;
+    public LocalDateTime expires_at;
 
     public Location() {
     }
@@ -35,7 +36,8 @@ public class Location {
             int accuracy,
             double speed,
             double bearing,
-            LocalDateTime timestamp
+            LocalDateTime timestamp,
+            LocalDateTime expires_at
     ) {
         this.id = id;
         this.device_id = device_id;
@@ -45,5 +47,6 @@ public class Location {
         this.speed = speed;
         this.bearing = bearing;
         this.timestamp = timestamp;
+        this.expires_at = expires_at;
     }
 }

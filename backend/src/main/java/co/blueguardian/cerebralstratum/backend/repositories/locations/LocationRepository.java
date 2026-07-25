@@ -1,5 +1,6 @@
 package co.blueguardian.cerebralstratum.backend.repositories.locations;
 
+import co.blueguardian.cerebralstratum.backend.controllers.locations.GetLocationRequest;
 import co.blueguardian.cerebralstratum.utils.model.Location;
 
 import java.util.List;
@@ -13,6 +14,10 @@ public interface LocationRepository {
 
     public Location getLatest(UUID device_uuid);
 
+    public Location record(UUID device_uuid, GetLocationRequest request);
+
     public Location delete(int location_id);
-    
+
+    public int purgeExpired();
+
 }

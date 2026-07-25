@@ -40,6 +40,9 @@ public class LocationResource {
     @Transactional
     public Response delete(UUID device_uuid, Integer location_id) {
         Location location = locationRepository.delete(location_id);
+        if (location == null) {
+            throw new WebApplicationException("Location with id of " + location_id + " does not exist.", 404);
+        }
         return Response.ok(location).status(201).build();
     }
 

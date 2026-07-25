@@ -41,6 +41,8 @@ public class LocationEntity {
     public double bearing;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime timestamp;
+    @Column(name = "expires_at", columnDefinition = "timestamp")
+    private LocalDateTime expiresAt;
 
     public LocationEntity() {
     }
@@ -125,5 +127,13 @@ public class LocationEntity {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
     }
 }

@@ -1,0 +1,89 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      comment: create retention_policies table and add expires_at to locations and device_statuses
+      changes:
+        - createTable:
+            tableName: retention_policies
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: subject_type
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subject_id
+                  type: uuid
+              - column:
+                  name: retention_days
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: uuid
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: retention_policies
+            schemaName: cerebralstratum
+            columnNames: subject_type, subject_id
+            constraintName: uq_retention_policies_subject
+        - sql:
+            sql: CREATE UNIQUE INDEX retention_policies_global_default_uidx ON cerebralstratum.retention_policies (subject_type) WHERE subject_id IS NULL
+        - createSequence:
+            incrementBy: 1
+            schemaName: cerebralstratum
+            sequenceName: retention_policies_id_seq
+            startValue: 1
+        - addColumn:
+            tableName: locations
+            columns:
+              - column:
+                  name: expires_at
+                  type: timestamp
+        - addColumn:
+            tableName: device_statuses
+            columns:
+              - column:
+                  name: expires_at
+                  type: timestamp
+  - changeSet:
+      id: 4
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      comment: enable pg_cron and schedule the expired-device_statuses purge, when available
+      preConditions:
+        onFail: MARK_RAN
+        sqlCheck:
+          expectedResult: "1"
+          sql: SELECT COUNT(*) FROM pg_available_extensions WHERE name = 'pg_cron'
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS pg_cron
+        - sql:
+            sql: |
+              SELECT cron.schedule_in_database(
+                'purge-expired-device-statuses',
+                '0 * * * *',
+                $$DELETE FROM cerebralstratum.device_statuses WHERE expires_at IS NOT NULL AND expires_at < now()$$,
+                'cerebral-stratum'
+              );
