@@ -174,3 +174,7 @@ keycloak:
         enabled: false
       logs:
         enabled: false
+    liquibase:
+      migrate-at-start: true
+      change-log: db/changeLog.yaml
+      default-schema-name: cerebralstratum
