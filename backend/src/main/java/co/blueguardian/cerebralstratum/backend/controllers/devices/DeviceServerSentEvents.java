@@ -25,21 +25,21 @@ public class DeviceServerSentEvents {
     @GET
     @Path("/location")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<GetLocationRequest> broadcastLocation(String device_uuid) {
-        return broadcaster.locationUpdatesFor(UUID.fromString(device_uuid)).map(DeviceLocationEvent::location);
+    public Multi<GetLocationRequest> broadcastLocation(UUID device_uuid) {
+        return broadcaster.locationUpdatesFor(device_uuid).map(DeviceLocationEvent::location);
     }
 
     @GET
     @Path("/status")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<Status> broadcastStatus(String device_uuid) {
-        return broadcaster.statusUpdatesFor(UUID.fromString(device_uuid)).map(DeviceStatusEvent::status);
+    public Multi<Status> broadcastStatus(UUID device_uuid) {
+        return broadcaster.statusUpdatesFor(device_uuid).map(DeviceStatusEvent::status);
     }
 
     @GET
     @Path("/canbus")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<CANBus> broadcastCANBus(String device_uuid) {
-        return broadcaster.canBusUpdatesFor(UUID.fromString(device_uuid)).map(DeviceCanBusEvent::canBus);
+    public Multi<CANBus> broadcastCANBus(UUID device_uuid) {
+        return broadcaster.canBusUpdatesFor(device_uuid).map(DeviceCanBusEvent::canBus);
     }
 }

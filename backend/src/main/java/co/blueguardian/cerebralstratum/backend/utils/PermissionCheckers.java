@@ -34,7 +34,7 @@ public class PermissionCheckers {
         return groups.contains("/" + group_name);
     }
     @PermissionChecker("member-of-device-group")
-    public boolean isMemberOfDeviceGroup(String device_uuid) {
+    public boolean isMemberOfDeviceGroup(UUID device_uuid) {
         LOG.info("Checking if user is a member of device group: " + device_uuid);
         Set<String> groups = getJwt().getGroups();
         LOG.info("Is /" + device_uuid + "(/view-only|/modify)" + " in these groups " + groups + ": " + (groups.contains("/" + device_uuid) || groups.contains("/" + device_uuid + "/view-only") || groups.contains("/" + device_uuid + "/modify")));
@@ -42,12 +42,12 @@ public class PermissionCheckers {
     }
 
     @PermissionChecker("device-admin")
-    public boolean isADeviceAdmin(String device_uuid) {
+    public boolean isADeviceAdmin(UUID device_uuid) {
         Set<String> groups = getJwt().getGroups();
         return (groups.contains("/" + PlatformAdminsGroupName) || groups.contains("/" + device_uuid));
     }
     @PermissionChecker("organisation-admin")
-    public boolean isAnOrganisationAdmin(String organisation_uuid) {
+    public boolean isAnOrganisationAdmin(UUID organisation_uuid) {
         Set<String> groups = getJwt().getGroups();
         return (groups.contains(PlatformAdminsGroupName) || groups.contains("/" + organisation_uuid));
     }
