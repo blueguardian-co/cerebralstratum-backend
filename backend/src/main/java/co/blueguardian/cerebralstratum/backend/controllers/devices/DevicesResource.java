@@ -49,10 +49,18 @@ public class DevicesResource {
         return (JsonWebToken) securityIdentity.getPrincipal();
     }
 
+    /**
+     * Fleet inventory only (id/name/owner/registration) — not a device-data read. Status
+     * (battery/health telemetry) is stripped for every device here: platform admins get
+     * standing visibility into what devices exist and who owns them for fleet maintenance,
+     * never into a device's own reported data. See zero-standing-operator-access, ADR-0005.
+     */
     @GET
     @RolesAllowed("admins")
     public List<Device> getAllDevices() {
-        return deviceRepository.findAll();
+        List<Device> devices = deviceRepository.findAll();
+        devices.forEach(device -> device.status = null);
+        return devices;
     }
 
     @GET
@@ -74,7 +82,7 @@ public class DevicesResource {
     @PUT
     @Path("by-id/{device_uuid}")
     @Transactional
-    @PermissionsAllowed("member-of-device-group")
+    @PermissionsAllowed("device-modify")
     public Response updateDevice(UUID device_uuid, UpdateDeviceRequest request) {
         Device device = deviceRepository.update(device_uuid, request);
         return Response.ok(device).status(200).build();
@@ -91,7 +99,7 @@ public class DevicesResource {
 
     @GET
     @Path("by-id/{device_uuid}")
-    @PermissionsAllowed("member-of-device-group")
+    @PermissionsAllowed("device-read")
     public Device getDeviceById(UUID device_uuid) {
         Device device = deviceRepository.getById(device_uuid);
         if (device == null) {
@@ -122,7 +130,7 @@ public class DevicesResource {
     }
     @Path("by-id/{device_uuid}/unregister")
     @POST
-    @PermissionsAllowed("member-of-device-group")
+    @PermissionsAllowed("device-modify")
     @Transactional
     public Response unregisterDevice(UUID device_uuid) {
         UUID keycloak_user_id = UUID.fromString(getJwt().getClaim("sub"));

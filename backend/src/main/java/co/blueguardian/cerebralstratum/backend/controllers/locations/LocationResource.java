@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 import io.quarkus.security.PermissionsAllowed;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
@@ -29,14 +28,14 @@ public class LocationResource {
 
     @Inject
     LocationRepository locationRepository;
-    @RolesAllowed("admins")
+    @PermissionsAllowed("device-read")
     @GET
     public List<Location> getAllLocations(UUID device_uuid) {
         return locationRepository.findAll(device_uuid);
     }
 
     @DELETE
-    @PermissionsAllowed("device-admin")
+    @PermissionsAllowed("device-modify")
     @Transactional
     public Response delete(UUID device_uuid, Integer location_id) {
         Location location = locationRepository.delete(location_id);
@@ -47,7 +46,7 @@ public class LocationResource {
     }
 
     @GET
-    @PermissionsAllowed("device-admin")
+    @PermissionsAllowed("device-read")
     @Path("{location_id}")
     public Location getSpecificLocation(UUID device_uuid, Integer location_id) {
         Location location = locationRepository.getById(location_id);
@@ -58,7 +57,7 @@ public class LocationResource {
     }
 
     @GET
-    @PermissionsAllowed("device-admin")
+    @PermissionsAllowed("device-read")
     @Path("latest")
     public Location getLatest(UUID device_uuid) {
         try {

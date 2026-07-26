@@ -97,3 +97,49 @@ databaseChangeLog:
               - column:
                   name: user_id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
+  - changeSet:
+      id:  2
+      author:  Alex Henshaw
+      labels: cerebral-stratum
+      context: test
+      comment: seed a device UMA-owner test user and device for device-permission ITs (ADR-0005)
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e
+              - column:
+                  name: created
+                  value: 26-07-2026T09:00
+              - column:
+                  name: subscription_active
+                  value: true
+              - column:
+                  name: subscription_discount
+                  value: 0
+              - column:
+                  name: subscription_entitlement
+                  value: 1
+              - column:
+                  name: subscription_used
+                  value: 1
+        - insert:
+            tableName: devices
+            columns:
+              - column:
+                  name: id
+                  value: d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091
+              - column:
+                  name: name
+                  value: device IT test device
+              - column:
+                  name: description
+                  value: owned by device-it-owner@example.com, used by device UMA permission ITs
+              - column:
+                  name: registered
+                  value: 26-07-2026T09:00
+              - column:
+                  name: user_id
+                  value: a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e

@@ -15,7 +15,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;
 
 @ApplicationScoped
-@PermissionsAllowed("member-of-device-group")
+@PermissionsAllowed("device-read")
 @Path("/api/v1/devices/by-id/{device_uuid}")
 public class DeviceServerSentEvents {
 

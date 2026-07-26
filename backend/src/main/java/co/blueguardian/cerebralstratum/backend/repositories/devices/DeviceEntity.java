@@ -67,6 +67,9 @@ public class DeviceEntity {
     @Column
     private Status status;
 
+    @Column(length = 255)
+    private String keycloak_resource_id;
+
     public DeviceEntity() {
     }
 
@@ -149,5 +152,12 @@ public class DeviceEntity {
     }
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getKeycloakResourceId() {
+        return keycloak_resource_id;
+    }
+    public void setKeycloakResourceId(String keycloak_resource_id) {
+        this.keycloak_resource_id = keycloak_resource_id;
     }
 }

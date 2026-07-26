@@ -57,8 +57,9 @@ Access is controlled via **policies** attached to each device resource:
 | Policy type        | Use case                                               |
 |--------------------|--------------------------------------------------------|
 | User-based policy  | Device owner; additional users granted explicit access |
-| Group-based policy | Support engineers, platform admins                     |
 | Org-based policy   | Enterprise devices shared at the organisation level    |
+
+Group-based policies are deliberately not used for device access — see ADR-0005's amendment: platform-admins (and any other operator group) get no standing device-data grant, per the platform's zero-standing-operator-access posture. Support-engineer access to a device is a per-instance consent grant (ADR-0006), not a policy attached ambiently to the device resource.
 
 The `quarkus-keycloak-authorization` extension handles authorisation evaluation on the backend. Resource and policy provisioning (at registration time and for sharing operations) is performed via the Keycloak Admin REST API.
 
@@ -218,6 +219,13 @@ The `deviceMetadata` object:
 - BLE advertisement integration requires the mobile app to handle the rotating claim code derivation client-side and submit it through the standard association flow — no additional backend surface is required
 
 ---
+
+## Implementation Note (2026-07-26)
+
+ADR-0005 (Accepted) is the operative decision for the Authorization Services rollout this section anticipated, and reconciles two details left open here:
+
+- **Client naming.** This ADR refers to the resource server as `gps-api`; ADR-0005 and its descendants (ADR-0006, ADR-0009) call it `device-fleet`. Neither name matches the actual Keycloak client (`cerebral-stratum-backend`, being renamed to `device-fleet` per ADR-0005's amendment). Treat `device-fleet` as the authoritative name going forward; `gps-api` here is stale.
+- **Scope of the current implementation.** Section 2's `device:read`/`device:modify` scope model is being implemented now, exactly as described, including for owner-tier access (see ADR-0005 amendment). Section 6/7's per-device Keycloak service-account clients and the `device.platform.registered`/`device.user.associated` Kafka event schemas are **not** part of this implementation pass — device identity and registration continue to work as currently implemented (a Postgres-only `devices` table with no per-device Keycloak client), with only the resource/scope/policy provisioning added. Revisit this note if/when per-device client provisioning is actually scheduled.
 
 ## References
 

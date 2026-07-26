@@ -20,6 +20,9 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     @Inject
     EntityManager entityManager;
 
+    @Inject
+    DeviceAuthorizationProvisioningService authorizationProvisioningService;
+
     private static Device mapEntityToDevice (DeviceEntity device) {
         UUID userId = device.getUser() != null ? device.getUser().getId() : null;
         UUID organisationId = device.getOrganisation() != null ? device.getOrganisation().getId() : null;
@@ -87,6 +90,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     @Transactional
     public Device create(CreateDeviceRequest request) {
         DeviceEntity newDevice = mapCreateRequestToEntity(request);
+        String keycloakResourceId = authorizationProvisioningService.createUnownedResource(request.uuid);
+        newDevice.setKeycloakResourceId(keycloakResourceId);
         entityManager.persist(newDevice);
         return mapEntityToDevice(newDevice);
     }
@@ -94,6 +99,8 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
     @Transactional
     public Device delete(UUID device_id) {
         DeviceEntity device = entityManager.find(DeviceEntity.class, device_id);
+        authorizationProvisioningService.revokeOwnerAccess(device_id);
+        authorizationProvisioningService.deleteResource(device.getKeycloakResourceId());
         entityManager.remove(device);
         return mapEntityToDevice(device);
     }
@@ -114,6 +121,7 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
                  .setParameter("keycloak_user_id", keycloak_user_id)
                  .getSingleResult();
             device.setUser(owner);
+            authorizationProvisioningService.grantOwnerAccess(device_id, device.getKeycloakResourceId(), keycloak_user_id);
             entityManager.persist(device);
             return mapEntityToDevice(device);
         } else {
@@ -128,6 +136,7 @@ public class EntityManagerDeviceRepository implements DeviceRepository {
         UserEntity owner = device.getUser();
         if (Objects.equals(owner.getId(), keycloak_user_id)) {
             device.setUser(null);
+            authorizationProvisioningService.revokeOwnerAccess(device_id);
             entityManager.persist(device);
             return mapEntityToDevice(device);
         } else {

@@ -41,7 +41,9 @@ quarkus:
     schema-management:
       strategy: none
   oidc:
-    client-id: cerebral-stratum-backend
+    client-id: device-fleet
+    credentials:
+      secret: yxj6VJfZB8plW95iLkGn9ebWPPhic6yY
     roles:
         role-claim-path: realm_access/roles
   keycloak:
@@ -144,7 +146,7 @@ quarkus:
     oidc:
       credentials:
         secret: yxj6VJfZB8plW95iLkGn9ebWPPhic6yY
-      client-id: cerebral-stratum-backend
+      client-id: device-fleet
       # Keycloak echoes back whatever hostname was used to reach it as the
       # token's `iss` claim (request-based hostname resolution). The backend
       # itself talks to the Keycloak dev-service via localhost, but browsers

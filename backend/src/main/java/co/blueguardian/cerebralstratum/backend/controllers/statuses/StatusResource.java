@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 import io.quarkus.security.PermissionsAllowed;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -27,14 +26,14 @@ public class StatusResource {
     @Inject
     StatusRepository statusRepository;
 
-    @RolesAllowed("admins")
+    @PermissionsAllowed("device-read")
     @GET
     public List<DeviceStatus> getAllStatuses(UUID device_uuid) {
         return statusRepository.findAll(device_uuid);
     }
 
     @GET
-    @PermissionsAllowed("device-admin")
+    @PermissionsAllowed("device-read")
     @Path("{status_id}")
     public DeviceStatus getSpecificStatus(UUID device_uuid, Integer status_id) {
         DeviceStatus status = statusRepository.getById(status_id);
@@ -45,7 +44,7 @@ public class StatusResource {
     }
 
     @GET
-    @PermissionsAllowed("device-admin")
+    @PermissionsAllowed("device-read")
     @Path("latest")
     public DeviceStatus getLatest(UUID device_uuid) {
         try {

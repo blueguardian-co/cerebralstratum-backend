@@ -1,0 +1,14 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      comment: add keycloak_resource_id to devices to track the provisioned UMA resource (ADR-0005)
+      changes:
+        - addColumn:
+            tableName: devices
+            columns:
+              - column:
+                  name: keycloak_resource_id
+                  type: varchar(255)

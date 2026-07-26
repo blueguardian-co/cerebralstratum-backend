@@ -281,7 +281,7 @@
         "containerId" : "2e0a6175-f13e-4448-9c37-ffab311b2499",
         "attributes" : { }
       } ],
-      "cerebral-stratum-backend" : [ {
+      "device-fleet" : [ {
         "id" : "6e222411-4e92-4c3c-88b4-9db1d09a0845",
         "name" : "uma_protection",
         "composite" : false,
@@ -367,58 +367,6 @@
     }
   },
   "groups" : [ {
-    "id" : "ebc285b7-7e79-4506-98f3-ac3050b675f8",
-    "name" : "da8922d4-34fb-543f-ae15-0c4d34815f70",
-    "path" : "/da8922d4-34fb-543f-ae15-0c4d34815f70",
-    "subGroups" : [ {
-      "id" : "974e6939-e2fc-43a7-8d40-af13ac4ad877",
-      "name" : "modify",
-      "path" : "/da8922d4-34fb-543f-ae15-0c4d34815f70/modify",
-      "parentId" : "ebc285b7-7e79-4506-98f3-ac3050b675f8",
-      "subGroups" : [ ],
-      "attributes" : { },
-      "realmRoles" : [ ],
-      "clientRoles" : { }
-    }, {
-      "id" : "c4727873-89b2-468b-9ad1-2c650849c538",
-      "name" : "view-only",
-      "path" : "/da8922d4-34fb-543f-ae15-0c4d34815f70/view-only",
-      "parentId" : "ebc285b7-7e79-4506-98f3-ac3050b675f8",
-      "subGroups" : [ ],
-      "attributes" : { },
-      "realmRoles" : [ ],
-      "clientRoles" : { }
-    } ],
-    "attributes" : { },
-    "realmRoles" : [ ],
-    "clientRoles" : { }
-  }, {
-    "id" : "de51d0fb-3e99-4531-8e05-cb5b84a47b91",
-    "name" : "e4bb7b63-6619-589b-98a3-549d0cedc8bc",
-    "path" : "/e4bb7b63-6619-589b-98a3-549d0cedc8bc",
-    "subGroups" : [ {
-      "id" : "a6e382a2-dca3-4ce5-80c6-7072cc6e4778",
-      "name" : "modify",
-      "path" : "/e4bb7b63-6619-589b-98a3-549d0cedc8bc/modify",
-      "parentId" : "de51d0fb-3e99-4531-8e05-cb5b84a47b91",
-      "subGroups" : [ ],
-      "attributes" : { },
-      "realmRoles" : [ ],
-      "clientRoles" : { }
-    }, {
-      "id" : "1e3974ec-4325-4586-af11-b42ddb665e82",
-      "name" : "view-only",
-      "path" : "/e4bb7b63-6619-589b-98a3-549d0cedc8bc/view-only",
-      "parentId" : "de51d0fb-3e99-4531-8e05-cb5b84a47b91",
-      "subGroups" : [ ],
-      "attributes" : { },
-      "realmRoles" : [ ],
-      "clientRoles" : { }
-    } ],
-    "attributes" : { },
-    "realmRoles" : [ ],
-    "clientRoles" : { }
-  }, {
     "id" : "8af27895-911d-4aa8-a6a0-eaebc4172a57",
     "name" : "platform-admins",
     "path" : "/platform-admins",
@@ -489,21 +437,21 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-external" ],
     "notBefore" : 0,
-    "groups" : [ "/da8922d4-34fb-543f-ae15-0c4d34815f70", "/e4bb7b63-6619-589b-98a3-549d0cedc8bc", "/platform-admins" ]
+    "groups" : [ "/platform-admins" ]
   }, {
     "id" : "190f01f7-78f7-4a1f-b337-2c74d181b566",
-    "username" : "service-account-cerebral-stratum-backend",
+    "username" : "service-account-device-fleet",
     "emailVerified" : false,
     "createdTimestamp" : 1734662338213,
     "enabled" : true,
     "totp" : false,
-    "serviceAccountClientId" : "cerebral-stratum-backend",
+    "serviceAccountClientId" : "device-fleet",
     "credentials" : [ ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-external" ],
     "clientRoles" : {
-      "cerebral-stratum-backend" : [ "uma_protection" ]
+      "device-fleet" : [ "uma_protection" ]
     },
     "notBefore" : 0,
     "groups" : [ "/platform-admins" ]
@@ -553,6 +501,63 @@
     "realmRoles" : [ "default-roles-external" ],
     "notBefore" : 0,
     "groups" : [ ]
+  }, {
+    "id" : "a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e",
+    "username" : "device-it-owner@example.com",
+    "firstName" : "Device IT",
+    "lastName" : "Owner",
+    "email" : "device-it-owner@example.com",
+    "emailVerified" : true,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "type" : "password",
+      "value" : "device-it-owner-pw",
+      "temporary" : false
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-external" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "b2f7cae5-ad3f-4c2b-9f88-2a3b4c5d6e7f",
+    "username" : "device-it-stranger@example.com",
+    "firstName" : "Device IT",
+    "lastName" : "Stranger",
+    "email" : "device-it-stranger@example.com",
+    "emailVerified" : true,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "type" : "password",
+      "value" : "device-it-stranger-pw",
+      "temporary" : false
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-external" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "c3086bf6-be40-4d3c-a099-3b4c5d6e7f80",
+    "username" : "device-it-platform-admin@example.com",
+    "firstName" : "Device IT",
+    "lastName" : "PlatformAdmin",
+    "email" : "device-it-platform-admin@example.com",
+    "emailVerified" : true,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "type" : "password",
+      "value" : "device-it-platform-admin-pw",
+      "temporary" : false
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-external" ],
+    "notBefore" : 0,
+    "groups" : [ "/platform-admins" ]
   } ],
   "scopeMappings" : [ {
     "clientScope" : "offline_access",
@@ -696,7 +701,7 @@
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "d812fa85-3b62-4128-a658-7508ab39a1eb",
-    "clientId" : "cerebral-stratum-backend",
+    "clientId" : "device-fleet",
     "name" : "",
     "description" : "",
     "rootUrl" : "",
@@ -785,13 +790,115 @@
       "policyEnforcementMode" : "ENFORCING",
       "resources" : [ {
         "name" : "Default Resource",
-        "type" : "urn:cerebral-stratum-backend:resources:default",
+        "type" : "urn:device-fleet:resources:default",
         "ownerManagedAccess" : false,
         "attributes" : { },
         "uris" : [ "/*" ]
+      }, {
+        "_id" : "da8922d4-34fb-543f-ae15-0c4d34815f70",
+        "name" : "da8922d4-34fb-543f-ae15-0c4d34815f70",
+        "type" : "urn:device-fleet:resources:device",
+        "ownerManagedAccess" : true,
+        "owner" : {
+          "id" : "cb9707fc-f0eb-4ad2-ad9c-e8e505aac991"
+        },
+        "attributes" : { },
+        "scopes" : [ {
+          "name" : "device:read"
+        }, {
+          "name" : "device:modify"
+        } ]
+      }, {
+        "_id" : "e4bb7b63-6619-589b-98a3-549d0cedc8bc",
+        "name" : "e4bb7b63-6619-589b-98a3-549d0cedc8bc",
+        "type" : "urn:device-fleet:resources:device",
+        "ownerManagedAccess" : true,
+        "owner" : {
+          "id" : "cb9707fc-f0eb-4ad2-ad9c-e8e505aac991"
+        },
+        "attributes" : { },
+        "scopes" : [ {
+          "name" : "device:read"
+        }, {
+          "name" : "device:modify"
+        } ]
+      }, {
+        "_id" : "d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091",
+        "name" : "d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091",
+        "type" : "urn:device-fleet:resources:device",
+        "ownerManagedAccess" : true,
+        "owner" : {
+          "id" : "a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e"
+        },
+        "attributes" : { },
+        "scopes" : [ {
+          "name" : "device:read"
+        }, {
+          "name" : "device:modify"
+        } ]
       } ],
-      "policies" : [ ],
-      "scopes" : [ ],
+      "policies" : [ {
+        "name" : "da8922d4-34fb-543f-ae15-0c4d34815f70-owner-policy",
+        "type" : "user",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "users" : "[\"cb9707fc-f0eb-4ad2-ad9c-e8e505aac991\"]"
+        }
+      }, {
+        "name" : "e4bb7b63-6619-589b-98a3-549d0cedc8bc-owner-policy",
+        "type" : "user",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "users" : "[\"cb9707fc-f0eb-4ad2-ad9c-e8e505aac991\"]"
+        }
+      }, {
+        "name" : "da8922d4-34fb-543f-ae15-0c4d34815f70-access-permission",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "AFFIRMATIVE",
+        "config" : {
+          "resources" : "[\"da8922d4-34fb-543f-ae15-0c4d34815f70\"]",
+          "scopes" : "[\"device:read\",\"device:modify\"]",
+          "applyPolicies" : "[\"da8922d4-34fb-543f-ae15-0c4d34815f70-owner-policy\"]"
+        }
+      }, {
+        "name" : "e4bb7b63-6619-589b-98a3-549d0cedc8bc-access-permission",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "AFFIRMATIVE",
+        "config" : {
+          "resources" : "[\"e4bb7b63-6619-589b-98a3-549d0cedc8bc\"]",
+          "scopes" : "[\"device:read\",\"device:modify\"]",
+          "applyPolicies" : "[\"e4bb7b63-6619-589b-98a3-549d0cedc8bc-owner-policy\"]"
+        }
+      }, {
+        "name" : "d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091-owner-policy",
+        "type" : "user",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "UNANIMOUS",
+        "config" : {
+          "users" : "[\"a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e\"]"
+        }
+      }, {
+        "name" : "d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091-access-permission",
+        "type" : "scope",
+        "logic" : "POSITIVE",
+        "decisionStrategy" : "AFFIRMATIVE",
+        "config" : {
+          "resources" : "[\"d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091\"]",
+          "scopes" : "[\"device:read\",\"device:modify\"]",
+          "applyPolicies" : "[\"d4197c07-cf51-4e4d-b1aa-4c5d6e7f8091-owner-policy\"]"
+        }
+      } ],
+      "scopes" : [ {
+        "name" : "device:read"
+      }, {
+        "name" : "device:modify"
+      }, {
+        "name" : "device:share"
+      } ],
       "decisionStrategy" : "UNANIMOUS"
     }
   }, {

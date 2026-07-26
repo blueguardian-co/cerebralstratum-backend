@@ -12,7 +12,7 @@ ADRs document significant architectural decisions, capturing the context, option
 | [ADR-0002](0002-observability-and-fleet-dashboard-embedding.md) | Observability and Fleet Dashboard Embedding | Accepted |
 | [ADR-0003](0003-loyalty-programme-integration.md) | Loyalty Programme Integration | Proposed |
 | [ADR-0004](0004-utils-module-as-shared-library.md) | `utils` Module as a Shared Library JAR | Accepted |
-| [ADR-0005](0005-uma2-device-resources.md) | Keycloak Authorization Services — UMA 2.0 Device Resources | Proposed |
+| [ADR-0005](0005-uma2-device-resources.md) | Keycloak Authorization Services — UMA 2.0 Device Resources | Accepted |
 | [ADR-0006](0006-support-impersonation-consent-flow.md) | Support Impersonation and Consent Flow | Proposed |
 | [ADR-0007](0007-emergency-sos.md) | Emergency SOS | Proposed |
 | [ADR-0008](0008-privacy-zones.md) | Privacy Zones | Proposed |
