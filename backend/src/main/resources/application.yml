@@ -55,6 +55,12 @@ quarkus:
       # Pinned (like the Postgres/Kafka dev-service ports above) so the frontend's
       # env.js KEYCLOAK_URL doesn't need updating on every backend restart.
       port: 8180
+      # Trust X-Forwarded-* from a reverse proxy (e.g. Cloudflare Tunnel) so Keycloak's
+      # self-referential URLs (including the UMA2 discovery document AuthzClient reads)
+      # advertise https rather than the plain-http scheme it sees on its local listener.
+      # No-op when accessed directly (no forwarded headers present).
+      container-env:
+        KC_PROXY_HEADERS: xforwarded
     admin-client:
       realm: ${keycloak.realm}
     policy-enforcer:

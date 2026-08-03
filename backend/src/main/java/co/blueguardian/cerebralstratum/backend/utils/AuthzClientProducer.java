@@ -8,6 +8,7 @@ import org.keycloak.authorization.client.AuthzClient;
 import org.keycloak.authorization.client.Configuration;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * quarkus-keycloak-authorization only produces its own AuthzClient bean when
@@ -33,6 +34,17 @@ public class AuthzClientProducer {
     String clientSecret;
 
     /**
+     * Escape hatch for dev setups where the backend is reached through a tunnel hostname
+     * different from Keycloak Dev Services' auto-injected localhost URL (e.g. testing
+     * against a mobile device via Cloudflare Tunnel). Keycloak's UMA-ticket token endpoint
+     * rejects a bearer token whose `iss` doesn't match however it was just reached, so
+     * AuthzClient must call Keycloak via the SAME hostname that minted the caller's token —
+     * unset (the default) preserves the existing localhost behaviour.
+     */
+    @ConfigProperty(name = "cerebral-stratum.authz-server-url")
+    Optional<String> authzServerUrlOverride;
+
+    /**
      * quarkus.oidc.auth-server-url is the full per-realm URL (Quarkus OIDC convention),
      * but AuthzClient's Configuration wants the bare server URL and appends
      * /realms/{realm}/.well-known/uma2-configuration itself (native Keycloak adapter
@@ -42,10 +54,15 @@ public class AuthzClientProducer {
     @DefaultBean
     @ApplicationScoped
     public AuthzClient authzClient() {
-        String realmSuffix = "/realms/" + realm;
-        String baseAuthServerUrl = authServerUrl.endsWith(realmSuffix)
-                ? authServerUrl.substring(0, authServerUrl.length() - realmSuffix.length())
-                : authServerUrl;
+        String baseAuthServerUrl;
+        if (authzServerUrlOverride.isPresent() && !authzServerUrlOverride.get().isBlank()) {
+            baseAuthServerUrl = authzServerUrlOverride.get();
+        } else {
+            String realmSuffix = "/realms/" + realm;
+            baseAuthServerUrl = authServerUrl.endsWith(realmSuffix)
+                    ? authServerUrl.substring(0, authServerUrl.length() - realmSuffix.length())
+                    : authServerUrl;
+        }
         Configuration configuration = new Configuration(
                 baseAuthServerUrl,
                 realm,
