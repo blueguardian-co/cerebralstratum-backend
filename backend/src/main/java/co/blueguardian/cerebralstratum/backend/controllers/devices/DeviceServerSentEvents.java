@@ -11,6 +11,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.inject.Inject;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.resteasy.reactive.RestStreamElementType;
 
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class DeviceServerSentEvents {
     @GET
     @Path("/location")
     @Produces(MediaType.SERVER_SENT_EVENTS)
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
     public Multi<GetLocationRequest> broadcastLocation(UUID device_uuid) {
         return broadcaster.locationUpdatesFor(device_uuid).map(DeviceLocationEvent::location);
     }
@@ -32,6 +34,7 @@ public class DeviceServerSentEvents {
     @GET
     @Path("/status")
     @Produces(MediaType.SERVER_SENT_EVENTS)
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
     public Multi<Status> broadcastStatus(UUID device_uuid) {
         return broadcaster.statusUpdatesFor(device_uuid).map(DeviceStatusEvent::status);
     }
@@ -39,6 +42,7 @@ public class DeviceServerSentEvents {
     @GET
     @Path("/canbus")
     @Produces(MediaType.SERVER_SENT_EVENTS)
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
     public Multi<CANBus> broadcastCANBus(UUID device_uuid) {
         return broadcaster.canBusUpdatesFor(device_uuid).map(DeviceCanBusEvent::canBus);
     }

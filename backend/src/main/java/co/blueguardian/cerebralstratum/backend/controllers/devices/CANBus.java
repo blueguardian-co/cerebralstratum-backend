@@ -9,10 +9,4 @@ public class CANBus {
     public CANBus(String payload){
         this.payload = payload;
     }
-
-    @Override
-    public String toString() {
-        return "-- CANBus Message --" +
-               "Payload: " + payload;
-    }
 }

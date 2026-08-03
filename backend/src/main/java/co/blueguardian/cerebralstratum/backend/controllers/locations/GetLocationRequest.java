@@ -42,15 +42,4 @@ public class GetLocationRequest {
         this.bearing = bearing;
         this.timestamp = timestamp;
     }
-
-    @Override
-    public String toString() {
-        return "-- Status --" +
-                "Coordinates: " + coordinates + '\n' +
-                "Update Frequency: " + update_frequency + '\n' +
-                "Accuracy: " + accuracy + '\n' +
-                "Speed: " + speed + '\n' +
-                "Bearing: " + bearing + '\n' +
-                "Timestamp: " + timestamp;
-    }
 }

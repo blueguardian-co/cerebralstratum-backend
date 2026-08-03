@@ -22,13 +22,4 @@ public class Status {
         this.battery = battery;
         this.timestamp = timestamp;
     }
-
-    @Override
-    public String toString() {
-        return "-- Status --" +
-               "Summary: " + summary + '\n' +
-               "Overall: " + overall + '\n' +
-               "Battery: " + battery + "\n" +
-               "Timestamp: " + timestamp;
-    }
 }
