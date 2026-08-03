@@ -42,7 +42,7 @@ class StatusResourceIT {
     void listRequiresAuthentication() {
         given()
         .when()
-            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/status")
+            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/statuses")
         .then()
             .statusCode(401);
     }
@@ -57,7 +57,7 @@ class StatusResourceIT {
         given()
             .auth().oauth2(ownerToken())
         .when()
-            .get("/api/v1/devices/by-id/" + UMA_DEVICE_ID + "/status")
+            .get("/api/v1/devices/by-id/" + UMA_DEVICE_ID + "/statuses")
         .then()
             .statusCode(200);
     }
@@ -67,7 +67,7 @@ class StatusResourceIT {
     void listForbiddenWithoutRealGrant() {
         given()
         .when()
-            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/status")
+            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/statuses")
         .then()
             .statusCode(403);
     }
@@ -77,7 +77,7 @@ class StatusResourceIT {
     void getSpecificStatusForbiddenWithoutDeviceGroupClaim() {
         given()
         .when()
-            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/status/999999")
+            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/statuses/999999")
         .then()
             .statusCode(403);
     }
@@ -87,7 +87,7 @@ class StatusResourceIT {
         given()
             .auth().oauth2(ownerToken())
         .when()
-            .get("/api/v1/devices/by-id/" + UMA_DEVICE_ID + "/status/999999")
+            .get("/api/v1/devices/by-id/" + UMA_DEVICE_ID + "/statuses/999999")
         .then()
             .statusCode(404);
     }
@@ -97,7 +97,7 @@ class StatusResourceIT {
         given()
             .auth().oauth2(ownerToken())
         .when()
-            .get("/api/v1/devices/by-id/" + UMA_DEVICE_ID + "/status/latest")
+            .get("/api/v1/devices/by-id/" + UMA_DEVICE_ID + "/statuses/latest")
         .then()
             .statusCode(404);
     }

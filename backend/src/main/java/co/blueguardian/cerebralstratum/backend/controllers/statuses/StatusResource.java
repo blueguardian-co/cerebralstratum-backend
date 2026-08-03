@@ -17,7 +17,7 @@ import jakarta.ws.rs.WebApplicationException;
 
 import io.quarkus.security.Authenticated;
 
-@Path("/api/v1/devices/by-id/{device_uuid}/status")
+@Path("/api/v1/devices/by-id/{device_uuid}/statuses")
 @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

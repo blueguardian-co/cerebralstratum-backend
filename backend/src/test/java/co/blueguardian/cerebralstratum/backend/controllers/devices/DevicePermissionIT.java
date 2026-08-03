@@ -57,7 +57,7 @@ class DevicePermissionIT {
         given()
             .auth().oauth2(ownerToken())
         .when()
-            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/status/latest")
+            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/statuses/latest")
         .then()
             .statusCode(404);
     }
@@ -72,7 +72,7 @@ class DevicePermissionIT {
         given()
             .auth().oauth2(platformAdminToken())
         .when()
-            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/status/latest")
+            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/statuses/latest")
         .then()
             .statusCode(403);
     }
@@ -82,7 +82,7 @@ class DevicePermissionIT {
         given()
             .auth().oauth2(strangerToken())
         .when()
-            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/status/latest")
+            .get("/api/v1/devices/by-id/" + DEVICE_ID + "/statuses/latest")
         .then()
             .statusCode(403);
     }
