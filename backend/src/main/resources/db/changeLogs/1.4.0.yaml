@@ -1,0 +1,22 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      comment: fix locations.bearing column type to match LocationEntity's double mapping (was int)
+      changes:
+        - modifyDataType:
+            tableName: locations
+            columnName: bearing
+            newDataType: float8
+  - changeSet:
+      id: 2
+      author: Alex Henshaw
+      labels: cerebral-stratum
+      comment: fix locations.speed column type to match LocationEntity's double mapping (was int)
+      changes:
+        - modifyDataType:
+            tableName: locations
+            columnName: speed
+            newDataType: float8
