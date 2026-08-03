@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NamedNativeQuery(
         name = "DeviceStatuses.latest",
         query = "SELECT DISTINCT ON (b.device_id) *"
-                + "FROM device_statuses b "
+                + "FROM cerebralstratum.device_statuses b "
                 + "WHERE b.device_id = :deviceId "
                 + "ORDER BY b.device_id, b.timestamp DESC;",
         resultClass = StatusEntity.class
