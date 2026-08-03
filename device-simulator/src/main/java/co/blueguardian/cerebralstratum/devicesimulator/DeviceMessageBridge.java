@@ -45,7 +45,7 @@ class DeviceMessageBridge {
 
     @Incoming("mqtt-location")
     void consumeLocation(String payload) {
-        LOG.infof("Received location payload from MQTT: %s", payload);
+        LOG.debugf("Received location payload from MQTT: %s", payload);
         try {
             LocationMessage message = objectMapper.readValue(payload, LocationMessage.class);
             LocationEvent event = new LocationEvent(
@@ -64,7 +64,7 @@ class DeviceMessageBridge {
 
     @Incoming("mqtt-status")
     void consumeStatus(String payload) {
-        LOG.infof("Received status payload from MQTT: %s", payload);
+        LOG.debugf("Received status payload from MQTT: %s", payload);
         try {
             StatusMessage message = objectMapper.readValue(payload, StatusMessage.class);
             Status status = new Status(message.summary, message.overall, message.battery, message.timestamp);
@@ -76,7 +76,7 @@ class DeviceMessageBridge {
 
     @Incoming("mqtt-canbus")
     void consumeCanBus(String payload) {
-        LOG.infof("Received canbus payload from MQTT: %s", payload);
+        LOG.debugf("Received canbus payload from MQTT: %s", payload);
         try {
             CANBusMessage message = objectMapper.readValue(payload, CANBusMessage.class);
             CanBusEvent event = new CanBusEvent(message.payload);
