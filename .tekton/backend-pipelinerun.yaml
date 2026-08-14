@@ -1,0 +1,138 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: cerebral-stratum-backend
+  annotations:
+    pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
+    pipelinesascode.tekton.dev/on-target-branch: '[main, qa]'
+    pipelinesascode.tekton.dev/on-path-change: "[backend/***, utils/***, pom.xml]"
+    pipelinesascode.tekton.dev/task: 'git-clone'
+    pipelinesascode.tekton.dev/task-1: 'buildah'
+    pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
+    pipelinesascode.tekton.dev/max-keep-runs: "2"
+spec:
+  params:
+    - name: repo_url
+      value: "{{ repo_url }}"
+    - name: revision
+      value: "{{ revision }}"
+    - name: repo_branch
+      value: '{{ target_branch }}'
+    - name: image
+      value: quay.io/blueguardian-co/cerebral-stratum/backend
+    - name: argocd-git-url
+      value: git@github.com:blueguardian-co/gitops.git
+  pipelineSpec:
+    taskRunTemplate:
+      serviceAccountName: pipeline
+    params:
+      - name: repo_url
+      - name: revision
+      - name: image
+      - name: argocd-git-url
+    workspaces:
+      - name: source
+      - name: argocd_source
+      - name: basic-auth
+    tasks:
+      - name: fetch-repository
+        taskRef:
+          name: git-clone
+        workspaces:
+          - name: output
+            workspace: source
+          - name: basic-auth
+            workspace: basic-auth
+        params:
+          - name: url
+            value: $(params.repo_url)
+          - name: revision
+            value: $(params.revision)
+      - name: build-binary
+        taskSpec:
+          workspaces:
+            - name: source
+          steps:
+            - name: build
+              image: registry.redhat.io/ubi9/openjdk-21:latest
+              script: |
+                set -euxo pipefail
+                cd $(workspaces.source.path)
+                nice -n 15 ./mvnw install -pl backend -am -T 2C
+        workspaces:
+          - name: source
+            workspace: source
+        runAfter:
+          - fetch-repository
+      - name: build-image
+        taskRef:
+          name: buildah
+        runAfter:
+          - build-binary
+        workspaces:
+          - name: source
+            workspace: source
+          - name: dockerconfig
+            workspace: dockerconfig-ws
+        params:
+          - name: IMAGE
+            value: $(params.image)
+          - name: DOCKERFILE
+            value: backend/src/main/docker/Dockerfile.jvm
+          - name: CONTEXT
+            value: backend
+          - name: BUILD_EXTRA_ARGS
+            value: "--storage-driver=overlay"
+      - name: git-clone-argocd-repo
+        taskRef:
+          name: git-clone
+        params:
+          - name: url
+            value: '$(params.argocd-git-url)'
+          - name: revision
+            value: 'main'
+        runAfter:
+          - build-image
+        workspaces:
+          - name: output
+            workspace: argocd_source
+      - name: deploy
+        taskRef:
+          kind: Task
+          name: deploy
+        runAfter:
+          - git-clone-argocd-repo
+        params:
+          - name: repo_branch
+            value: $(params.repo_branch)
+          - name: image_url
+            value: $(params.image)
+          - name: image_digest
+            value: $(tasks.build-image.results.IMAGE_DIGEST)
+        workspaces:
+          - name: argocd_source
+            workspace: argocd_source
+  workspaces:
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: argocd_source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: dockerconfig-ws
+      secret:
+        secretName: pull-secret
+    - name: basic-auth
+      secret:
+        secretName: '{{ git_auth_secret }}'

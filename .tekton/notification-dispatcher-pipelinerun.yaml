@@ -2,14 +2,14 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: cerebral-stratum-backend
+  name: cerebral-stratum-notification-dispatcher
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
     pipelinesascode.tekton.dev/on-target-branch: '[main, qa]'
+    pipelinesascode.tekton.dev/on-path-change: "[notification-dispatcher/***, utils/***, pom.xml]"
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
-    pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/mvnw-build.yaml]'
-    pipelinesascode.tekton.dev/task-3: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
+    pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 spec:
   params:
@@ -20,9 +20,9 @@ spec:
     - name: repo_branch
       value: '{{ target_branch }}'
     - name: image
-      value: quay.io/blueguardian-co/cerebral-stratum/backend
+      value: quay.io/blueguardian-co/cerebral-stratum/notification-dispatcher
     - name: argocd-git-url
-      value: git@github.com:blueguardian-co/infra.git
+      value: git@github.com:blueguardian-co/gitops.git
   pipelineSpec:
     taskRunTemplate:
       serviceAccountName: pipeline
@@ -50,10 +50,18 @@ spec:
           - name: revision
             value: $(params.revision)
       - name: build-binary
-        taskRef:
-          name: mvnw-build
+        taskSpec:
+          workspaces:
+            - name: source
+          steps:
+            - name: build
+              image: registry.redhat.io/ubi9/openjdk-21:latest
+              script: |
+                set -euxo pipefail
+                cd $(workspaces.source.path)
+                nice -n 15 ./mvnw install -pl notification-dispatcher -am -T 2C
         workspaces:
-          - name: output
+          - name: source
             workspace: source
         runAfter:
           - fetch-repository
@@ -71,7 +79,9 @@ spec:
           - name: IMAGE
             value: $(params.image)
           - name: DOCKERFILE
-            value: src/main/docker/Dockerfile.native
+            value: notification-dispatcher/src/main/docker/Dockerfile.jvm
+          - name: CONTEXT
+            value: notification-dispatcher
           - name: BUILD_EXTRA_ARGS
             value: "--storage-driver=overlay"
       - name: git-clone-argocd-repo
@@ -100,8 +110,6 @@ spec:
             value: $(params.image)
           - name: image_digest
             value: $(tasks.build-image.results.IMAGE_DIGEST)
-          - name: repo_url
-            value: $(params.repo_url)
         workspaces:
           - name: argocd_source
             workspace: argocd_source
