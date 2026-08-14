@@ -18,7 +18,7 @@ databaseChangeLog:
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
               - column:
                   name: created
-                  value: 02-02-2024T10:40
+                  value: 2024-02-02T10:40
         - insert:
             tableName: users
             columns:
@@ -30,7 +30,7 @@ databaseChangeLog:
                   value: 4fca28bd-e2ca-4b68-8736-eb883818bf6d
               - column:
                   name: created
-                  value: 02-02-2024T10:43
+                  value: 2024-02-02T10:43
               - column:
                   name: subscription_active
                   value: true
@@ -51,7 +51,7 @@ databaseChangeLog:
                   value: c2150083-8742-4161-9bcf-f1819251953d
               - column:
                   name: created
-                  value: 10-02-2024T14:35
+                  value: 2024-02-10T14:35
               - column:
                   name: subscription_active
                   value: false
@@ -78,7 +78,7 @@ databaseChangeLog:
                   value: this is a test device
               - column:
                   name: registered
-                  value: 02-02-2024T10:43
+                  value: 2024-02-02T10:43
               - column:
                   name: user_id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
@@ -93,7 +93,7 @@ databaseChangeLog:
                   value: da8922d4-34fb-543f-ae15-0c4d34815f70
               - column:
                   name: registered
-                  value: 10-02-2024T14:34
+                  value: 2024-02-10T14:34
               - column:
                   name: user_id
                   value: cb9707fc-f0eb-4ad2-ad9c-e8e505aac991
@@ -112,7 +112,7 @@ databaseChangeLog:
                   value: a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e
               - column:
                   name: created
-                  value: 26-07-2026T09:00
+                  value: 2026-07-26T09:00
               - column:
                   name: subscription_active
                   value: true
@@ -139,7 +139,7 @@ databaseChangeLog:
                   value: owned by device-it-owner@example.com, used by device UMA permission ITs
               - column:
                   name: registered
-                  value: 26-07-2026T09:00
+                  value: 2026-07-26T09:00
               - column:
                   name: user_id
                   value: a1e6b9d4-9c2f-4b1a-8e77-1f2a3b4c5d6e

@@ -5,6 +5,7 @@ import co.blueguardian.cerebralstratum.backend.repositories.locations.LocationRe
 import co.blueguardian.cerebralstratum.backend.repositories.statuses.StatusRepository;
 import co.blueguardian.cerebralstratum.utils.model.Status;
 
+import java.util.Set;
 import java.util.UUID;
 
 import io.smallrye.mutiny.Multi;
@@ -50,14 +51,32 @@ public class DeviceEventBroadcaster {
     }
 
     public Multi<DeviceLocationEvent> locationUpdatesFor(UUID deviceId) {
-        return locationEvents.filter(event -> event.deviceId().equals(deviceId));
+        return locationUpdatesFor(Set.of(deviceId));
     }
 
     public Multi<DeviceStatusEvent> statusUpdatesFor(UUID deviceId) {
-        return statusEvents.filter(event -> event.deviceId().equals(deviceId));
+        return statusUpdatesFor(Set.of(deviceId));
     }
 
     public Multi<DeviceCanBusEvent> canBusUpdatesFor(UUID deviceId) {
-        return canBusEvents.filter(event -> event.deviceId().equals(deviceId));
+        return canBusUpdatesFor(Set.of(deviceId));
+    }
+
+    /**
+     * Multiplexed variants backing the multi-device SSE endpoints (DeviceMultiplexedServerSentEvents):
+     * one BroadcastProcessor subscription filtered against a caller-specific device set, rather
+     * than one subscription per device. {@code deviceIds} must already be access-checked — this
+     * is an in-process filter, not an authorization boundary.
+     */
+    public Multi<DeviceLocationEvent> locationUpdatesFor(Set<UUID> deviceIds) {
+        return locationEvents.filter(event -> deviceIds.contains(event.deviceId()));
+    }
+
+    public Multi<DeviceStatusEvent> statusUpdatesFor(Set<UUID> deviceIds) {
+        return statusEvents.filter(event -> deviceIds.contains(event.deviceId()));
+    }
+
+    public Multi<DeviceCanBusEvent> canBusUpdatesFor(Set<UUID> deviceIds) {
+        return canBusEvents.filter(event -> deviceIds.contains(event.deviceId()));
     }
 }
