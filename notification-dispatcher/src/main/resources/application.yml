@@ -1,5 +1,6 @@
-# CI test commit: verifying the per-component Tekton pipeline (path-trigger,
-# module-scoped build, image push, open-pr deploy step) against qa. No
+# CI test commit #2: verifying the per-component Tekton pipeline (path-trigger,
+# module-scoped build, image push, open-pr deploy step) against qa, after
+# fixing the open-pr step's curl-minimal/curl microdnf conflict. No
 # functional change — safe to revert.
 quarkus:
   application:
