@@ -1,6 +1,3 @@
-# CI test commit: verifying the per-component Tekton pipeline (path-trigger,
-# module-scoped build, image push, open-pr deploy step) against qa. No
-# functional change — safe to revert.
 quarkus:
   application:
     name: cerebral-stratum-notification-dispatcher
