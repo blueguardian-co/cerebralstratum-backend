@@ -5,7 +5,7 @@ metadata:
   name: cerebral-stratum-device-registrar
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
-    pipelinesascode.tekton.dev/on-target-branch: '[main, qa]'
+    pipelinesascode.tekton.dev/on-target-branch: '[qa]'
     pipelinesascode.tekton.dev/on-path-change: "[device-registrar/***, utils/***, pom.xml]"
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
