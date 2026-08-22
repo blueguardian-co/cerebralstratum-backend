@@ -1,0 +1,50 @@
+# .github/workflows/code-review.yml
+name: Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: JetBrains/junie-github-action@v1
+        with:
+          junie_api_key: ${{ secrets.JUNIE_API_KEY }}
+          # Update the same comment on subsequent Junie runs instead of adding new comments
+          use_single_comment: true
+          # Alternatively, write your custom review instructions in the prompt field
+          # instead of using the built-in "code-review" value
+          prompt: |
+            Review this pull request for the CEREBRAL STRATUM backend (Quarkus + Hibernate + PostgreSQL/PostGIS, hexagonal layout).
+
+            Flag, in priority order:
+            1. Tenant isolation breaks — any query, cache key, or Kafka consumer that could read/write across
+               tenant schemas, or a `blueguardian` schema code path that leaks into a tenant schema.
+            2. Missing/wrong authorization — new or changed JAX-RS endpoints without `@RolesAllowed` or
+               `@PermissionsAllowed`, or permission checks that don't match the JWT `groups`/`realm_access/roles`
+               claims described in the security model.
+            3. JTS `Point` fields on any REST/SSE-exposed DTO without `@JsonSerialize(using = PointSerializer.class)`
+               / `@JsonDeserialize(using = PointDeserializer.class)` — this fails only at runtime as a
+               `StackOverflowError`, not at compile time, so it will not show up in a normal build.
+            4. Cache-key correctness on anything using `@CacheResult`/`@CacheKey` (e.g. notification dedupe) —
+               check that fields which should vary per event (like timestamps) are deliberately excluded, and
+               that fields which should collapse duplicates are included.
+            5. Layering violations — JPA entities appearing under `controllers/`, or domain records/DTOs
+               appearing under `repositories/`.
+            6. New `@GrpcService` classes that aren't `@Singleton` extending the generated `*ImplBase` (implementing
+               only the `AsyncService` interface means Quarkus silently never binds the service).
+            7. Kafka message shape changes in `utils/messaging/` without checking all consuming services stay
+               compatible (there are no hand-written deserializers — Quarkus generates them from these classes).
+
+            Also apply general good practice: correctness bugs, missing test coverage for new logic, timestamps
+            not stored/compared in UTC, and secrets or credentials in code/config.
