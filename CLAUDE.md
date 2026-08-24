@@ -184,12 +184,28 @@ Fields in use (CSPROD project):
   Open, Duplicate
 - `Priority`: Highest, High, Medium, Low, Lowest
 
+### Commit message conventions (VCS integration)
+
+The YouTrack VCS integration is configured against this repo (`blueguardian-co/cerebralstratum-backend`).
+Reference the relevant issue in every commit so YouTrack can link and transition it automatically:
+
+- Always mention the issue ID somewhere in the commit message (e.g. `CSPROD-XXX Fix ...`) to link the
+  commit.
+- To also transition the issue's `State`, append a command line: `#<ISSUE-ID> <State>` (e.g. `#CSPROD-238
+  Fixed` for a Bug Fix issue, `#CSPROD-238 Done` for a Task/Epic) — the state value must match one of the
+  issue's actual `State` options above. The command must be on its own line and not wrap.
+- For a commit closing multiple issues: `(#CSPROD-1, #CSPROD-2) Fixed`.
+- Requires the committer's git email to be a member of the VCS integration's Committers group in
+  YouTrack (Project Settings → VCS Repositories) — otherwise the commit still links but the state
+  command is silently ignored.
+
 **Claude Code's responsibility during implementation work:**
 - When starting work on a ticket, move `State` to `In Progress`
   (`update_issue`).
-- When a PR lands that implements a ticket, move `State` to `Fixed` (or
-  `Done` for Epics once all children are closed) and reference the commit/PR
-  in a comment or the issue description.
+- When a PR lands that implements a ticket, use the commit message convention above to transition
+  `State` to `Fixed` (or `Done` for Epics once all children are closed) — this also links the commit to
+  the issue automatically. Fall back to `update_issue` only if the VCS integration doesn't apply (e.g.
+  the change wasn't committed to this repo).
 - Do not close/re-prioritize tickets outside the scope of the current task —
   only touch the ticket(s) explicitly being worked.
 - If work reveals the ADR itself needs revision (an Open Item gets resolved,
