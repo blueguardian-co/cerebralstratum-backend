@@ -1,4 +1,4 @@
-# .github/workflows/code-review.yml
+# .github/workflows/code-review.yaml
 name: Code Review
 
 on:
