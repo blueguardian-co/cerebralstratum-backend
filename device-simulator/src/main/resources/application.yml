@@ -36,20 +36,15 @@ mp:
         port: 1883
         connector: smallrye-mqtt
       # Dev-only MQTT->Kafka bridge (stands in for Eclipse Hono until it's wired up).
-      kafka-location:
-        topic: device.location
+      # Mirrors Hono's fixed per-tenant Kafka topic shape (see the Hono Kafka
+      # Telemetry API spec) — all telemetry types share one topic, demuxed by
+      # content-type header (see DeviceMessageBridge).
+      device-telemetry:
+        topic: hono.telemetry.cerebral-stratum
         key:
-          serializer: org.apache.kafka.common.serialization.UUIDSerializer
-        connector: smallrye-kafka
-      kafka-status:
-        topic: device.status
-        key:
-          serializer: org.apache.kafka.common.serialization.UUIDSerializer
-        connector: smallrye-kafka
-      kafka-canbus:
-        topic: device.canbus
-        key:
-          serializer: org.apache.kafka.common.serialization.UUIDSerializer
+          serializer: org.apache.kafka.common.serialization.StringSerializer
+        value:
+          serializer: org.apache.kafka.common.serialization.ByteArraySerializer
         connector: smallrye-kafka
     incoming:
       mqtt-location:
