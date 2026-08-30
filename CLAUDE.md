@@ -199,6 +199,12 @@ Reference the relevant issue in every commit so YouTrack can link and transition
   YouTrack (Project Settings → VCS Repositories) — otherwise the commit still links but the state
   command is silently ignored.
 
+### Branch naming
+
+Create a feature branch off `qa` named after the relevant YouTrack issue ID (e.g. `CSPROD-247`, or
+`CSPROD-247-short-description`), then open a PR into `qa` — don't commit or push directly to `qa` or
+`main`.
+
 **Claude Code's responsibility during implementation work:**
 - When starting work on a ticket, move `State` to `In Progress`
   (`update_issue`).
