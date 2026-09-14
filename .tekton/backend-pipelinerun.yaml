@@ -11,6 +11,10 @@ metadata:
     pipelinesascode.tekton.dev/task-1: 'buildah'
     pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
     pipelinesascode.tekton.dev/max-keep-runs: "2"
+    # ADR-0009 / CSPROD-301: PaC scopes cancellation per-PR or per-target-
+    # branch separately, so this cancels a superseded in-flight qa push
+    # build without touching concurrent PR validation runs.
+    pipelinesascode.tekton.dev/cancel-in-progress: "true"
 spec:
   params:
     - name: repo_url
