@@ -24,6 +24,18 @@ quarkus:
       notification-dispatch:
         expire-after-write: 5m
 
+mp:
+  messaging:
+    incoming:
+      device-telemetry:
+        connector: smallrye-kafka
+        # Eclipse Hono's Kafka protocol adapters always publish to this fixed
+        # per-tenant topic (see the Hono Kafka Telemetry API spec) — all telemetry
+        # types share it, demuxed in NotificationEventConsumer by content-type header.
+        topic: hono.telemetry.cerebral-stratum
+        key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value.deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
 '%dev':
   quarkus:
     otel:
