@@ -6,7 +6,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
     pipelinesascode.tekton.dev/on-target-branch: '[qa]'
-    pipelinesascode.tekton.dev/on-path-change: "[device-registrar/***, utils/***, pom.xml]"
+    pipelinesascode.tekton.dev/on-path-change: "[device-registrar/***, utils/***, pom.xml, .tekton/device-registrar-pipelinerun.yaml]"
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
     pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
