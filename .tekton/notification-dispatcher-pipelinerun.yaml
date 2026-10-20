@@ -6,7 +6,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request, push]"
     pipelinesascode.tekton.dev/on-target-branch: '[qa]'
-    pipelinesascode.tekton.dev/on-path-change: "[notification-dispatcher/***, utils/***, pom.xml]"
+    pipelinesascode.tekton.dev/on-path-change: "[notification-dispatcher/***, utils/***, pom.xml, .tekton/notification-dispatcher-pipelinerun.yaml]"
     pipelinesascode.tekton.dev/task: 'git-clone'
     pipelinesascode.tekton.dev/task-1: 'buildah'
     pipelinesascode.tekton.dev/task-2: '[https://github.com/blueguardian-co/infra/blob/main/.tekton/tasks/deploy.yaml]'
@@ -89,6 +89,13 @@ spec:
           - name: BUILD_EXTRA_ARGS
             value: "--storage-driver=overlay"
       - name: git-clone-argocd-repo
+        # CSPROD-331: only a merge into qa (push) promotes to gitops. PR and
+        # /retest runs still build the image for validation, but must not
+        # pin it or open a digest-bump PR.
+        when:
+          - input: "{{ event_type }}"
+            operator: in
+            values: ["push"]
         taskRef:
           name: git-clone
         params:
@@ -102,6 +109,12 @@ spec:
           - name: output
             workspace: argocd_source
       - name: deploy
+        # CSPROD-331: guarded separately because a skipped when only skips
+        # its own task, not those that runAfter it.
+        when:
+          - input: "{{ event_type }}"
+            operator: in
+            values: ["push"]
         taskRef:
           kind: Task
           name: deploy
