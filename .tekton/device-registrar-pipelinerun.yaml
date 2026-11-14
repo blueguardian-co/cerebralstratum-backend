@@ -35,6 +35,20 @@ spec:
       - name: revision
       - name: image
       - name: argocd-git-url
+    # CSPROD-345 / ADR-0014 §2.3.2 check 5: Tekton Chains type hints. With
+    # IMAGE_URL/IMAGE_DIGEST as pipeline results Chains attests the PipelineRun
+    # against the image, and CHAINS-GIT_URL/CHAINS-GIT_COMMIT put the source
+    # repo and the exact commit git-clone checked out into the attestation's
+    # materials, so the gitops validator can tie the digest to a qa commit.
+    results:
+      - name: IMAGE_URL
+        value: $(tasks.build-image.results.IMAGE_URL)
+      - name: IMAGE_DIGEST
+        value: $(tasks.build-image.results.IMAGE_DIGEST)
+      - name: CHAINS-GIT_URL
+        value: $(tasks.fetch-repository.results.url)
+      - name: CHAINS-GIT_COMMIT
+        value: $(tasks.fetch-repository.results.commit)
     workspaces:
       - name: source
       - name: argocd_source
