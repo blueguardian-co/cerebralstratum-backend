@@ -60,7 +60,7 @@ jobs:
       new-version: ${{ steps.meta.outputs.new-version }}
     steps:
       - id: meta
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
         with:
           github-token: ${{ github.token }}
 
